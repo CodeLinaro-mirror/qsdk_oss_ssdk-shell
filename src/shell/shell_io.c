@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -3316,8 +3316,8 @@ cmd_data_print_portmap(char * param_name, fal_pbmp_t val, a_uint32_t size)
 				    if(strlen(tmp) == 0)
 					    snprintf(tmp, sizeof(tmp), "%d", i);
 				    else
-					    snprintf(tmp+strlen(tmp),
-							    sizeof(tmp+strlen(tmp)), ",%d", i);
+					    snprintf(tmp + strlen(tmp),
+							    sizeof(tmp) - strlen(tmp), ",%d", i);
 			    }
 		    }
 		    break;
