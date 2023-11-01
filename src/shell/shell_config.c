@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2023, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2024, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -1320,6 +1320,22 @@ struct cmd_des_t gcmd_des[] =
 		{
 			{"Config", "set", "set ipv4/ipv6 rss hash code", "<ipv4v6|ipv4|ipv6>", SW_API_RSS_HASH_CONFIG_SET, NULL},
 			{"Config", "get", "get ipv4/ipv6 rss hash code", "<ipv4v6|ipv4|ipv6>", SW_API_RSS_HASH_CONFIG_GET, NULL},
+			{"hashalgm", "set", "set rss hash algorithm", "", SW_API_TOEPLITZ_HASH_RSS_ALGM_SET, NULL},
+			{"hashalgm", "get", "get rss hash algorithm", "", SW_API_TOEPLITZ_HASH_RSS_ALGM_GET, NULL},
+			{"toeplitzseckey", "set", "set 44 bytes toeplitzhash secret key",
+					"", SW_API_TOEPLITZ_HASH_SECRET_KEY_SET, NULL},
+			{"toeplitzseckey", "get", "get 44 bytes toeplitzhash secret key",
+					"", SW_API_TOEPLITZ_HASH_SECRET_KEY_GET, NULL},
+			{"toeplitzconfig", "add", "add one toeplitzhash config",
+					"", SW_API_TOEPLITZ_HASH_CONFIG_ADD, NULL},
+			{"toeplitzconfig", "del", "delete one toeplitzhash config",
+					"", SW_API_TOEPLITZ_HASH_CONFIG_DEL, NULL},
+			{"toeplitzconfig", "getfirst", "get first toeplitzhash config",
+					"", SW_API_TOEPLITZ_HASH_CONFIG_GETFIRST, NULL},
+			{"toeplitzconfig", "getnext", "get next toeplitzhash config",
+					"", SW_API_TOEPLITZ_HASH_CONFIG_GETNEXT, NULL},
+			{"toeplitzconfig", "show", "show all toeplitzhash config",
+					"", SW_CMD_TOEPLITZ_HASH_CONFIG_SHOW, cmd_show_toeplitz_hash_config},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},
