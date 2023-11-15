@@ -829,6 +829,8 @@ struct cmd_des_t gcmd_des[] =
         {
             {"ctrlpattern", "set", "set led control pattern", "<group_id> <led_id>", SW_API_LED_PATTERN_SET, NULL},
             {"ctrlpattern", "get", "get led control pattern", "<group_id> <led_id>", SW_API_LED_PATTERN_GET, NULL},
+            {"ptsrcpattern", "set", "set led port source pattern", "<port_id> <source_id>", SW_API_LED_PT_SRC_PATTERN_SET, NULL},
+            {"ptsrcpattern", "get", "get led port source pattern", "<port_id> <source_id>", SW_API_LED_PT_SRC_PATTERN_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

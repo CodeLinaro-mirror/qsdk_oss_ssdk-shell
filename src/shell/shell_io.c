@@ -360,6 +360,14 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"led_active_level",
+		{
+			{"high", LED_ACTIVE_HIGH},
+			{"low", LED_ACTIVE_LOW},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -9039,6 +9047,26 @@ cmd_data_check_blinkfreq(char *cmd_str, led_blink_freq_t * arg_val,
     {
         *arg_val = LED_BLINK_8HZ;
     }
+    else if (!strcasecmp(cmd_str, "16HZ"))
+    {
+        *arg_val = LED_BLINK_16HZ;
+    }
+    else if (!strcasecmp(cmd_str, "32HZ"))
+    {
+        *arg_val = LED_BLINK_32HZ;
+    }
+    else if (!strcasecmp(cmd_str, "64HZ"))
+    {
+        *arg_val = LED_BLINK_64HZ;
+    }
+    else if (!strcasecmp(cmd_str, "128HZ"))
+    {
+        *arg_val = LED_BLINK_128HZ;
+    }
+    else if (!strcasecmp(cmd_str, "256HZ"))
+    {
+        *arg_val = LED_BLINK_256HZ;
+    }
     else if (!strcasecmp(cmd_str, "TXRX"))
     {
         *arg_val = LED_BLINK_TXRX;
@@ -9063,6 +9091,11 @@ cmd_data_check_ledpattern(char *info, void * val, a_uint32_t size)
     dprintf("\n");
 
     /* get pattern mode configuration */
+    cmd_data_check_element("active_level", "high",
+                            "usage:high or low, etc\n",
+                            cmd_data_check_attr, ("led_active_level", cmd,
+                            &(pattern.active_level), sizeof(pattern.active_level)));
+
     cmd_data_check_element("pattern_mode", NULL, "usage: <always_off/always_blink/always_on/map>\n",
                            cmd_data_check_patternmode, (cmd, &pattern.mode,
                                    sizeof(led_pattern_mode_t)));
@@ -9092,15 +9125,6 @@ cmd_data_check_ledpattern(char *info, void * val, a_uint32_t size)
         {
             pattern.map |= (1 << POWER_ON_LIGHT_EN);
         }
-
-        cmd_data_check_element("active_high", "no", "usage: <yes/no/y/n>\n",
-                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-                                       sizeof (a_bool_t)));
-        if (1 == tmpdata)
-        {
-            pattern.map |= (1 << LED_ACTIVE_HIGH);
-        }
-
         cmd_data_check_element("link_2500m_light", "no", "usage: <yes/no/y/n>\n",
                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                        sizeof (a_bool_t)));
@@ -9164,8 +9188,9 @@ cmd_data_check_ledpattern(char *info, void * val, a_uint32_t size)
         {
             pattern.map |= (1 << LINKUP_OVERRIDE_EN);
         }
-
-        cmd_data_check_element("blink freq", NULL, "usage: <2HZ/4HZ/8HZ/TXRX> \n",
+    }
+    if (LED_PATTERN_MAP_EN == pattern.mode || LED_ALWAYS_BLINK == pattern.mode) {
+        cmd_data_check_element("blink freq", "4HZ", "usage: <2HZ/4HZ/8HZ/16HZ/32HZ/64HZ/128HZ/256HZ/TXRX> \n",
                                cmd_data_check_blinkfreq, (cmd, &pattern.freq,
                                        sizeof(led_blink_freq_t)));
     }
@@ -9183,6 +9208,16 @@ cmd_data_print_ledpattern(a_uint8_t * param_name, a_uint32_t * buf,
 
     pattern = (led_ctrl_pattern_t *) buf;
 
+    if (pattern->active_level == LED_ACTIVE_HIGH)
+    {
+        dprintf("[pattern_active_level]:high");
+        dprintf("\n");
+    }
+    else
+    {
+        dprintf("[pattern_active_level]:low");
+        dprintf("\n");
+    }
     if (LED_ALWAYS_OFF == pattern->mode)
     {
         dprintf("[pattern_mode]:always_off");
@@ -9218,12 +9253,6 @@ cmd_data_print_ledpattern(a_uint8_t * param_name, a_uint32_t * buf,
         if (pattern->map & (1 << POWER_ON_LIGHT_EN))
         {
             cmd_data_print_confirm("[power_on_light]:", A_TRUE, sizeof (a_bool_t));
-            dprintf("\n");
-        }
-
-        if (pattern->map & (1 << LED_ACTIVE_HIGH))
-        {
-            cmd_data_print_confirm("[active_high]:", A_TRUE, sizeof (a_bool_t));
             dprintf("\n");
         }
 
@@ -9274,7 +9303,8 @@ cmd_data_print_ledpattern(a_uint8_t * param_name, a_uint32_t * buf,
             cmd_data_print_confirm("[linkup_override]:", A_TRUE, sizeof (a_bool_t));
             dprintf("\n");
         }
-
+    }
+    if (LED_PATTERN_MAP_EN == pattern->mode || LED_ALWAYS_BLINK == pattern->mode) {
         if (LED_BLINK_2HZ == pattern->freq)
         {
             dprintf("[blink_frequency]:2HZ\n");
@@ -9286,6 +9316,26 @@ cmd_data_print_ledpattern(a_uint8_t * param_name, a_uint32_t * buf,
         else if (LED_BLINK_8HZ == pattern->freq)
         {
             dprintf("[blink_frequency]:8HZ\n");
+        }
+        else if (LED_BLINK_16HZ == pattern->freq)
+        {
+            dprintf("[blink_frequency]:16HZ\n");
+        }
+        else if (LED_BLINK_32HZ == pattern->freq)
+        {
+            dprintf("[blink_frequency]:32HZ\n");
+        }
+        else if (LED_BLINK_64HZ == pattern->freq)
+        {
+            dprintf("[blink_frequency]:64HZ\n");
+        }
+        else if (LED_BLINK_128HZ == pattern->freq)
+        {
+            dprintf("[blink_frequency]:128HZ\n");
+        }
+        else if (LED_BLINK_256HZ == pattern->freq)
+        {
+            dprintf("[blink_frequency]:256HZ\n");
         }
         else
         {
