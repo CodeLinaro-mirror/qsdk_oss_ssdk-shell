@@ -7550,11 +7550,20 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
             {
                 /*cookie value configuration*/
-                cmd_data_check_element("cookie value", "0",
-                           "usage: the format is 0x0-0xffff or 0-65535\n",
-                           cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
-                                   0x0));
-                entry->cookie_val= tmpdata & 0xffff;
+                if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
+                    /*high 24bit for cookie ext, low 16bit for cookie*/
+                    cmd_data_check_element("cookie value", "0",
+                               "usage: the format is 0x0-0xffffffffff or 0-1099511627775\n",
+                               cmd_data_check_uint64, (cmd, &entry->cookie_val,
+                                       sizeof(a_uint64_t)));
+                    entry->cookie_val &= 0xffffffffff;
+                } else {
+                    cmd_data_check_element("cookie value", "0",
+                               "usage: the format is 0x0-0xffff or 0-65535\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
+                                       0x0));
+                    entry->cookie_val = tmpdata & 0xffff;
+                }
 
                 /*cookie priority configuration*/
                 cmd_data_check_element("cookie priority", "0",
@@ -7569,6 +7578,18 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                             cmd_data_check_integer, (cmd, &tmpdata, 0xf,
                                     0x0));
                 entry->metadata_pri = tmpdata & 0xf;
+
+                if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
+                    /*wifi qos configuration*/
+                    cmd_data_check_element("wifi qos enable", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &(entry->wifi_qos_en),
+                                       sizeof (a_bool_t)));
+                    cmd_data_check_element("wifi qos value", "0",
+                               "usage: the format is 0x0-0xff or 0-255\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                        0x0));
+                    entry->wifi_qos_val = tmpdata & 0xff;
+                }
             }
         }
     }
@@ -8894,9 +8915,13 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
             if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
             {
-                dprintf("\n[cookie_val]:0x%x", rule->cookie_val);
+                dprintf("\n[cookie_val]:0x%llx", rule->cookie_val);
                 dprintf("\n[cookie_pri]:%d", rule->cookie_pri);
                 dprintf("\n[meta_data_pri]:%d", rule->metadata_pri);
+                if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
+                    cmd_data_print_confirm("\n[wifi_qos_en]:", rule->wifi_qos_en, sizeof(a_bool_t));
+                    dprintf(" [wifi_qos_val]:0x%x", rule->wifi_qos_val);
+                }
             }
         }
     }
