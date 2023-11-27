@@ -3407,6 +3407,34 @@ cmd_data_check_confirm(char *cmdstr, a_bool_t def, a_bool_t * val,
     return SW_OK;
 }
 
+sw_error_t
+cmd_data_check_rule_confirm(char *cmdstr, a_bool_t def, a_uint32_t * val,
+                       a_uint32_t size)
+{
+    if (0 == cmdstr[0])
+    {
+        *val = def;
+    }
+    else if ((!strcasecmp(cmdstr, "yes")) || (!strcasecmp(cmdstr, "y")))
+    {
+        *val = A_TRUE;
+    }
+    else if ((!strcasecmp(cmdstr, "no")) || (!strcasecmp(cmdstr, "n")))
+    {
+        *val = A_FALSE;
+    }
+    else if ((!strcasecmp(cmdstr, "inverse")) || (!strcasecmp(cmdstr, "i")))
+    {
+        *val = A_TRUE + 1;
+    }
+    else
+    {
+        return SW_BAD_VALUE;
+    }
+
+    return SW_OK;
+}
+
 void
 cmd_data_print_confirm(char * param_name, a_bool_t val, a_uint32_t size)
 {
@@ -4936,8 +4964,8 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
             FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IPV6);
     }
     /* get destination mac address field configuration */
-    cmd_data_check_element("mac dst addr field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("mac dst addr field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
@@ -4955,13 +4983,15 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                        &(entry->dest_mac_mask),
                                        sizeof
                                        (fal_mac_addr_t)));
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_DA);
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_DA);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_MAC_DA);
     }
 
     /* get source mac address field configuration */
-    cmd_data_check_element("mac src addr field", "no",  "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("mac src addr field", "no",  "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
@@ -4980,16 +5010,24 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                        sizeof
                                        (fal_mac_addr_t)));
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_SA);
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_SA);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_MAC_SA);
     }
 
     /* get ethernet type field configuration */
-    cmd_data_check_element("ethernet type field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("ethernet type field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_ETHTYPE);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_MAC_ETHTYPE);
+
         cmd_data_check_element("ethernet type", NULL,
                                "usage: the format is 0x0-0xffff or 0-65535\n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
@@ -5001,8 +5039,6 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
                                        0x0));
         entry->ethtype_mask = tmpdata & 0xffff;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_ETHTYPE);
     }
 
     if(!is_inner)
@@ -5147,12 +5183,17 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
     }
 
     /* get stag vlanid field configuration */
-    cmd_data_check_element("stag vid field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("stag vid field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_STAG_VID);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_MAC_STAG_VID);
+
         cmd_data_check_element("stag vid operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
@@ -5193,17 +5234,20 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                            0xfff, 0x0));
             entry->stag_vid_val = tmpdata & 0xfff;
         }
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_STAG_VID);
     }
 
-
     /* get stag priority field configuration */
-    cmd_data_check_element("stag pri field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("stag pri field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_STAG_PRI);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_MAC_STAG_PRI);
+
         cmd_data_check_element("stag pri", NULL,
                                "usage: the format is 0x0-0x7 or 0-7 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x7,
@@ -5215,8 +5259,6 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                cmd_data_check_integer, (cmd, &tmpdata, 0x7,
                                        0x0));
         entry->stag_pri_mask = tmpdata & 0x7;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_STAG_PRI);
     }
 
     /* get stag dei field configuration */
@@ -5264,12 +5306,17 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
     }
 
     /* get ctag vlanid field configuration */
-    cmd_data_check_element("ctag vid field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("ctag vid field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CTAG_VID);
+        else
+           FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_MAC_CTAG_VID);
+
         cmd_data_check_element("ctag vid operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
@@ -5311,17 +5358,20 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                            0xfff, 0x0));
             entry->ctag_vid_val = tmpdata & 0xfff;
         }
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CTAG_VID);
     }
 
     /* get ctag priority field configuration */
-    cmd_data_check_element("ctag pri field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("ctag pri field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CTAG_PRI);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_MAC_CTAG_PRI);
+
         cmd_data_check_element("ctag pri", NULL,
                                "usage: the format is 0x0-0x7 or 0-7 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x7,
@@ -5333,8 +5383,6 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                cmd_data_check_integer, (cmd, &tmpdata, 0x7,
                                        0x0));
         entry->ctag_pri_mask = tmpdata & 0x7;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MAC_CTAG_PRI);
     }
 
     /* get ctag cfi field configuration */
@@ -5374,12 +5422,17 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
         }
 
         /* get vsi field configuration */
-        cmd_data_check_element("vsi field", "no", "usage: <yes/no/y/n>\n",
-                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+        cmd_data_check_element("vsi field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                               cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                        sizeof (a_bool_t)));
 
         if (tmpdata)
         {
+            if (tmpdata == A_TRUE)
+                FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI);
+            else
+                FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_VSI);
+
             if (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE)
             {
                 cmd_data_check_element("vsi", "0x0",
@@ -5407,17 +5460,20 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                                0x0));
                 entry->vsi_mask = tmpdata & 0x3f;
             }
-
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_VSI);
         }
     }
     /* get pppoe session id field configuration */
-    cmd_data_check_element("pppoe session id field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("pppoe session id field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID);
+
         cmd_data_check_element("pppoe session id", "0x0",
                                "usage: the format is 0x0-0xffff or 0-65535 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
@@ -5429,8 +5485,6 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                cmd_data_check_integer, (cmd, &tmpdata, 0xffff,
                                        0x0));
         entry->pppoe_sessionid_mask = tmpdata & 0xffff;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID);
     }
     return SW_OK;
 }
@@ -5443,7 +5497,7 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 
     /* get ip4 source address field configuration */
     cmd_data_check_element("ip4 src address field", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
@@ -5458,12 +5512,15 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                cmd_data_check_ip4addr, (cmd,
                                        &(entry->src_ip4_mask), 4));
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP4_SIP);
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP4_SIP);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_IP4_SIP);
     }
 
     /* get ip4 destination address field configuration */
     cmd_data_check_element("ip4 dst address field", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
@@ -5480,7 +5537,10 @@ cmd_data_check_ip4_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                        &(entry->
                                          dest_ip4_mask), 4));
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP4_DIP);
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP4_DIP);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_IP4_DIP);
     }
     if(!is_inner)
     {
@@ -5553,7 +5613,7 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 
     /* get ip6 source address field configuration */
     cmd_data_check_element("ip6 src address field", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
@@ -5569,12 +5629,15 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                        &(entry->
                                          src_ip6_mask), 16));
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP6_SIP);
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP6_SIP);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_IP6_SIP);
     }
 
     /* get ip6 destination address field configuration */
     cmd_data_check_element("ip6 dst address field", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
@@ -5591,7 +5654,10 @@ cmd_data_check_ip6_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                        &(entry->
                                          dest_ip6_mask), 16));
 
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP6_DIP);
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP6_DIP);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_IP6_DIP);
     }
     if(!is_inner)
     {
@@ -5692,12 +5758,17 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     a_uint32_t tmpdata = 0;
 
     /* get ip protocol field configuration */
-    cmd_data_check_element("ip protocol field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("ip protocol field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (tmpdata)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PROTO);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_IP_PROTO);
+
         cmd_data_check_element("ip protocol", NULL,
                                "usage: the format is 0x0-0xff or 0-255 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0xff,
@@ -5709,16 +5780,19 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
                                cmd_data_check_integer, (cmd, &tmpdata, 0xff,
                                        0x0));
         entry->ip_proto_mask = tmpdata & 0xff;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PROTO);
     }
 
     /* get ip dscp field configuration */
-    cmd_data_check_element("ip dscp field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("ip dscp field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (tmpdata)));
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_DSCP);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_IP_DSCP);
+
         cmd_data_check_element("ip dscp", NULL,
                                "usage: the format is 0x0-0xff or 0-255 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0xff,
@@ -5730,17 +5804,20 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
                                cmd_data_check_integer, (cmd, &tmpdata, 0xff,
                                        0x0));
         entry->ip_dscp_mask = tmpdata & 0xff;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_DSCP);
     }
 
     /* get ip l4 destination port field configuration */
     cmd_data_check_element("ip l4 dst port field", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L4_DPORT);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_L4_DPORT);
+
         cmd_data_check_element("ip l4 dst port operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
@@ -5782,17 +5859,20 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
                                            0xffff, 0x0));
             entry->dest_l4port_val = tmpdata & 0xffff;
         }
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L4_DPORT);
     }
 
     /* get ip l4 source port field configuration */
     cmd_data_check_element("ip l4 src port field", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L4_SPORT);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_L4_SPORT);
+
         cmd_data_check_element("ip l4 src port operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
@@ -5834,17 +5914,20 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
                                            0xffff, 0x0));
             entry->src_l4port_val = tmpdata & 0xffff;
         }
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L4_SPORT);
     }
 
     /* get tcp flags field configuration */
-    cmd_data_check_element("tcp flags field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("tcp flags field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (tmpdata)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TCP_FLAG);
+        else
+           FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_TCP_FLAG);
+
         cmd_data_check_element("tcp flags", NULL,
                                "usage: the format is 0x0-0x3f or 0-63 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x3f,
@@ -5856,14 +5939,12 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
                                cmd_data_check_integer, (cmd, &tmpdata, 0x3f,
                                        0x0));
         entry->tcp_flag_mask = tmpdata & 0x3f;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TCP_FLAG);
     }
 
 
     /* get icmp type/code field configuration */
-    cmd_data_check_element("icmp type code field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("icmp type code field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (tmpdata)));
 
     if (tmpdata)
@@ -5875,52 +5956,64 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
 
         if (FAL_ACL_FIELD_MASK == entry->icmp_type_code_op)
         {
-	    /* get icmp type field configuration */
-	    cmd_data_check_element("icmp type field", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-	                                   sizeof (tmpdata)));
+            /* get icmp type field configuration */
+            cmd_data_check_element("icmp type field", "no", "usage: <yes/no/y/n>\n",
+                                   cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                           sizeof (tmpdata)));
+            if (tmpdata)
+            {
+                if (tmpdata == A_TRUE)
+                    FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+                else
+                    FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_ICMP_TYPE);
 
-	    if (tmpdata)
-	    {
-	        cmd_data_check_element("icmp type", NULL,
-	                               "usage: the format is 0x0-0xff or 0-255 \n",
-	                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-	                                       0x0));
-	        entry->icmp_type_val = tmpdata & 0xff;
+                cmd_data_check_element("icmp type", NULL,
+                                       "usage: the format is 0x0-0xff or 0-255 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                               0x0));
+                entry->icmp_type_val = tmpdata & 0xff;
 
-	        cmd_data_check_element("icmp type mask", NULL,
-	                               "usage: the format is 0x0-0xff or 0-255 \n",
-	                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-	                                       0x0));
-	        entry->icmp_type_mask = tmpdata & 0xff;
+                cmd_data_check_element("icmp type mask", NULL,
+                                       "usage: the format is 0x0-0xff or 0-255 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                               0x0));
+                entry->icmp_type_mask = tmpdata & 0xff;
+            }
 
-	        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
-	    }
+            /* get icmp code field configuration */
+            cmd_data_check_element("icmp code field", "no", "usage: <yes/no/y/n>\n",
+                                   cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                           sizeof (tmpdata)));
 
-	    /* get icmp code field configuration */
-	    cmd_data_check_element("icmp code field", "no", "usage: <yes/no/y/n>\n",
-	                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
-	                                   sizeof (tmpdata)));
+            if (tmpdata)
+            {
+                if (tmpdata == A_TRUE)
+                    FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
+                else
+                    FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_ICMP_CODE);
+                cmd_data_check_element("icmp code", NULL,
+                                       "usage: the format is 0x0-0xff or 0-255 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                               0x0));
+                entry->icmp_code_val = tmpdata & 0xff;
 
-	    if (tmpdata)
-	    {
-	        cmd_data_check_element("icmp code", NULL,
-	                               "usage: the format is 0x0-0xff or 0-255 \n",
-	                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-	                                       0x0));
-	        entry->icmp_code_val = tmpdata & 0xff;
-
-	        cmd_data_check_element("icmp code mask", NULL,
-	                               "usage: the format is 0x0-0xff or 0-255 \n",
-	                               cmd_data_check_integer, (cmd, &tmpdata, 0xff,
-	                                       0x0));
-	        entry->icmp_code_mask = tmpdata & 0xff;
-
-	        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
-	    }
+                cmd_data_check_element("icmp code mask", NULL,
+                                       "usage: the format is 0x0-0xff or 0-255 \n",
+                                       cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                               0x0));
+                entry->icmp_code_mask = tmpdata & 0xff;
+            }
         }
         else if (FAL_ACL_FIELD_RANGE == entry->icmp_type_code_op)
         {
+            if (tmpdata == A_TRUE) {
+                FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+                FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
+            } else {
+                FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+                FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_ICMP_CODE);
+            }
+
             cmd_data_check_element("icmp type code low", NULL,
                                    "usage: the format is 0x0-0xffff or 0-65535 \n",
                                    cmd_data_check_integer, (cmd, &tmpdata,
@@ -5934,19 +6027,23 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
                                            0xffff, 0x0));
             entry->icmp_type_mask = (tmpdata>>8) & 0xff;
             entry->icmp_code_mask= tmpdata & 0xff;
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
         }
         else
         {
+            if (tmpdata == A_TRUE) {
+                FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+                FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
+            } else {
+                FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_ICMP_TYPE);
+                FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_ICMP_CODE);
+            }
+
             cmd_data_check_element("icmp type code", NULL,
                                    "usage: the format is 0x0-0xffff or 0-65535 \n",
                                    cmd_data_check_integer, (cmd, &tmpdata,
                                            0xffff, 0x0));
             entry->icmp_type_val= (tmpdata>>8) & 0xff;
             entry->icmp_code_val= tmpdata & 0xff;
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_TYPE);
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_ICMP_CODE);
         }
     }
 
@@ -5979,29 +6076,37 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
     }
 
     /* get L3 TTL field configuration */
-    cmd_data_check_element("l3 ttl field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("l3 ttl field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (tmpdata)));
 
     if (tmpdata)
     {
+            if (tmpdata == A_TRUE)
+                FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L3_TTL);
+            else
+                FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_L3_TTL);
+
             entry->l3_ttl_mask = 0x3;
             cmd_data_check_element("l3 ttl", "0",
                                "usage: 0-ttl/hoplimit is 0, 1-ttl/hoplimit is 1, 2-ttl/hoplimit is 255, 3-ttl/hoplimit is other \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x3,
                                        0x0));
             entry->l3_ttl = tmpdata & 0x3;
-
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L3_TTL);
     }
 
     /* get l3 length field configuration */
-    cmd_data_check_element("l3 length field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("l3 length field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (tmpdata)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L3_LENGTH);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_L3_LENGTH);
+
         cmd_data_check_element("l3 length operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
@@ -6043,25 +6148,26 @@ cmd_data_check_ip_field(fal_acl_rule_t * entry)
                                            0xffff, 0x0));
             entry->l3_length = tmpdata & 0xffff;
         }
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L3_LENGTH);
     }
 
     /* get L3 packet type field configuration */
-    cmd_data_check_element("l3 packet type field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("l3 packet type field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (tmpdata)));
 
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_IP_PKT_TYPE);
+
         entry->l3_pkt_type_mask = 0x7;
         cmd_data_check_element("l3 packet type", "tcp",
                            "usage: TCP, UDP, UDP-Lite, ARP, ICMP, GRE \n",
                            cmd_data_check_ip_packet_type, (cmd, &tmpdata,sizeof(tmpdata)));
 
         entry->l3_pkt_type = tmpdata & 0x7;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE);
     }
 
     /* get ah header field configuration */
@@ -6470,10 +6576,15 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
     }
     /* get udf0 field configuration */
     cmd_data_check_element("udf0", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF0);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_UDF0);
+
         cmd_data_check_element("udf0 operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
@@ -6515,16 +6626,19 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                            0xffff, 0x0));
             entry->udf0_val = tmpdata & 0xffff;
         }
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF0);
     }
 
     /* get udf1 field configuration */
     cmd_data_check_element("udf1", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF1);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_UDF1);
+
         cmd_data_check_element("udf1 operation", "mask",
                                "usage: <mask/range/le/ge/ne> \n",
                                cmd_data_check_fieldop, (cmd, FAL_ACL_FIELD_MASK,
@@ -6566,16 +6680,19 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                            0xffff, 0x0));
             entry->udf1_val = tmpdata & 0xffff;
         }
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF1);
     }
 
     /* get udf2 field configuration */
     cmd_data_check_element("udf2", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF2);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_UDF2);
+
         if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
         {
@@ -6620,15 +6737,17 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                            0xffff, 0x0));
             entry->udf2_val = tmpdata & 0xffff;
         }
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF2);
     }
     /* get udf3 field configuration */
     cmd_data_check_element("udf3", "no",
-                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                            (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF3);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_UDF3);
 
         cmd_data_check_element("udf3", NULL,
                            "usage: the format is 0x0-0xffff\n",
@@ -6641,8 +6760,6 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                            cmd_data_check_integer, (cmd, &tmpdata,
                                    0xffff, 0x0));
         entry->udf3_mask = tmpdata & 0xffff;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDF3);
     }
 
     /* get udfprofile field configuration */
@@ -6650,10 +6767,15 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
     {
         cmd_data_check_element("udfprofile", "no",
-                               "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                               "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
                                (cmd, A_FALSE, &tmpdata, sizeof (tmpdata)));
         if (tmpdata)
         {
+            if (tmpdata == A_TRUE)
+                FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDFPROFILE);
+            else
+                FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_UDFPROFILE);
+
             cmd_data_check_element("udfprofile", NULL,
                                "usage: the format is 0x0-0x7\n",
                                cmd_data_check_integer, (cmd, &tmpdata,
@@ -6665,8 +6787,6 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                cmd_data_check_integer, (cmd, &tmpdata,
                                        0x7, 0x0));
             entry->udfprofile_mask = tmpdata & 0x7;
-
-            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_UDFPROFILE);
         }
     }
 
@@ -8197,7 +8317,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         cmd_data_print_confirm("\n[ethernet]:", rule->is_ethernet_val, sizeof(a_uint32_t));
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_DA))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_DA) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_DA))
     {
         cmd_data_print_macaddr("\n[mac_dst_addr]:",
                                (a_uint32_t *) & (rule->dest_mac_val),
@@ -8205,9 +8326,12 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         cmd_data_print_macaddr("  [mac_dst_addr_mask]:",
                                (a_uint32_t *) & (rule->dest_mac_mask),
                                sizeof (fal_mac_addr_t));
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_DA))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_SA))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_SA) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_SA))
     {
         cmd_data_print_macaddr("\n[mac_src_addr]:",
                                (a_uint32_t *) & (rule->src_mac_val),
@@ -8215,12 +8339,17 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         cmd_data_print_macaddr("  [mac_src_addr_mask]:",
                                (a_uint32_t *) & (rule->src_mac_mask),
                                sizeof (fal_mac_addr_t));
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_SA))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_ETHTYPE))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_ETHTYPE) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_ETHTYPE))
     {
         dprintf("\n[mac_eth_type]:0x%x", rule->ethtype_val);
         dprintf("  [mac_eth_type_mask]:0x%x", rule->ethtype_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_ETHTYPE))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_TAGGED))
@@ -8264,10 +8393,13 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         dprintf("  [mac_stagged_mask]:0x%x", rule->stagged_mask);
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_STAG_PRI))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_STAG_PRI) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_STAG_PRI))
     {
         dprintf("\n[mac_stag_pri]:0x%x", rule->stag_pri_val);
         dprintf("  [mac_stag_pri_mask]:0x%x", rule->stag_pri_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_STAG_PRI))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_STAG_DEI))
@@ -8276,7 +8408,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         dprintf("  [mac_stag_dei_mask]:0x%x", rule->stag_dei_mask);
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_STAG_VID))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_STAG_VID) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_STAG_VID))
     {
         cmd_data_print_fieldop("\n[mac_stag_vlanid_op]:",
                                (a_uint32_t *) & (rule->stag_vid_op),
@@ -8291,6 +8424,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
             dprintf("  [stag_vlanid_low]:0x%x", rule->stag_vid_val);
             dprintf("  [stag_vlanid_high]:0x%x", rule->stag_vid_mask);
         }
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_STAG_VID))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_CTAGGED))
@@ -8299,10 +8434,13 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         dprintf("  [mac_ctagged_mask]:0x%x", rule->ctagged_mask);
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_CTAG_PRI))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_CTAG_PRI) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_CTAG_PRI))
     {
         dprintf("\n[mac_ctag_pri]:0x%x", rule->ctag_pri_val);
         dprintf("  [mac_ctag_pri_mask]:0x%x", rule->ctag_pri_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_CTAG_PRI))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_CTAG_CFI))
@@ -8311,7 +8449,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         dprintf("  [mac_ctag_cfi_mask]:0x%x", rule->ctag_cfi_mask);
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_CTAG_VID))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MAC_CTAG_VID) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_CTAG_VID))
     {
         cmd_data_print_fieldop("\n[mac_ctag_vlanid_op]:",
                                (a_uint32_t *) & (rule->ctag_vid_op),
@@ -8326,6 +8465,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
             dprintf("  [ctag_vlanid_low]:0x%x", rule->ctag_vid_val);
             dprintf("  [ctag_vlanid_high]:0x%x", rule->ctag_vid_mask);
         }
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_CTAG_VID))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_VSI_VALID))
@@ -8333,16 +8474,22 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
     	cmd_data_print_confirm("\n[vsi_valid]:", rule->vsi_valid, sizeof(a_uint32_t));
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_VSI))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_VSI) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_VSI))
     {
         dprintf("\n[vsi]:0x%x", rule->vsi);
         dprintf("  [vsi_mask]:0x%x", rule->vsi_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_VSI))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID))
     {
         dprintf("\n[pppoe_session_id]:0x%x", rule->pppoe_sessionid);
         dprintf("  [pppoe_session_id_mask]:0x%x", rule->pppoe_sessionid_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_PPPOE_SESSIONID))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP))
@@ -8355,7 +8502,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
     	cmd_data_print_confirm("\n[is_ipv6]:", rule->is_ipv6_val, sizeof(a_uint32_t));
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP4_DIP))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP4_DIP) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP4_DIP))
     {
         cmd_data_print_ip4addr("\n[ip4_dst_addr]:",
                                (a_uint32_t *) & (rule->dest_ip4_val),
@@ -8363,9 +8511,12 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         cmd_data_print_ip4addr("  [ip4_dst_addr_mask]:",
                                (a_uint32_t *) & (rule->dest_ip4_mask),
                                sizeof (fal_ip4_addr_t));
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP4_DIP))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP4_SIP))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP4_SIP) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP4_SIP))
     {
         cmd_data_print_ip4addr("\n[ip4_src_addr]:",
                                (a_uint32_t *) & (rule->src_ip4_val),
@@ -8373,6 +8524,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         cmd_data_print_ip4addr("  [ip4_src_addr_mask]:",
                                (a_uint32_t *) & (rule->src_ip4_mask),
                                sizeof (fal_ip4_addr_t));
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP4_SIP))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_RIPV1))
@@ -8387,7 +8540,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         dprintf("  [ip4_dhcpv4_mask]:0x%x", rule->dhcpv4_mask);
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP6_DIP))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP6_DIP) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP6_DIP))
     {
         cmd_data_print_ip6addr("\n[ip6_dst_addr]:",
                                (a_uint32_t *) & (rule->dest_ip6_val),
@@ -8395,9 +8549,12 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         cmd_data_print_ip6addr("\n[ip6_dst_addr_mask]:",
                                (a_uint32_t *) & (rule->dest_ip6_mask),
                                sizeof (fal_ip6_addr_t));
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP6_DIP))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP6_SIP))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP6_SIP) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP6_SIP))
     {
         cmd_data_print_ip6addr("\n[ip6_src_addr]:",
                                (a_uint32_t *) & (rule->src_ip6_val),
@@ -8405,6 +8562,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         cmd_data_print_ip6addr("\n[ip6_src_addr_mask]:",
                                (a_uint32_t *) & (rule->src_ip6_mask),
                                sizeof (fal_ip6_addr_t));
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP6_SIP))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP6_LABEL))
@@ -8444,10 +8603,13 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
     	cmd_data_print_confirm("\n[is_other_header]:", rule->is_other_header_val, sizeof(a_uint32_t));
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_TTL))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_TTL) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_L3_TTL))
     {
         dprintf("\n[l3_ttl]:0x%x", rule->l3_ttl);
         dprintf("  [l3_ttl_mask]:0x%x", rule->l3_ttl_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_L3_TTL))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IPV4_OPTION))
@@ -8460,27 +8622,39 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
     	cmd_data_print_confirm("\n[is_first_fragment]:", rule->is_first_frag_val, sizeof(a_uint32_t));
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_LENGTH))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_LENGTH) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_L3_LENGTH))
     {
         dprintf("\n[l3_length]:0x%x", rule->l3_length);
         dprintf("  [l3_length_mask]:0x%x", rule->l3_length_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_L3_LENGTH))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_PKT_TYPE) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP_PKT_TYPE))
     {
     	cmd_data_print_ip_packet_type("\n[l3_packet_type]:", &rule->l3_pkt_type, sizeof(a_uint16_t));
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP_PKT_TYPE))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_PROTO))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_PROTO) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP_PROTO))
     {
         dprintf("\n[ip_proto]:0x%x", rule->ip_proto_val);
         dprintf("  [ip_proto_mask]:0x%x", rule->ip_proto_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP_PROTO))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_DSCP))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_IP_DSCP) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP_DSCP))
     {
         dprintf("\n[ip_dscp]:0x%x", rule->ip_dscp_val);
         dprintf("  [ip_dscp_mask]:0x%x", rule->ip_dscp_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_IP_DSCP))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L3_FRAGMENT))
@@ -8488,7 +8662,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
     	cmd_data_print_confirm("\n[is_l3_fragment]:", rule->is_fragement_val, sizeof(a_uint32_t));
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L4_DPORT))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L4_DPORT) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_L4_DPORT))
     {
         cmd_data_print_fieldop("\n[ip_l4_dport_op]:",
                                (a_uint32_t *) & (rule->dest_l4port_op),
@@ -8503,9 +8678,12 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
             dprintf("  [dport_low]:0x%x", rule->dest_l4port_val);
             dprintf("  [dport_high]:0x%x", rule->dest_l4port_mask);
         }
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_L4_DPORT))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L4_SPORT))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L4_SPORT) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_L4_SPORT))
     {
         cmd_data_print_fieldop("\n[ip_l4_sport_op]:",
                                (a_uint32_t *) & (rule->src_l4port_op),
@@ -8520,24 +8698,35 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
             dprintf("  [sport_low]:0x%x", rule->src_l4port_val);
             dprintf("  [sport_high]:0x%x", rule->src_l4port_mask);
         }
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_L4_SPORT))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_TCP_FLAG))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_TCP_FLAG) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_TCP_FLAG))
     {
         dprintf("\n[ip_tcp_flags]:0x%x", rule->tcp_flag_val);
         dprintf("  [ip_tcp_flags_mask]:0x%x", rule->tcp_flag_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_TCP_FLAG))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ICMP_TYPE))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ICMP_TYPE) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_ICMP_TYPE))
     {
         dprintf("\n[ip_icmp_type]:0x%x", rule->icmp_type_val);
         dprintf("  [ip_icmp_type_mask]:0x%x", rule->icmp_type_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_ICMP_TYPE))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ICMP_CODE))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_ICMP_CODE) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_ICMP_CODE))
     {
         dprintf("\n[ip_icmp_code]:0x%x", rule->icmp_code_val);
         dprintf("  [ip_icmp_code_mask]:0x%x", rule->icmp_code_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_ICMP_CODE))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF))
@@ -8557,7 +8746,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
                                    rule->udf_len);
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF0))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF0) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDF0))
     {
         cmd_data_print_fieldop("\n[udf0_op]:",
                                (a_uint32_t *) & (rule->udf0_op),
@@ -8572,9 +8762,12 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
             dprintf("  [udf0_low]:0x%x", rule->udf0_val);
             dprintf("  [udf0_high]:0x%x", rule->udf0_mask);
         }
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDF0))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF1))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF1) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDF1))
     {
         cmd_data_print_fieldop("\n[udf1_op]:",
                                (a_uint32_t *) & (rule->udf1_op),
@@ -8589,9 +8782,12 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
             dprintf("  [udf1_low]:0x%x", rule->udf1_val);
             dprintf("  [udf1_high]:0x%x", rule->udf1_mask);
         }
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDF1))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF2))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF2) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDF2))
     {
         if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
@@ -8610,18 +8806,26 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
             dprintf("  [udf2_low]:0x%x", rule->udf2_val);
             dprintf("  [udf2_high]:0x%x", rule->udf2_mask);
         }
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDF2))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF3))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDF3) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDF3))
     {
         dprintf("  [udf3]:0x%x", rule->udf3_val);
         dprintf("  [udf3_mask]:0x%x", rule->udf3_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDF3))
+            dprintf("  [is_inverse]: YES");
     }
 
-    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDFPROFILE))
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_UDFPROFILE) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDFPROFILE))
     {
         dprintf("  [udfprofile]:0x%x", rule->udfprofile_val);
         dprintf("  [udfprofile_mask]:0x%x", rule->udfprofile_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_UDFPROFILE))
+            dprintf("  [is_inverse]: YES");
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_INVERSE_ALL))
