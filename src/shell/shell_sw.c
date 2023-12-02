@@ -102,6 +102,11 @@ cmd_show_fdb(a_ulong_t *arg_val)
 			}
 			arg_val[0] = SW_API_FDB_EXTEND_NEXT;
 			cnt++;
+			if (cnt > 2048) {
+				dprintf("\n Query FDB entry exception!\n");
+				rtn = SW_ABORTED;
+				break;
+			}
 		}
 
 		if((rtn != SW_OK) && (rtn != SW_NO_MORE))
