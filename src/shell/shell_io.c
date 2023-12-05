@@ -28287,7 +28287,8 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 	}
 	while (talk_mode && (SW_OK != rv));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
 	{
 		do
 		{
@@ -28452,7 +28453,8 @@ cmd_data_print_servcode_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 			"bypass_bitmap_2:0x%x\n",
 				entry->bypass_bitmap[0], entry->bypass_bitmap[1],
 				entry->bypass_bitmap[2]);
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE)
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)
 	{
 		dprintf("bypass_bitmap_3:0x%x\n", entry->bypass_bitmap[3]);
 	}
