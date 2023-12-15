@@ -23059,6 +23059,7 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)  {
     do
     {
         cmd = get_sub_cmd("flow_cookie_ext", "0");
@@ -23081,6 +23082,7 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
         }
     }
     while (talk_mode && (SW_OK != rv));
+    }
 
     if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
@@ -41057,11 +41059,12 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 			cmd_data_check_uint32,
 			(cmd, &(entry.tree_id), sizeof(entry.tree_id)));
 
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
         cmd_data_check_element("flow_cookie_ext", "0",
 			"usage: flow_cookie_ext for qos\n",
 			cmd_data_check_uint32,
 			(cmd, &(entry.flow_cookie_ext), sizeof(entry.flow_cookie_ext)));
-
+	}
         cmd_data_check_element("wifi_qos_en", "disable",
 			"usage: usage: enable/disable\n",
 			cmd_data_check_enable,
