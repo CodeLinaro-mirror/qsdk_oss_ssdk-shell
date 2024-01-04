@@ -1398,25 +1398,25 @@ cmd_data_print_xgmib(a_uint8_t * param_name, a_uint64_t * buf, a_uint64_t size)
 static char *counter_regname[] =
 {
     "RxGoodFrame",
-    "RxBadCRC   ",
+    "RxFcsErr   ",
     "TxGoodFrame",
-    "TxBadCRC   ",
+    "TxFcsErr   ",
     "SysRxGoodFrame",
-    "SysRxBadCRC",
+    "SysRxFcsErr",
     "SysTxGoodFrame",
-    "SysTxBadCRC",
+    "SysTxFcsErr",
 };
 
 void
-cmd_data_print_counter_info(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+cmd_data_print_counter_info(a_uint8_t * param_name, a_uint64_t * buf, a_uint32_t size)
 {
     dprintf("\n[%s] \n", param_name);
     a_uint32_t offset = 0;
-    for (offset = 0; offset < (sizeof (fal_port_counter_info_t) / sizeof (a_uint32_t));
+    for (offset = 0; offset < (sizeof (fal_port_counter_info_t) / sizeof (a_uint64_t));
             offset++)
     {
 
-        dprintf("%s<0x%08x>\n", counter_regname[offset], *(buf + offset));
+        dprintf("%s<0x%016llx>\n", counter_regname[offset], *(buf + offset));
 
     }
 }
