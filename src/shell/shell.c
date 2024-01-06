@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2017-2018, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2021-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -360,7 +360,8 @@ cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
 				    api_id == SW_CMD_TUNNEL_ENCAP_ENTRY_SHOW ||
 				    api_id == SW_CMD_GENEVE_ENTRY_SHOW ||
 				    api_id == SW_CMD_MAPT_ENTRY_SHOW ||
-				    api_id == SW_CMD_PUBADDR_SHOW )) ||
+				    api_id == SW_CMD_PUBADDR_SHOW ||
+				    api_id == SW_CMD_TOEPLITZ_HASH_CONFIG_SHOW)) ||
 				    ( arg_index == 1 && (api_id == SW_CMD_SET_DEVID ||
 						api_id == SW_CMD_VXLAN_ENTRY_SHOW ||
 						api_id == SW_CMD_TUNNEL_PROGRAM_ENTRY_SHOW ||

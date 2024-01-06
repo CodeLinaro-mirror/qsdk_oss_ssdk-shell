@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2016-2018, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2021, 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -1231,3 +1231,41 @@ cmd_show_ptp_timestamp(a_ulong_t *arg_val)
 
 	return SW_OK;
 }
+
+sw_error_t
+cmd_show_toeplitz_hash_config(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt = 0;
+	a_uint16_t rtn_size = sizeof(sw_error_t);
+	a_uint16_t p_size = sizeof(a_ulong_t);
+	fal_toeplitz_hash_config_t *cfg =
+		(fal_toeplitz_hash_config_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
+
+	aos_mem_zero(cfg, sizeof (fal_toeplitz_hash_config_t));
+	arg_val[0] = SW_API_TOEPLITZ_HASH_CONFIG_GETFIRST;
+
+	while (1)
+	{
+		arg_val[1] = (a_ulong_t) ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = (a_ulong_t) cfg;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
+		{
+			break;
+		}
+		arg_val[0] = SW_API_TOEPLITZ_HASH_CONFIG_GETNEXT;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NO_MORE))
+		cmd_print_error(rtn);
+	else
+		dprintf("\ntotal %d entries\n", cnt);
+
+	return SW_OK;
+}
+
+

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -349,6 +349,14 @@ struct attr_des_t g_attr_des[] =
 			{"low_power", FAL_ERP_LOW_POWER},
 			{"0", FAL_ERP_ACTIVE},
 			{"1", FAL_ERP_LOW_POWER},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"rsshash_algm",
+		{
+			{"legacy", FAL_RSS_LEGACY_HASH},
+			{"toeplitz", FAL_RSS_TOEPLITZ_HASH},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -879,6 +887,12 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_SERVCODE_ATHTAG, cmd_data_check_servcode_athtag, cmd_data_print_servcode_athtag),
     SW_TYPE_DEF(SW_COMBO_LINK, NULL, cmd_data_print_combo_link),
     SW_TYPE_DEF(SW_ERP_POWER_MODE, cmd_data_check_erp_power_mode, NULL),
+    SW_TYPE_DEF(SW_TOEPLITZ_SECRET_KEY, cmd_data_check_toeplitz_hash_secret_key,
+    		cmd_data_print_toeplitz_hash_secret_key),
+    SW_TYPE_DEF(SW_RSS_HASH_ALGM, cmd_data_check_rss_hash_algm,
+    		cmd_data_print_rss_hash_algm),
+    SW_TYPE_DEF(SW_TOEPLITZ_CONFIG, cmd_data_check_toeplitz_hash_config,
+    		cmd_data_print_toeplitz_hash_config),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -41844,6 +41858,244 @@ cmd_data_check_erp_power_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
 {
     return cmd_data_check_attr("erp_power_mode", cmd_str,
                     arg_val, sizeof(*arg_val));
+}
+
+sw_error_t
+cmd_data_check_toeplitz_hash_secret_key(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	char *cmd, cmd_word[9];
+	sw_error_t rv;
+	fal_toeplitz_secret_key_t entry;
+	a_uint32_t words = 0;
+
+	aos_mem_zero(&entry, sizeof(fal_toeplitz_secret_key_t));
+
+	do {
+		cmd = get_sub_cmd("secret_key", "0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("input the toeplitz hash secret key hex data\n");
+			rv = SW_BAD_VALUE;
+		}
+		else if (strspn(cmd, "1234567890abcdefABCDEFXx") != strlen(cmd) ||
+				(strlen(cmd) -2) > 8 * TOEPLITZ_HASH_SECRET_KEY_NUM) {
+			dprintf("the input data should be less than 44 byte hex data\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			if (cmd[0] == '0' && (cmd[1] == 'x' || cmd[1] == 'X')) {
+				cmd += 2;
+				for (words = 0; words < TOEPLITZ_HASH_SECRET_KEY_NUM; words++) {
+					if (strlen(cmd) == 0) {
+						break;
+					}
+					/* copy 8 chars from cmd */
+					strlcpy(cmd_word, cmd, sizeof(cmd_word));
+					sscanf(cmd_word, "%x", &entry.key[words]);
+					cmd += 8;
+				}
+				rv = SW_OK;
+			} else {
+				dprintf("need to input hex data\n");
+				rv = SW_BAD_VALUE;
+			}
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	*(fal_toeplitz_secret_key_t* )arg_val = entry;
+	return SW_OK;
+}
+
+void
+cmd_data_print_toeplitz_hash_secret_key(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_toeplitz_secret_key_t *entry;
+	a_uint32_t words = 0;
+
+	dprintf("\n[%s]: \n", param_name);
+
+	entry = (fal_toeplitz_secret_key_t *)buf;
+
+	for (words= 0; words < TOEPLITZ_HASH_SECRET_KEY_NUM; words++) {
+		if (!(words % 4)) {
+			dprintf("\n%02x:", words);
+		}
+
+		dprintf("%08x", entry->key[words]);
+	}
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_rss_hash_algm(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_rss_hash_algm_t entry;
+	fal_rss_hash_algm_e hash_algm = FAL_RSS_LEGACY_HASH;
+	a_uint32_t tmpdata = 0;
+
+	aos_mem_zero(&entry, sizeof(fal_rss_hash_algm_t));
+
+	cmd_data_check_element("rsshash_algm", "toeplitz", "usage: toeplitz/legacy\n",
+		cmd_data_check_attr, ("rsshash_algm", cmd, &hash_algm, sizeof(hash_algm)));
+	entry.hash_algm = hash_algm;
+
+	if (hash_algm == FAL_RSS_TOEPLITZ_HASH) {
+		cmd_data_check_element("extract_bit", "0", "usage: hash extract bit postion\n",
+			cmd_data_check_uint32, (cmd, &tmpdata, sizeof(tmpdata)));
+		entry.extract_pos = tmpdata;
+	}
+
+	*(fal_rss_hash_algm_t* )arg_val = entry;
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_rss_hash_algm(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_rss_hash_algm_t *entry = (fal_rss_hash_algm_t *)buf;
+    fal_rss_hash_algm_e hash_algm = entry->hash_algm;
+
+	cmd_data_print_attr("rsshash_algm", "[rsshash_algm]:",
+                    &hash_algm, sizeof(hash_algm));
+
+	if (hash_algm == FAL_RSS_TOEPLITZ_HASH) {
+		dprintf("\n[extract_bit]:%d", entry->extract_pos);
+	}
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_toeplitz_hash_config(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_toeplitz_hash_config_t entry;
+	a_uint32_t tmpdata = 0;
+
+	aos_mem_zero(&entry, sizeof(fal_toeplitz_hash_config_t));
+
+	cmd_data_check_element("ip_ver_flag", "0x0",
+						"usage: \n0x0 Both IPv4 and IPv6 are valid\n"
+								"0x1 Only IPv4 is valid\n"
+								"0x2 Only IPv6 is valid\n",
+						cmd_data_check_integer, (cmd, &tmpdata, 0x2, 0x0));
+	entry.ip_ver_flg = tmpdata;
+
+	cmd_data_check_element("ip_frag_flag", "0x0",
+						"usage: \n0x0 Both fragmented and non-fragmented are valid\n"
+								"0x1 Only non-first segment (fragmented) is valid\n"
+								"0x2 Only first segment (fragmented) is valid\n"
+								"0x3 Fragmented is valid, not care first segment or not\n",
+						cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+	entry.ip_frag_flg = tmpdata;
+
+	cmd_data_check_element("security_flag", "0x0",
+						"usage: \n0x0 Both security header (AH/ESP) available and not are valid\n"
+								"0x1 Only AH header available is valid\n"
+								"0x2 Only ESP header available is valid\n"
+								"0x3 Either AH or ESP header available is valid\n",
+						cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+	entry.sec_flg = tmpdata;
+
+	cmd_data_check_element("ip_prot_flag", "0x0",
+						"usage: \n0x0 Any protocol value is valid\n"
+								"0x1 Exact match IP_PROT is valid\n",
+						cmd_data_check_integer, (cmd, &tmpdata, 0x1, 0x0));
+	entry.ip_prot_flg = tmpdata;
+	if (entry.ip_prot_flg) {
+		cmd_data_check_element("ip_prot", "0x0",
+							"usage: IP protocol value\n",
+							cmd_data_check_integer, (cmd, &tmpdata, 0xff, 0x0));
+		entry.ip_prot = tmpdata;
+	}
+
+	cmd_data_check_element("l4_port_flag", "0x0",
+						"usage: \n0x0 Any L4 port value (available or not) is valid\n"
+								"0x1 Exact match source port is valid\n"
+								"0x2 Exact match dest port is valid\n"
+								"0x3 Exact match source or dest port is valid\n",
+						cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+	entry.l4_port_flg = tmpdata;
+	if (entry.l4_port_flg) {
+		cmd_data_check_element("l4_port", "0x0",
+							"usage: L4 port ID\n",
+							cmd_data_check_integer, (cmd, &tmpdata, 0xffff, 0x0));
+		entry.l4_port = tmpdata;
+	}
+
+	cmd_data_check_element("l4_type_flag", "0x0",
+						"usage: \n0x0 Any L4 type packet is valid\n"
+								"0x1 Only TCP packet is valid\n"
+								"0x2 Only UDP/UDP-Lite packet is valid\n"
+								"0x3 Either TCP or UDP/UDP-Lite packet is valid\n",
+						cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+	entry.l4_type_flg = tmpdata;
+
+	/* tup fields */
+    cmd_data_check_element("sip_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.sip_en, sizeof(&entry.sip_en)));
+    cmd_data_check_element("dip_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.dip_en, sizeof(&entry.dip_en)));
+    cmd_data_check_element("sport_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.sport_en, sizeof(&entry.sport_en)));
+    cmd_data_check_element("dport_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.dport_en, sizeof(&entry.dport_en)));
+    cmd_data_check_element("ip_prot_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.ip_prot_en, sizeof(&entry.ip_prot_en)));
+    cmd_data_check_element("spi_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.spi_en, sizeof(&entry.spi_en)));
+    cmd_data_check_element("udf_0_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.udf_0_en, sizeof(&entry.udf_0_en)));
+    cmd_data_check_element("udf_1_en", "no",
+                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                           (cmd, A_FALSE, &entry.udf_1_en, sizeof(&entry.udf_1_en)));
+
+	*(fal_toeplitz_hash_config_t* )arg_val = entry;
+	return SW_OK;
+}
+
+void
+cmd_data_print_toeplitz_hash_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_toeplitz_hash_config_t *entry;
+
+	dprintf("\n[%s]: \n", param_name);
+
+	entry = (fal_toeplitz_hash_config_t *)buf;
+	dprintf("ip_ver_flag:%#x\n", entry->ip_ver_flg);
+	dprintf("ip_frag_flag:%#x\n", entry->ip_frag_flg);
+	dprintf("security_flag:%#x\n", entry->sec_flg);
+	dprintf("ip_prot_flag:%#x\n", entry->ip_prot_flg);
+	dprintf("ip_prot:%#x\n", entry->ip_prot);
+	dprintf("l4_port_flag:%#x\n", entry->l4_port_flg);
+	dprintf("l4_port:%#x\n", entry->l4_port);
+	dprintf("l4_type_flag:%#x\n", entry->l4_type_flg);
+
+	cmd_data_print_confirm("sip_en:", entry->sip_en, sizeof(a_bool_t));
+	cmd_data_print_confirm("\ndip_en:", entry->dip_en, sizeof(a_bool_t));
+	cmd_data_print_confirm("\nsport_en:", entry->sport_en, sizeof(a_bool_t));
+	cmd_data_print_confirm("\ndport_en:", entry->dport_en, sizeof(a_bool_t));
+	cmd_data_print_confirm("\nip_prot_en:", entry->ip_prot_en, sizeof(a_bool_t));
+	cmd_data_print_confirm("\nspi_en:", entry->spi_en, sizeof(a_bool_t));
+	cmd_data_print_confirm("\nudf_0_en:", entry->udf_0_en, sizeof(a_bool_t));
+	cmd_data_print_confirm("\nudf_1_en:", entry->udf_1_en, sizeof(a_bool_t));
+	dprintf("\nhash_flag:%#x\n", entry->hash_flag);
+
+	dprintf("\n");
 }
 
 /* auto_insert_flag_1 */
