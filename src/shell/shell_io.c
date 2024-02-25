@@ -6828,11 +6828,16 @@ cmd_data_check_tunnel_info_field(fal_acl_tunnel_info_t * entry)
     a_uint32_t tmpdata = 0;
 
     /* get tunnel type field configuration */
-    cmd_data_check_element("tunnel type field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("tunnel type field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
     if(tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_TYPE);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_TUNNEL_TYPE);
+
         entry->tunnel_type_mask = 0x1f;
         cmd_data_check_element("tunnel type", "gre_tap_ipv4",
                "usage: gre_tap_ipv4, gre_tap_ipv6, vxlan_ipv4, vxlan_ipv6, "
@@ -6842,24 +6847,25 @@ cmd_data_check_tunnel_info_field(fal_acl_tunnel_info_t * entry)
                cmd_data_check_attr, ("tunnel_type", cmd,
                              &tmpdata, sizeof(tmpdata)));
         entry->tunnel_type = tmpdata & 0x1f;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_TYPE);
     }
 
     /* get inner type field configuration */
-    cmd_data_check_element("inner type field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("inner type field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
     if(tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE);
+
         entry->inner_type_mask = 0x3;
         cmd_data_check_element("inner type", "ethernet",
                            "usage: ethernet, ipv4, ipv6\n",
                            cmd_data_check_attr, ("hdr_type", cmd,
                                    &tmpdata, sizeof(tmpdata)));
         entry->inner_type = tmpdata & 0x3;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE);
     }
 
     /* get tunnek key valid field configuration */
@@ -6876,11 +6882,16 @@ cmd_data_check_tunnel_info_field(fal_acl_tunnel_info_t * entry)
     }
 
     /* get tunnel key field configuration */
-    cmd_data_check_element("tunnel key field", "no", "usage: <yes/no/y/n>\n",
-                           cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+    cmd_data_check_element("tunnel key field", "no", "usage: <yes/no/inverse/y/n/i>\n",
+                           cmd_data_check_rule_confirm, (cmd, A_FALSE, &tmpdata,
                                    sizeof (a_bool_t)));
     if (tmpdata)
     {
+        if (tmpdata == A_TRUE)
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_KEY);
+        else
+            FAL_FIELD_FLG_SET(entry->inverse_field_flg, FAL_ACL_FIELD_TUNNEL_KEY);
+
         cmd_data_check_element("tunel key", NULL,
                                "usage: the format is 0x0-0xffffffff or 0-4294967295\n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0xffffffff,
@@ -6891,8 +6902,6 @@ cmd_data_check_tunnel_info_field(fal_acl_tunnel_info_t * entry)
                                cmd_data_check_integer, (cmd, &tmpdata, 0xffffffff,
                                        0x0));
         entry->tunnel_key_mask = tmpdata & 0xffffffff;
-
-        FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_TUNNEL_KEY);
     }
 
     /* get tunnel decap_en field configuration */
@@ -7804,6 +7813,8 @@ void acl_rule_field_convert(fal_acl_rule_t * rule,
         /*fields flag*/
         aos_mem_copy(rule_field->field_flg,
             rule->field_flg, sizeof(fal_acl_field_map_t));
+        aos_mem_copy(rule_field->inverse_field_flg,
+            rule->inverse_field_flg, sizeof(fal_acl_field_map_t));
 
         /*mac fields*/
         rule_field->is_fake_mac_header_mask = rule->is_fake_mac_header_mask;
@@ -7925,6 +7936,8 @@ void acl_rule_field_convert(fal_acl_rule_t * rule,
         /*fields flag*/
         aos_mem_copy(rule->field_flg,
             rule_field->field_flg, sizeof(fal_acl_field_map_t));
+        aos_mem_copy(rule->inverse_field_flg,
+            rule_field->inverse_field_flg, sizeof(fal_acl_field_map_t));
 
         /*mac fields*/
         rule->is_fake_mac_header_mask = rule_field->is_fake_mac_header_mask;
@@ -8864,18 +8877,24 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         FAL_ACL_RULE_TUNNEL_UDF == rule->rule_type))
     {
         dprintf("\n\n tunnel rule fields: ");
-        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_TYPE))
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_TYPE) ||
+            FAL_FIELD_FLG_TST(rule->tunnel_info.inverse_field_flg, FAL_ACL_FIELD_TUNNEL_TYPE))
         {
             cmd_data_print_attr("tunnel_type", "\n[tunnel_type]:",
                                        &rule->tunnel_info.tunnel_type,
                                        sizeof(a_uint32_t));
+            if (FAL_FIELD_FLG_TST(rule->tunnel_info.inverse_field_flg, FAL_ACL_FIELD_TUNNEL_TYPE))
+                dprintf("  [is_inverse]: YES");
         }
 
-        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE))
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE) ||
+            FAL_FIELD_FLG_TST(rule->tunnel_info.inverse_field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE))
         {
             cmd_data_print_attr("hdr_type", "\n[inner_type]:",
                                 &rule->tunnel_info.inner_type,
                                 sizeof(a_uint32_t));
+            if (FAL_FIELD_FLG_TST(rule->tunnel_info.inverse_field_flg, FAL_ACL_FIELD_TUNNEL_INNER_TYPE))
+                dprintf("  [is_inverse]: YES");
         }
 
         if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_KEY_VALID))
@@ -8885,10 +8904,13 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
                                    sizeof(a_uint32_t));
         }
 
-        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_KEY))
+        if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_KEY) ||
+           FAL_FIELD_FLG_TST(rule->tunnel_info.inverse_field_flg, FAL_ACL_FIELD_TUNNEL_KEY))
         {
             dprintf("\n[tunnel_key]:0x%x", rule->tunnel_info.tunnel_key);
             dprintf("  [tunnel_key_mask]:0x%x", rule->tunnel_info.tunnel_key_mask);
+            if (FAL_FIELD_FLG_TST(rule->tunnel_info.inverse_field_flg, FAL_ACL_FIELD_TUNNEL_KEY))
+                dprintf("  [is_inverse]: YES");
         }
 
         if (FAL_FIELD_FLG_TST(rule->tunnel_info.field_flg, FAL_ACL_FIELD_TUNNEL_DECAP_EN))
