@@ -901,6 +901,11 @@ static sw_data_type_t sw_data_type[] =
     		cmd_data_print_rss_hash_algm),
     SW_TYPE_DEF(SW_TOEPLITZ_CONFIG, cmd_data_check_toeplitz_hash_config,
     		cmd_data_print_toeplitz_hash_config),
+    SW_TYPE_DEF(SW_FLOW_NPT66_IID_CAL, cmd_data_check_flow_npt66_iid_cal,
+    		cmd_data_print_flow_npt66_iid_cal),
+	SW_TYPE_DEF(SW_FLOW_NPT66_IID, cmd_data_check_flow_npt66_iid,
+		cmd_data_print_flow_npt66_iid),
+
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -42373,5 +42378,109 @@ cmd_data_print_toeplitz_hash_config(a_uint8_t * param_name, a_uint32_t * buf, a_
 
 	dprintf("\n");
 }
+
+sw_error_t
+cmd_data_check_flow_npt66_iid_cal(char *cmd_str, fal_flow_npt66_iid_calc_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_flow_npt66_iid_calc_t entry = { 0 };
+
+	aos_mem_zero(&entry, sizeof(fal_flow_npt66_iid_calc_t));
+
+        cmd_data_check_element("source ip6 address", NULL,
+			"usage: the format is xxxx::xxxx \n",
+			cmd_data_check_ip6addr,
+			(cmd, &(entry.sip), sizeof(fal_ip6_addr_t)));
+
+        cmd_data_check_element("dest ip6 address", NULL,
+			"usage: the format is xxxx::xxxx \n",
+			cmd_data_check_ip6addr,
+			(cmd, &(entry.dip), sizeof(fal_ip6_addr_t)));
+
+        cmd_data_check_element("translate ip6 address", NULL,
+			"usage: the format is xxxx::xxxx \n",
+			cmd_data_check_ip6addr,
+			(cmd, &(entry.tip), sizeof(fal_ip6_addr_t)));
+
+        cmd_data_check_element("prefix_len", "0",
+			"usage: prefix_len\n",
+			cmd_data_check_uint32,
+			(cmd, &(entry.prefix_len), sizeof(entry.prefix_len)));
+
+        cmd_data_check_element("tip_prefix_len", "0",
+			"usage: tip_prefix_len\n",
+			cmd_data_check_uint32,
+			(cmd, &(entry.tip_prefix_len), sizeof(entry.tip_prefix_len)));
+
+	    cmd_data_check_element("is_dnat", "no",
+	                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+	                           (cmd, A_FALSE, &entry.is_dnat, sizeof(&entry.is_dnat)));
+
+	*arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_flow_npt66_iid_cal(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_flow_npt66_iid_calc_t *entry;
+
+	entry = (fal_flow_npt66_iid_calc_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_ip6addr("sip", (a_uint32_t *) &(entry->sip), sizeof(entry->sip));
+	cmd_data_print_ip6addr("dip", (a_uint32_t *) &(entry->dip), sizeof(entry->dip));	
+	cmd_data_print_ip6addr("tip", (a_uint32_t *) &(entry->tip), sizeof(entry->tip));		
+	cmd_data_print_uint32("prefix_len", &entry->prefix_len, sizeof(entry->prefix_len));
+	cmd_data_print_uint32("tip_prefix_len", &entry->tip_prefix_len, sizeof(entry->tip_prefix_len));
+	cmd_data_print_enable("is_dnat", &entry->is_dnat, sizeof(entry->is_dnat));
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_flow_npt66_iid(char *cmd_str, fal_flow_npt66_iid_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_flow_npt66_iid_t entry = { 0 };
+
+	aos_mem_zero(&entry, sizeof(fal_flow_npt66_iid_t));
+        cmd_data_check_element("iid_offset", "0",
+			"usage: iid_offset\n",
+			cmd_data_check_uint32,
+			(cmd, &(entry.iid_offset), sizeof(entry.iid_offset)));
+
+        cmd_data_check_element("iid", "0",
+			"usage: iid\n",
+			cmd_data_check_uint32,
+			(cmd, &(entry.iid), sizeof(entry.iid)));
+
+	    cmd_data_check_element("is_dnat", "no",
+	                           "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+	                           (cmd, A_FALSE, &entry.is_dnat, sizeof(&entry.is_dnat)));
+
+	*arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_flow_npt66_iid(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_flow_npt66_iid_t *entry;
+
+	entry = (fal_flow_npt66_iid_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_uint32("iid_offset", &entry->iid_offset, sizeof(entry->iid_offset));
+	cmd_data_print_uint32("iid", &entry->iid, sizeof(entry->iid));	
+	cmd_data_print_enable("is_dnat", &entry->is_dnat, sizeof(entry->is_dnat));
+
+	dprintf("\n");
+}
+
 
 /* auto_insert_flag_1 */

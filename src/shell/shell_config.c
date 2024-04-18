@@ -1107,6 +1107,15 @@ struct cmd_des_t gcmd_des[] =
 		    SW_API_FLOW_QOS_SET, NULL},
             {"qos", "get", "get flow qos", "<flow_index>",
 		    SW_API_FLOW_QOS_GET, NULL},
+            {"npt66_prefix", "add", "add flow npt66_prefix entry", "<if_index> <ip6_addr> <prefix_len>",
+            SW_API_FLOW_NPT66_PREFIX_ADD, NULL},
+            {"npt66_prefix", "get", "get flow npt66_prefix entry", "<if_index>", SW_API_FLOW_NPT66_PREFIX_GET, NULL},
+            {"npt66_prefix", "del", "del flow npt66_prefix entry", "<if_index>", SW_API_FLOW_NPT66_PREFIX_DEL, NULL},
+            {"npt66_iid", "cal", "cal flow npt66_iid entry", "", SW_API_FLOW_NPT66_IID_CAL, NULL},
+            {"npt66_iid", "add", "add flow npt66_iid entry", "<flow_index>", SW_API_FLOW_NPT66_IID_ADD, NULL},
+            {"npt66_iid", "get", "get flow npt66_iid entry", "<flow_index>", SW_API_FLOW_NPT66_IID_GET, NULL},
+            {"npt66_iid", "del", "del flow npt66_iid entry", "<flow_index>", SW_API_FLOW_NPT66_IID_DEL, NULL},
+
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
