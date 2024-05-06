@@ -1379,6 +1379,10 @@ sw_error_t
 cmd_data_check_flow_npt66_iid(char *cmd_str, fal_flow_npt66_iid_t *arg_val, a_uint32_t size);
 void
 cmd_data_print_flow_npt66_iid(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_pktedit_padding(char *cmd_str, void *val, a_uint32_t size);
+void
+cmd_data_print_pktedit_padding(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
 
 /* auto_insert_flag */
 

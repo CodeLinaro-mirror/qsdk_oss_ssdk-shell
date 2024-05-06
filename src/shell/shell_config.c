@@ -1908,6 +1908,20 @@ struct cmd_des_t gcmd_des[] =
 	},
 #endif
 
+/* PKTEDIT */
+#ifdef IN_PKTEDIT
+	{
+		"pktedit", "config pktedit",
+		{
+			{"padding", "set", "set padding configurations", "padding",
+				SW_API_PKTEDIT_PADDING_SET, NULL},
+			{"padding", "get", "get padding configurations", "",
+				SW_API_PKTEDIT_PADDING_GET, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
 /* auto_insert_flag */
 
 /*qca808x_start*/
