@@ -632,8 +632,10 @@ cmd_socket_init(int dev_id)
 
     if (flag == 0)
     {
-        aos_mem_set(&ssdk_cfg, 0 ,sizeof(ssdk_cfg_t));
-        rv = sw_uk_exec(SW_API_SSDK_CFG, dev_id, &ssdk_cfg);
+        aos_mem_set(ioctl_buf, 0 , IOCTL_BUF_SIZE);
+        rv = sw_uk_exec(SW_API_SSDK_CFG, dev_id, ioctl_buf);
+        aos_mem_copy(&ssdk_cfg, ioctl_buf, sizeof(ssdk_cfg_t));
+        aos_mem_set(ioctl_buf, 0 , IOCTL_BUF_SIZE);
         flag = 1;
     }
     return rv;
