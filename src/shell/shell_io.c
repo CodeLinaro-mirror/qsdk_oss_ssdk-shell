@@ -905,6 +905,8 @@ static sw_data_type_t sw_data_type[] =
     		cmd_data_print_flow_npt66_iid_cal),
 	SW_TYPE_DEF(SW_FLOW_NPT66_IID, cmd_data_check_flow_npt66_iid,
 		cmd_data_print_flow_npt66_iid),
+	SW_TYPE_DEF(SW_PKTEDIT_PADDING, cmd_data_check_pktedit_padding,
+		    cmd_data_print_pktedit_padding),
 
 /* auto_insert_flag */
 /*qca808x_start*/
@@ -42482,5 +42484,69 @@ cmd_data_print_flow_npt66_iid(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t 
 	dprintf("\n");
 }
 
+sw_error_t
+cmd_data_check_pktedit_padding(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_pktedit_padding_t entry;
+
+	memset(&entry, 0, sizeof (fal_pktedit_padding_t));
+
+	cmd_data_check_element("srip padding enable", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.strip_padding_en, sizeof (a_bool_t)));
+
+	cmd_data_check_element("srip padding route enable", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.strip_padding_route_en, sizeof (a_bool_t)));
+
+	cmd_data_check_element("srip padding bridge enable", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.strip_padding_bridge_en, sizeof (a_bool_t)));
+
+	cmd_data_check_element("srip padding checksum enable", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.strip_padding_checksum_en, sizeof (a_bool_t)));
+
+	cmd_data_check_element("srip padding snap enable", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.strip_padding_snap_en, sizeof (a_bool_t)));
+
+	cmd_data_check_element("srip tunnel inner padding enable", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.strip_tunnel_inner_padding_en, sizeof (a_bool_t)));
+
+	cmd_data_check_element("tunnel inner padding exception enable", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.tunnel_inner_padding_exp_en, sizeof (a_bool_t)));
+
+	cmd_data_check_element("tunnel ip length gap exception enable", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.tunnel_ip_len_gap_exp_en, sizeof (a_bool_t)));
+
+	*(fal_pktedit_padding_t *) val = entry;
+	return SW_OK;
+}
+
+void
+cmd_data_print_pktedit_padding(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_pktedit_padding_t *entry;
+
+	entry = (fal_pktedit_padding_t *) buf;
+
+	dprintf("\n[strip_padding_en]:%s", (entry->strip_padding_en) ? "YES" : "NO");
+	dprintf("\n[strip_padding_route_en]:%s", (entry->strip_padding_route_en) ? "YES" : "NO");
+	dprintf("\n[strip_padding_bridge_en]:%s", (entry->strip_padding_bridge_en) ? "YES" : "NO");
+	dprintf("\n[strip_padding_checksum_en]:%s",
+		(entry->strip_padding_checksum_en) ? "YES" : "NO");
+	dprintf("\n[strip_padding_snap_en]:%s", (entry->strip_padding_snap_en) ? "YES" : "NO");
+	dprintf("\n[strip_tunnel_inner_padding_en]:%s",
+		(entry->strip_tunnel_inner_padding_en) ? "YES" : "NO");
+	dprintf("\n[tunnel_inner_padding_exp_en]:%s",
+		(entry->tunnel_inner_padding_exp_en) ? "YES" : "NO");
+	dprintf("\n[tunnel_ip_len_gap_exp_en]:%s",
+		(entry->tunnel_ip_len_gap_exp_en) ? "YES" : "NO");
+}
 
 /* auto_insert_flag_1 */
