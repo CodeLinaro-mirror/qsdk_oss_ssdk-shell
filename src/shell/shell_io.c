@@ -23333,54 +23333,6 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
                                cmd_data_check_ip6addr, (cmd, &(entry.flow_ip.ipv6), 16));
     }
 
-    do
-    {
-        cmd = get_sub_cmd("tree id", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: tree id \n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(flow_qos->tree_id), sizeof (a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: tree id \n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)  {
-    do
-    {
-        cmd = get_sub_cmd("flow_cookie_ext", "0");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: flow_cookie_ext \n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_uint32(cmd, &(flow_qos->flow_cookie_ext), sizeof (a_uint32_t));
-            if (SW_OK != rv)
-                dprintf("usage: flow_cookie_ext \n");
-        }
-    }
-    while (talk_mode && (SW_OK != rv));
-    }
-
     if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
 	    do
@@ -23524,49 +23476,8 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 	    }
 	    while (talk_mode && (SW_OK != rv));
 
-	    do {
-		    cmd = get_sub_cmd("wifi_qos_en", "no");
-		    SW_RTN_ON_NULL_PARAM(cmd);
-
-		    if (!strncasecmp(cmd, "quit", 4)) {
-			    return SW_BAD_VALUE;
-		    }
-		    else if (!strncasecmp(cmd, "help", 4)) {
-			    dprintf("usage: <yes/no/y/n>\n");
-			    rv = SW_BAD_VALUE;
-		    }
-		    else {
-			    rv = cmd_data_check_confirm(cmd, A_TRUE, &(flow_qos->wifi_qos_en),
-					    sizeof (a_bool_t));
-			    if (SW_OK != rv)
-				    dprintf("usage: <yes/no/y/n>\n");
-		    }
-	    } while (talk_mode && (SW_OK != rv));
-
-	    do {
-		    cmd = get_sub_cmd("wifi_qos", "0");
-		    SW_RTN_ON_NULL_PARAM(cmd);
-
-		    if (!strncasecmp(cmd, "quit", 4)) {
-			    return SW_BAD_VALUE;
-		    }
-		    else if (!strncasecmp(cmd, "help", 4)) {
-			    dprintf("usage: wifi qos profile\n");
-			    rv = SW_BAD_VALUE;
-		    }
-		    else {
-			    rv = cmd_data_check_uint32(cmd, &(flow_qos->wifi_qos), sizeof(a_uint32_t));
-			    if (SW_OK != rv)
-				    dprintf("usage: wifi qos profile\n");
-		    }
-	    } while (talk_mode && (SW_OK != rv));
-
 	    if ((ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
-		    cmd_data_check_element("qos_type", "0",
-				    "usage: 0 for tree_id, 1 for flowcookie\n",
-				    cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
-		    flow_qos->qos_type = tmp;
 
 		    cmd_data_check_element("bridge_nexthop_valid", "no",
 				    "usage: <yes/no/y/n>\n",
@@ -23590,6 +23501,8 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 		    entry.policer_index = tmp;
 	    }
     }
+
+    cmd_data_check_flow_qos(cmd_str, flow_qos, size);
 
     *(fal_flow_entry_t *)val = entry;
     return SW_OK;
@@ -23620,20 +23533,17 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		    entry->port_valid, entry->route_port, entry->bridge_port,
 		    entry->deacclr_en, entry->copy_tocpu_en);
     dprintf("\n[syn_toggle]:0x%x [pri_profile]:0x%x [sevice_code]:0x%x [ip_type]:0x%x \
-		    [src_port]:0x%x [dst_port]:0x%x [tree_id]:0x%x [flow_cookie_ext]:0x%x",
+		    [src_port]:0x%x [dst_port]:0x%x",
 		    entry->syn_toggle, entry->pri_profile, entry->sevice_code,
-		    entry->ip_type, entry->src_port, entry->dst_port, flow_qos->tree_id, flow_qos->flow_cookie_ext);
+		    entry->ip_type, entry->src_port, entry->dst_port);
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
 	    dprintf("\n[pmtu_check_l3]:0x%x [pmtu]:0x%x [vpn_id]:0x%x",
 			    entry->pmtu_check_l3, entry->pmtu, entry->vpn_id);
 	    dprintf("\n[bridge_vlan_format_valid]:0x%x [bridge_svlan_format]:0x%x \
 			    [bridge_cvlan_format]:0x%x",
 			    entry->vlan_fmt_valid, entry->svlan_fmt, entry->cvlan_fmt);
-	    cmd_data_print_confirm(" [wifi_qos_en]:", flow_qos->wifi_qos_en, sizeof(a_bool_t));
-	    dprintf(" [wifi_qos]:0x%x", flow_qos->wifi_qos);
 
 	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
-		    dprintf(" [qos_type]:0x%x", flow_qos->qos_type);
 		    cmd_data_print_confirm(" [bridge_nexthop_valid]:",
 				    entry->bridge_nexthop_valid, sizeof(a_bool_t));
 		    dprintf(" [bridge_nexthop]:0x%x", entry->bridge_nexthop);
@@ -23654,6 +23564,9 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
                                (a_uint32_t *) & (entry->flow_ip.ipv6),
                                sizeof (fal_ip6_addr_t));
     }
+
+    cmd_data_print_flow_qos(param_name, (a_ulong_t *)flow_qos, size);
+
     dprintf("\n[pkt]:0x%x [byte]:0x%x ", entry->pkt_counter, entry->byte_counter);
 }
 
@@ -41354,30 +41267,51 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
         cmd_data_check_element("tree_id", "0",
 			"usage: tree id for qos\n",
 			cmd_data_check_uint32,
-			(cmd, &(entry.tree_id), sizeof(entry.tree_id)));
+			(cmd, &tmp, sizeof(tmp)));
+	memcpy(entry.tree_id, &tmp, sizeof(entry.tree_id));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) {
-        cmd_data_check_element("flow_cookie_ext", "0",
-			"usage: flow_cookie_ext for qos\n",
-			cmd_data_check_uint32,
-			(cmd, &(entry.flow_cookie_ext), sizeof(entry.flow_cookie_ext)));
+	if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
+			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
+		cmd_data_check_element("wifi_qos_en", "disable",
+				"usage: usage: enable/disable\n",
+				cmd_data_check_enable,
+				(cmd, &(entry.qos_valid), sizeof(entry.qos_valid)));
+
+		cmd_data_check_element("wifi_qos", "0",
+				"usage: wifi qos value\n",
+				cmd_data_check_uint32,
+				(cmd, &tmp, sizeof(tmp)));
+		entry.qos = tmp;
 	}
-        cmd_data_check_element("wifi_qos_en", "disable",
-			"usage: usage: enable/disable\n",
-			cmd_data_check_enable,
-			(cmd, &(entry.wifi_qos_en), sizeof(entry.wifi_qos_en)));
-
-        cmd_data_check_element("wifi_qos", "0",
-			"usage: wifi qos value\n",
-			cmd_data_check_uint32,
-			(cmd, &(entry.wifi_qos), sizeof(entry.wifi_qos)));
 
 	if ((ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ||
-		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
+			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
+		a_uint64_t cookie;
+
 		cmd_data_check_element("qos_type", "0",
-				"usage: 0 for tree_id, 1 for flowcookie\n",
+				"usage: 0 for tree_id, 1 for 16 bit flow cookie,"
+				"2 for 40 bit flow cookie, 3 for 48 bit flow cookie\n",
 				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
-		entry.qos_type = tmp;
+		entry.type = tmp;
+
+		cmd_data_check_element("flow_cookie", "0",
+				"usage: flow_cookie for qos\n",
+				cmd_data_check_uint64,
+				(cmd, &cookie, sizeof(cookie)));
+		
+		switch (entry.type) {
+		case FAL_FLOW_QOS_TYPE_COOKIE_16B:
+			memcpy(entry.cookie_16b, &cookie, sizeof(entry.cookie_16b));
+			break;
+		case FAL_FLOW_QOS_TYPE_COOKIE_40B:
+			memcpy(entry.cookie_40b, &cookie, sizeof(entry.cookie_40b));
+			break;
+		case FAL_FLOW_QOS_TYPE_COOKIE_48B:
+			memcpy(entry.cookie_48b, &cookie, sizeof(entry.cookie_48b));
+			break;
+		default:
+			break;
+		}
 	}
 
 	*arg_val = entry;
@@ -41389,20 +41323,51 @@ void
 cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 {
 	fal_flow_qos_t *entry;
+	a_uint32_t tree_id;
+	a_uint64_t flow_cookie;
 
 	entry = (fal_flow_qos_t *)buf;
 
 	dprintf("\n[%s] \n", param_name);
 
-	cmd_data_print_uint32("tree_id", &entry->tree_id, sizeof(entry->tree_id));
-	cmd_data_print_uint32("flow_cookie_ext", &entry->flow_cookie_ext, sizeof(entry->flow_cookie_ext));	
-	cmd_data_print_enable("wifi_qos_en", &entry->wifi_qos_en, sizeof(entry->wifi_qos_en));
-	cmd_data_print_uint32("wifi_qos", &entry->wifi_qos, sizeof(entry->wifi_qos));
+	memcpy(&tree_id, entry->tree_id, sizeof(entry->tree_id));
+
+	/* tree_id is the union with flow cookie, print tree_id as 0 if the
+	 * type is not the tree id.
+	 */
+	if (entry->type != FAL_FLOW_QOS_TYPE_TREE_ID)
+		tree_id = 0;
+
+	cmd_data_print_uint32("tree_id", &tree_id, sizeof(tree_id));
+
+	if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
+			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
+		cmd_data_print_enable("wifi_qos_en", &entry->qos_valid, sizeof(entry->qos_valid));
+		cmd_data_print_uint32("wifi_qos", (a_uint32_t *)&entry->qos, sizeof(entry->qos));
+	};
 
 	if ((ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)) {
-		cmd_data_print_uint8("qos_type", (a_uint32_t *)&entry->qos_type,
-				sizeof(a_uint32_t));
+		cmd_data_print_uint8("type", (a_uint32_t *)&entry->type, sizeof(a_uint32_t));
+
+		switch (entry->type) {
+		case FAL_FLOW_QOS_TYPE_TREE_ID:
+			flow_cookie = 0;
+			break;
+		case FAL_FLOW_QOS_TYPE_COOKIE_16B:
+			memcpy(&flow_cookie, entry->cookie_16b, sizeof(entry->cookie_16b));
+			break;
+		case FAL_FLOW_QOS_TYPE_COOKIE_40B:
+			memcpy(&flow_cookie, entry->cookie_40b, sizeof(entry->cookie_40b));
+			break;
+		case FAL_FLOW_QOS_TYPE_COOKIE_48B:
+			memcpy(&flow_cookie, entry->cookie_48b, sizeof(entry->cookie_48b));
+			break;
+		default:
+			break;
+		}
+
+		cmd_data_print_uint64("flow_cookie", &flow_cookie, sizeof(flow_cookie));
 	}
 
 	dprintf("\n");
