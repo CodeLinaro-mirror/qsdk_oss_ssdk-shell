@@ -1155,3 +1155,34 @@ fal_port_erp_power_mode_set(a_uint32_t dev_id,
 
 	return rv;
 }
+
+sw_error_t
+fal_port_erp_power_mode_get(a_uint32_t dev_id,
+		fal_port_t port_id, fal_port_erp_power_mode_t *power_mode)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_ERP_POWER_MODE_GET, dev_id, port_id, power_mode);
+
+	return rv;
+}
+
+sw_error_t
+fal_erp_standby_enter (a_uint32_t dev_id, a_uint32_t active_pbmap)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_ERP_STANDBY_ENTER, dev_id, active_pbmap);
+
+	return rv;
+}
+
+sw_error_t
+fal_erp_standby_exit (a_uint32_t dev_id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_ERP_STANDBY_EXIT, dev_id);
+
+	return rv;
+}
