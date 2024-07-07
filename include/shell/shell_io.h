@@ -1359,6 +1359,8 @@ void
 cmd_data_print_combo_link(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 sw_error_t
 cmd_data_check_erp_power_mode(char * cmd_str, a_uint32_t * val, a_uint32_t size);
+void
+cmd_data_print_erp_power_mode(a_char_t * param_name, a_uint32_t * buf, a_uint32_t size);
 sw_error_t
 cmd_data_check_toeplitz_hash_secret_key(char *cmd_str, a_uint32_t * arg_val, a_uint32_t size);
 void
