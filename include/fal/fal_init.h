@@ -86,6 +86,8 @@ typedef struct
 	a_uint32_t service_code_caps;
 	a_uint32_t pppoe_session_caps;
 	a_uint32_t policer_caps;
+	a_uint32_t ipv6_prefix_caps;
+	a_uint32_t ipv6_iid_caps;
 } fal_ppe_tbl_caps_t;
 
 sw_error_t fal_init(a_uint32_t dev_id, ssdk_init_cfg * cfg);

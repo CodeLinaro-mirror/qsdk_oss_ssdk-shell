@@ -258,6 +258,12 @@ struct cmd_des_t gcmd_des[] =
                 SW_API_PT_COMBO_LINK_STATUS_GET, NULL},
             {"erppowermode", "set", "set port erp power mode", "<port_id> <0:active|1:low_power>",
                 SW_API_PT_ERP_POWER_MODE_SET, NULL},
+	    {"erppowermode", "get", "get port erp power mode", "<port_id>",
+		SW_API_PT_ERP_POWER_MODE_GET, NULL},
+	    {"erpstandby", "enter", "enter standby", "<active_pbmap>",
+		SW_API_PT_ERP_STANDBY_ENTER, NULL},
+	    {"erpstandby", "exit", "exit standby", "",
+		SW_API_PT_ERP_STANDBY_EXIT, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },
