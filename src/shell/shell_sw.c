@@ -113,34 +113,6 @@ cmd_show_fdb(a_ulong_t *arg_val)
 			cmd_print_error(rtn);
 		else
 			dprintf("\ntotal %d entries\n", cnt);
-	}else if (ssdk_cfg.init_cfg.chip_type == CHIP_SHIVA) {
-		sw_error_t rtn;
-		a_uint32_t cnt = 0;
-		fal_fdb_entry_t *fdb_entry = (fal_fdb_entry_t *) (ioctl_buf + 2);
-
-		memset(fdb_entry, 0, sizeof (fal_fdb_entry_t));
-		arg_val[0] = SW_API_FDB_ITERATE;
-		*(ioctl_buf + 1) = 0;
-
-		while (1)
-		{
-			arg_val[1] = (a_ulong_t) ioctl_buf;
-			arg_val[2] = get_devid();
-			arg_val[3] = (a_ulong_t) (ioctl_buf + 1);
-			arg_val[4] = (a_ulong_t) fdb_entry;
-
-			rtn = cmd_exec_api(arg_val);
-			if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
-			{
-				break;
-			}
-			cnt++;
-		}
-
-		if((rtn != SW_OK) && (rtn != SW_NO_MORE))
-			cmd_print_error(rtn);
-		else
-			dprintf("\ntotal %d entries\n", cnt);
 	}else {
 		sw_error_t rtn;
 		a_uint32_t cnt = 0;
@@ -227,12 +199,6 @@ cmd_show_vlan(a_ulong_t *arg_val)
 		case CHIP_MHT:
 		case CHIP_DESS:
 			tmp_vid = FAL_NEXT_ENTRY_FIRST_ID;
-			break;
-		case CHIP_ATHENA:
-		case CHIP_GARUDA:
-		case CHIP_SHIVA:
-		case CHIP_HORUS:
-			tmp_vid = 0;
 			break;
 		default:
 			return SW_NOT_SUPPORTED;

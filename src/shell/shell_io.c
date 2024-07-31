@@ -11853,15 +11853,7 @@ _cmd_collect_shell_cfg(ssdk_cfg_t *shell_cfg)
     aos_mem_copy(shell_cfg->build_date, BUILD_DATE, sizeof(BUILD_DATE));
 #endif
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_ATHENA)
-        aos_mem_copy(shell_cfg->chip_type, "athena", sizeof("athena"));
-    else if (ssdk_cfg.init_cfg.chip_type == CHIP_GARUDA)
-        aos_mem_copy(shell_cfg->chip_type, "garuda", sizeof("garuda"));
-    else if (ssdk_cfg.init_cfg.chip_type == CHIP_SHIVA)
-        aos_mem_copy(shell_cfg->chip_type, "shiva", sizeof("shiva"));
-    else if (ssdk_cfg.init_cfg.chip_type == CHIP_HORUS)
-        aos_mem_copy(shell_cfg->chip_type, "horus", sizeof("horus"));
-    else if (ssdk_cfg.init_cfg.chip_type == CHIP_ISIS)
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_ISIS)
         aos_mem_copy(shell_cfg->chip_type, "isis", sizeof("isis"));
     else if (ssdk_cfg.init_cfg.chip_type == CHIP_ISISC)
         aos_mem_copy(shell_cfg->chip_type, "isisc", sizeof("isisc"));

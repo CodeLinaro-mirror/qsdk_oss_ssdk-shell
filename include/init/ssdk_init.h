@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2017-2019, 2021, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -122,11 +122,7 @@ extern "C" {
     typedef enum
     {
 	    CHIP_UNSPECIFIED = 0,
-	    CHIP_ATHENA,
-	    CHIP_GARUDA,
-	    CHIP_SHIVA,
-	    CHIP_HORUS,
-	    CHIP_ISIS,
+	    CHIP_ISIS = 5,
 	    CHIP_ISISC,
 	    CHIP_DESS,
 	    CHIP_HPPE,
@@ -183,58 +179,8 @@ typedef struct
 	a_uint32_t      mac_mode2;
 } ssdk_init_cfg;
 /*qca808x_end*/
-#if defined ATHENA
-#define def_init_cfg  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_CPU_2};
-#elif defined GARUDA
 
-#define def_init_cfg_cpu2  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_CPU_2,};
-
-#define def_init_spec_cfg_cpu2 {.mac0_rgmii = A_TRUE, .mac5_rgmii = A_TRUE, \
-                    .rx_delay_s0 = A_FALSE, .rx_delay_s1 = A_FALSE, \
-                    .tx_delay_s0 = A_TRUE,  .tx_delay_s1 = A_FALSE,\
-                    .rgmii_rxclk_delay = A_TRUE, .rgmii_txclk_delay = A_TRUE,\
-                    .phy4_rx_delay = A_TRUE, .phy4_tx_delay = A_TRUE,}
-
-#define def_init_cfg_cpu1  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_CPU_1,};
-
-#define def_init_spec_cfg_cpu1 {.mac0_rgmii = A_TRUE, .mac5_rgmii = A_FALSE, \
-                    .rx_delay_s0 = A_FALSE, .rx_delay_s1 = A_FALSE, \
-                    .tx_delay_s0 = A_TRUE,  .tx_delay_s1 = A_FALSE,\
-                    .rgmii_rxclk_delay = A_TRUE, .rgmii_txclk_delay = A_TRUE, \
-                    .phy4_rx_delay = A_TRUE, .phy4_tx_delay = A_TRUE,}
-
-#define def_init_cfg_cpu1plus  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_CPU_1_PLUS,};
-
-#define def_init_spec_cfg_cpu1plus {.mac0_rgmii = A_TRUE, .mac5_rgmii = A_FALSE, \
-                    .rx_delay_s0 = A_FALSE, .rx_delay_s1 = A_FALSE, \
-                    .tx_delay_s0 = A_FALSE,  .tx_delay_s1 = A_FALSE,\
-                    .rgmii_rxclk_delay = A_TRUE, .rgmii_txclk_delay = A_TRUE, \
-                    .phy4_rx_delay = A_TRUE, .phy4_tx_delay = A_TRUE,}
-
-#define def_init_cfg_nocpu  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_NO_CPU,};
-
-#define def_init_spec_cfg_nocpu { .mac0_rgmii = A_FALSE, .mac5_rgmii = A_FALSE, \
-                    .rx_delay_s0 = A_FALSE, .rx_delay_s1 = A_FALSE, \
-                    .tx_delay_s0 = A_FALSE,  .tx_delay_s1 = A_FALSE,\
-                    .rgmii_rxclk_delay = A_TRUE, .rgmii_txclk_delay = A_TRUE, \
-                    .phy4_rx_delay = A_TRUE, .phy4_tx_delay = A_TRUE,}
-
-#define def_init_cfg_cpu1_gmii  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_CPU_1,};
-
-#define def_init_spec_cfg_cpu1_gmii {.mac0_rgmii = A_FALSE, .mac5_rgmii = A_FALSE, \
-                    .rx_delay_s0 = A_FALSE, .rx_delay_s1 = A_FALSE, \
-                    .tx_delay_s0 = A_TRUE,  .tx_delay_s1 = A_FALSE,\
-                    .rgmii_rxclk_delay = A_TRUE, .rgmii_txclk_delay = A_TRUE, \
-                    .phy4_rx_delay = A_TRUE, .phy4_tx_delay = A_TRUE,}
-
-#define def_init_cfg def_init_cfg_cpu2
-#define def_init_spec_cfg def_init_spec_cfg_cpu2
-
-#elif defined SHIVA
-#define def_init_cfg  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_CPU_2};
-#elif defined HORUS
-#define def_init_cfg  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_CPU_2};
-#elif defined ISIS
+#if defined ISIS
 #define def_init_cfg  {.reg_mode = HSL_MDIO, .cpu_mode = HSL_CPU_2};
 #elif defined ISISC
 /*qca808x_start*/

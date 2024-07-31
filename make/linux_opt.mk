@@ -216,26 +216,6 @@ MODULE_INC += -I$(PRJ_PATH)/include \
                    -I$(PRJ_PATH)/include/sal/sd/linux/uk_interface \
                    -I$(PRJ_PATH)/include/init
 
-ifneq (,$(findstring ATHENA, $(SUPPORT_CHIP)))
-  MODULE_INC   += -I$(PRJ_PATH)/include/hsl/athena
-  MODULE_CFLAG += -DATHENA
-endif
-
-ifneq (,$(findstring GARUDA, $(SUPPORT_CHIP)))
-  MODULE_INC   += -I$(PRJ_PATH)/include/hsl/garuda
-  MODULE_CFLAG += -DGARUDA
-endif
-
-ifneq (,$(findstring SHIVA, $(SUPPORT_CHIP)))
-  MODULE_INC   += -I$(PRJ_PATH)/include/hsl/shiva
-  MODULE_CFLAG += -DSHIVA
-endif
-
-ifneq (,$(findstring HORUS, $(SUPPORT_CHIP)))
-  MODULE_INC   += -I$(PRJ_PATH)/include/hsl/horus
-  MODULE_CFLAG += -DHORUS
-endif
-
 ifneq (,$(findstring ISIS, $(SUPPORT_CHIP)))
   ifneq (ISISC, $(SUPPORT_CHIP))
      MODULE_INC   += -I$(PRJ_PATH)/include/hsl/isis

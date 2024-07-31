@@ -1,5 +1,8 @@
 /*
  * Copyright (c) 2014,2018, The Linux Foundation. All rights reserved.
+ *
+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
  * above copyright notice and this permission notice appear in all copies.
@@ -19,71 +22,7 @@
 #if (defined(KERNEL_MODULE))
 #include "hsl.h"
 #include "hsl_dev.h"
-#if defined ATHENA
-#include "fal_igmp.h"
-#include "fal_leaky.h"
-#include "athena_mib.h"
-#include "athena_port_ctrl.h"
-#include "athena_portvlan.h"
-#include "athena_fdb.h"
-#include "athena_vlan.h"
-#include "athena_init.h"
-#include "athena_reg_access.h"
-#include "athena_reg.h"
-#elif defined GARUDA
-#include "garuda_mib.h"
-#include "garuda_qos.h"
-#include "garuda_rate.h"
-#include "garuda_port_ctrl.h"
-#include "garuda_portvlan.h"
-#include "garuda_fdb.h"
-#include "garuda_vlan.h"
-#include "garuda_mirror.h"
-#include "garuda_stp.h"
-#include "garuda_misc.h"
-#include "garuda_leaky.h"
-#include "garuda_igmp.h"
-#include "garuda_acl.h"
-#include "garuda_led.h"
-#include "garuda_init.h"
-#include "garuda_reg_access.h"
-#include "garuda_reg.h"
-#elif defined SHIVA
-#include "shiva_mib.h"
-#include "shiva_qos.h"
-#include "shiva_rate.h"
-#include "shiva_port_ctrl.h"
-#include "shiva_portvlan.h"
-#include "shiva_fdb.h"
-#include "shiva_vlan.h"
-#include "shiva_mirror.h"
-#include "shiva_stp.h"
-#include "shiva_misc.h"
-#include "shiva_leaky.h"
-#include "shiva_igmp.h"
-#include "shiva_acl.h"
-#include "shiva_led.h"
-#include "shiva_init.h"
-#include "shiva_reg_access.h"
-#include "shiva_reg.h"
-#elif defined HORUS
-#include "horus_mib.h"
-#include "horus_qos.h"
-#include "horus_rate.h"
-#include "horus_port_ctrl.h"
-#include "horus_portvlan.h"
-#include "horus_fdb.h"
-#include "horus_vlan.h"
-#include "horus_mirror.h"
-#include "horus_stp.h"
-#include "horus_misc.h"
-#include "horus_leaky.h"
-#include "horus_igmp.h"
-#include "horus_led.h"
-#include "horus_init.h"
-#include "horus_reg_access.h"
-#include "horus_reg.h"
-#elif defined ISIS
+#if defined ISIS
 #include "isis_mib.h"
 #include "isis_qos.h"
 #include "isis_cosmap.h"
@@ -141,15 +80,7 @@
 /*qca808x_end*/
 #if (((!defined(USER_MODE)) && defined(KERNEL_MODULE)) || (defined(USER_MODE) && (!defined(KERNEL_MODULE))))
 #ifdef HSL_STANDALONG
-#if defined ATHENA
-#include "athena_api.h"
-#elif defined GARUDA
-#include "garuda_api.h"
-#elif defined SHIVA
-#include "shiva_api.h"
-#elif defined HORUS
-#include "horus_api.h"
-#elif defined ISIS
+#if defined ISIS
 #include "isis_api.h"
 #elif defined ISISC
 #include "isisc_api.h"
@@ -159,15 +90,7 @@
 #include "fal_api.h"
 #endif
 #elif (defined(USER_MODE))
-#if defined ATHENA
-#include "athena_api.h"
-#elif defined GARUDA
-#include "garuda_api.h"
-#elif defined SHIVA
-#include "shiva_api.h"
-#elif defined HORUS
-#include "horus_api.h"
-#elif defined ISIS
+#if defined ISIS
 #include "isis_api.h"
 #elif defined ISISC
 #include "isisc_api.h"

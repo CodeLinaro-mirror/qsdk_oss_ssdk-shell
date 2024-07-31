@@ -340,7 +340,6 @@ struct cmd_des_t gcmd_des[] =
 		    "<tpid>", SW_API_NESTVLAN_TPID_SET, NULL},
             {"sVlanTPID", "get", "get service VLAN tpid",
 		    "", SW_API_NESTVLAN_TPID_GET, NULL},
-            /*shiva*/
             {"invlan", "set", "set port invlan mode",
 		    "<port_id> <admit_all|admit_tagged|admit_untagged>",
 		    SW_API_PT_IN_VLAN_MODE_SET, NULL},
