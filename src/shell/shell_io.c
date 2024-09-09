@@ -23528,14 +23528,16 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		    [src_port]:0x%x [dst_port]:0x%x",
 		    entry->syn_toggle, entry->pri_profile, entry->sevice_code,
 		    entry->ip_type, entry->src_port, entry->dst_port);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
+		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)) {
 	    dprintf("\n[pmtu_check_l3]:0x%x [pmtu]:0x%x [vpn_id]:0x%x",
 			    entry->pmtu_check_l3, entry->pmtu, entry->vpn_id);
 	    dprintf("\n[bridge_vlan_format_valid]:0x%x [bridge_svlan_format]:0x%x \
 			    [bridge_cvlan_format]:0x%x",
 			    entry->vlan_fmt_valid, entry->svlan_fmt, entry->cvlan_fmt);
 
-	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	    if ((ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ||
+			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)) {
 		    cmd_data_print_confirm(" [bridge_nexthop_valid]:",
 				    entry->bridge_nexthop_valid, sizeof(a_bool_t));
 		    dprintf(" [bridge_nexthop]:0x%x", entry->bridge_nexthop);
