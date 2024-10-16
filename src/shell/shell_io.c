@@ -1840,20 +1840,8 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
 
     if (!strncasecmp(cmd_str, "psgmii_baset", 13))
         *arg_val = PHY_PSGMII_BASET;
-    else if (!strncasecmp(cmd_str, "psgmii_bx1000", 14))
-        *arg_val = PHY_PSGMII_BX1000;
-    else if (!strncasecmp(cmd_str, "psgmii_fx100", 13))
-        *arg_val = PHY_PSGMII_FX100;
-    else if (!strncasecmp(cmd_str, "psgmii_amdet", 13))
-        *arg_val = PHY_PSGMII_AMDET;
-    else if (!strncasecmp(cmd_str, "rgmii_amdet", 13))
-        *arg_val = PORT_RGMII_AMDET;
     else if (!strncasecmp(cmd_str, "rgmii_baset", 13))
         *arg_val = PORT_RGMII_BASET;
-    else if (!strncasecmp(cmd_str, "rgmii_bx1000", 13))
-        *arg_val = PORT_RGMII_BX1000;
-    else if (!strncasecmp(cmd_str, "rgmii_fx100", 13))
-        *arg_val = PORT_RGMII_FX100;
     else if (!strncasecmp(cmd_str, "sgmii_baset", 13))
         *arg_val = PHY_SGMII_BASET;
     else if (!strncasecmp(cmd_str, "qsgmii", 13))
@@ -1866,12 +1854,8 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
 	  *arg_val = PORT_10GBASE_R;
     else if (!strncasecmp(cmd_str, "sgmii_fiber", 20))
 	  *arg_val = PORT_SGMII_FIBER;
-    else if (!strncasecmp(cmd_str, "psgmii_fiber", 20))
-	  *arg_val = PHY_PSGMII_FIBER;
     else if (!strncasecmp(cmd_str, "uqxgmii", 20))
 	  *arg_val = PORT_UQXGMII;
-    else if (!strncasecmp(cmd_str, "uqxgmii_3channels", 20))
-	  *arg_val = PORT_UQXGMII_3CHANNELS;
     else if (!strncasecmp(cmd_str, "auto", 5))
 	  *arg_val = PORT_INTERFACE_MODE_AUTO;
     else if (!strncasecmp(cmd_str, "interfacemode_max", 20))
@@ -1893,33 +1877,9 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     {
         dprintf("PSGMII_BASET");
     }
-    else if (*(a_uint32_t *) buf == PHY_PSGMII_BX1000)
-    {
-        dprintf("PSGMII_BX1000");
-    }
-    else if (*(a_uint32_t *) buf == PHY_PSGMII_FX100)
-    {
-	    dprintf("PSGMII_FX100");
-    }
-    else if (*(a_uint32_t *) buf == PHY_PSGMII_AMDET)
-    {
-	    dprintf("PSGMII_AMDET");
-    }
-    else if (*(a_uint32_t *) buf == PORT_RGMII_AMDET)
-    {
-	    dprintf("RGMII_AMDET");
-    }
     else if (*(a_uint32_t *) buf == PORT_RGMII_BASET)
     {
 	    dprintf("RGMII_BASET");
-    }
-    else if (*(a_uint32_t *) buf == PORT_RGMII_BX1000)
-    {
-	    dprintf("RGMII_BX1000");
-    }
-    else if (*(a_uint32_t *) buf == PORT_RGMII_FX100)
-    {
-	    dprintf("RGMII_FX100");
     }
     else if (*(a_uint32_t *) buf == PHY_SGMII_BASET)
     {
@@ -1945,17 +1905,9 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     {
 	    dprintf("sgmii_fiber");
     }
-    else if (*(a_uint32_t *) buf == PHY_PSGMII_FIBER)
-    {
-	    dprintf("psgmii_fiber");
-    }
     else if(*(a_uint32_t *) buf == PORT_UQXGMII)
     {
 	    dprintf("uqxgmii");
-    }
-    else if(*(a_uint32_t *) buf == PORT_UQXGMII_3CHANNELS)
-    {
-	    dprintf("uqxgmii_3channels");
     }
     else if(*(a_uint32_t *) buf == PORT_INTERFACE_MODE_AUTO)
     {
