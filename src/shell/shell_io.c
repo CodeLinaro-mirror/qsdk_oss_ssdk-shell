@@ -41260,7 +41260,7 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 
 	if ((ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)){
-		a_uint64_t cookie;
+		a_uint64_t cookie = 0;
 
 		cmd_data_check_element("qos_type", "0",
 				"usage: 0 for tree_id, 1 for 16 bit flow cookie,"
