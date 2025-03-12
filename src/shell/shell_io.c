@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022-2024, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2025, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -725,7 +725,6 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_ACL_UDF_PKT_TYPE, cmd_data_check_udf_pkt_type, cmd_data_print_udf_pkt_type),
     SW_TYPE_DEF(SW_PORTGROUP, cmd_data_check_port_group, cmd_data_print_port_group),
     SW_TYPE_DEF(SW_PORTPRI, cmd_data_check_port_pri, cmd_data_print_port_pri),
-    SW_TYPE_DEF(SW_PORTREMARK, cmd_data_check_port_remark, cmd_data_print_port_remark),
     SW_TYPE_DEF(SW_COSMAP, cmd_data_check_cosmap, cmd_data_print_cosmap),
     SW_TYPE_DEF(SW_SCHEDULER, cmd_data_check_queue_scheduler, cmd_data_print_queue_scheduler),
     SW_TYPE_DEF(SW_QUEUEBMP, cmd_data_check_ring_queue, cmd_data_print_ring_queue),
@@ -20984,105 +20983,6 @@ cmd_data_print_port_pri(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 	}
 
 	dprintf("\n");
-}
-
-sw_error_t
-cmd_data_check_port_remark(char *cmd_str, void * val, a_uint32_t size)
-{
-    char *cmd;
-    sw_error_t rv;
-    fal_qos_remark_enable_t entry;
-
-    aos_mem_zero(&entry, sizeof (fal_qos_remark_enable_t));
-
-    do
-    {
-        cmd = get_sub_cmd("pcp_change_en", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.pcp_change_en),
-                                       sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    do
-    {
-        cmd = get_sub_cmd("dei_change_en", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.dei_chage_en),
-                                       sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    do
-    {
-        cmd = get_sub_cmd("dscp_change_en", "no");
-        SW_RTN_ON_NULL_PARAM(cmd);
-
-        if (!strncasecmp(cmd, "quit", 4))
-        {
-            return SW_BAD_VALUE;
-        }
-        else if (!strncasecmp(cmd, "help", 4))
-        {
-            dprintf("usage: <yes/no/y/n>\n");
-            rv = SW_BAD_VALUE;
-        }
-        else
-        {
-            rv = cmd_data_check_confirm(cmd, A_FALSE, &(entry.dscp_change_en),
-                                       sizeof (a_bool_t));
-            if (SW_OK != rv)
-                dprintf("usage: <yes/no/y/n>\n");
-        }
-
-    }
-    while (talk_mode && (SW_OK != rv));
-
-    *(fal_qos_remark_enable_t *)val = entry;
-    return SW_OK;
-}
-
-void
-cmd_data_print_port_remark(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
-{
-    fal_qos_remark_enable_t *entry;
-
-    entry = (fal_qos_remark_enable_t *) buf;
-
-    dprintf("\n[pcp_change_en]:0x%x [dei_chage_en]:0x%x [dscp_change_en]:0x%x ",
-			entry->pcp_change_en, entry->dei_chage_en, entry->dscp_change_en);
 }
 
 sw_error_t

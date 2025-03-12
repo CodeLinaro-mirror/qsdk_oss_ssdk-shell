@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2024, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2025, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -627,8 +627,6 @@ struct cmd_des_t gcmd_des[] =
 	{"ptgroup", "get", "get port group", "<port_id>", SW_API_QOS_PORT_GROUP_GET, NULL},
 	{"ptpriprece", "set", "set port priority precedence", "<port_id>", SW_API_QOS_PORT_PRI_SET, NULL},
 	{"ptPriprece", "get", "get port priority precedence", "<port_id>", SW_API_QOS_PORT_PRI_GET, NULL},
-	{"ptremark", "set", "set port remark", "<port_id> <remark>", SW_API_QOS_PORT_REMARK_SET, NULL},
-	{"ptremark", "get", "get port remark", "<port_id>", SW_API_QOS_PORT_REMARK_GET, NULL},
 	{"pcpmap", "set", "set pcp map", "<group_id> <pcp> <cosmap>", SW_API_QOS_PCP_MAP_SET, NULL},
 	{"pcpmap", "get", "get pcp map", "<group_id> <pcp>", SW_API_QOS_PCP_MAP_GET, NULL},
 	{"flowmap", "set", "set flow map", "<group_id> <flow> <cosmap>", SW_API_QOS_FLOW_MAP_SET, NULL},

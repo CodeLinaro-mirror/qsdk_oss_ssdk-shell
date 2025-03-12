@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014, 2017, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022, 2025, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -438,26 +438,6 @@ fal_qos_port_pri_precedence_get(a_uint32_t dev_id, fal_port_t port_id,
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_QOS_PORT_PRI_GET, dev_id, port_id, pri);
-    return rv;
-}
-
-sw_error_t
-fal_qos_port_remark_set(a_uint32_t dev_id, fal_port_t port_id,
-					fal_qos_remark_enable_t *remark)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_QOS_PORT_REMARK_SET, dev_id, port_id, remark);
-    return rv;
-}
-
-sw_error_t
-fal_qos_port_remark_get(a_uint32_t dev_id, fal_port_t port_id,
-					fal_qos_remark_enable_t *remark)
-{
-    sw_error_t rv;
-
-    rv = sw_uk_exec(SW_API_QOS_PORT_REMARK_GET, dev_id, port_id, remark);
     return rv;
 }
 
