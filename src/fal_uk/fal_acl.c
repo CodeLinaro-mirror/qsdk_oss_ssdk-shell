@@ -334,3 +334,21 @@ fal_acl_rule_priority_get(a_uint32_t dev_id, a_uint32_t list_id,
     rv = sw_uk_exec(SW_API_ACL_RULE_PRIORITY_GET, dev_id, list_id, rule_id, priority);
     return rv;
 }
+
+sw_error_t
+fal_acl_dscp_pcp_mapping_set(a_uint32_t dev_id, a_uint8_t group_id, a_uint8_t dscp, a_uint8_t pcp)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_ACL_DSCP_PCP_MAPPING_SET, dev_id, group_id, dscp, pcp);
+	return rv;
+}
+
+sw_error_t
+fal_acl_dscp_pcp_mapping_get(a_uint32_t dev_id, a_uint8_t group_id, a_uint8_t dscp, a_uint8_t *pcp)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_ACL_DSCP_PCP_MAPPING_GET, dev_id, group_id, dscp, pcp);
+	return rv;
+}

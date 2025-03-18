@@ -586,7 +586,11 @@ struct cmd_des_t gcmd_des[] =
 		    SW_API_ACL_RULE_PRIORITY_SET, NULL},
 	    {"rulePriority", "get", "get rule priority", "<list_id> <rule_id>",
 		    SW_API_ACL_RULE_PRIORITY_GET, NULL},
-            {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+	    {"dscp_pcp_mapping", "set", "set dscp to pcp mapping", "<group_id> <dscp> <pcp>",
+		    SW_API_ACL_DSCP_PCP_MAPPING_SET, NULL},
+	    {"dscp_pcp_mapping", "get", "get dscp to pcp mapping", "<group_id> <dscp>",
+		    SW_API_ACL_DSCP_PCP_MAPPING_GET, NULL},
+	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
 #endif
