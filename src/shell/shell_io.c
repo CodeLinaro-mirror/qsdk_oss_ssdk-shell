@@ -5476,6 +5476,110 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
                                        0x0));
         entry->pppoe_sessionid_mask = tmpdata & 0xffff;
     }
+
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        cmd_data_check_element("stag tpid index field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_STAG_TPID_INDEX);
+            cmd_data_check_element("stag tpid index", "0x0",
+                                   "usage: the format is 0x0-0x3 or 0-3 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3,
+                                           0x0));
+            entry->stag_tpid_index_val = tmpdata;
+
+            cmd_data_check_element("stag tpid index mask", "0x0",
+                                   "usage: the format is 0x0-0x3 or 0-3 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3,
+                                           0x0));
+            entry->stag_tpid_index_mask = tmpdata;
+        }
+
+        cmd_data_check_element("ctag tpid index field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_CTAG_TPID_INDEX);
+            cmd_data_check_element("ctag tpid index", "0x0",
+                                   "usage: the format is 0x0-0x3 or 0-3 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3,
+                                           0x0));
+            entry->ctag_tpid_index_val = tmpdata;
+
+            cmd_data_check_element("ctag tpid index mask", "0x0",
+                                   "usage: the format is 0x0-0x3 or 0-3 \n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3,
+                                       0x0));
+            entry->ctag_tpid_index_mask = tmpdata;
+        }
+
+        cmd_data_check_element("l2 proto type field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_L2_PROTO);
+            cmd_data_check_element("l2 proto type", "0x0",
+                                   "usage: the format is 0x0-0x1F"
+                                   "(0x1 IPV4, 0x2 PPPoE, 0x4 ARP, 0x8 IPV6, 0x10 EAPOL)\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1F,
+                                           0x0));
+            entry->l2_proto_type = tmpdata;
+
+            cmd_data_check_element("l2 proto type mask", "0x0",
+                                   "usage: the format is 0x0-0x1F"
+                                   "(0x1 IPV4, 0x2 PPPoE, 0x4 ARP, 0x8 IPV6, 0x10 EAPOL)\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1F,
+                                           0x0));
+            entry->l2_proto_type_mask = tmpdata;
+        }
+
+        cmd_data_check_element("dhcp type field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_DHCP_TYPE);
+            cmd_data_check_element("dhcp type", "0x0",
+                                   "usage: the format is 0x0-0x7"
+                                   "(0x1 Non-DHCP, 0x2 IPV4 DHCP, 0x4 IPV6 DHCP)\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x7,
+                                           0x0));
+            entry->dhcp_type = tmpdata;
+
+            cmd_data_check_element("dhcp type mask", "0x0",
+                                   "usage: the format is 0x0-0x7"
+                                   "(0x1 Non-DHCP, 0x2 IPV4 DHCP, 0x4 IPV6 DHCP)\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1F,
+                                           0x0));
+            entry->dhcp_type_mask = tmpdata;
+        }
+
+        cmd_data_check_element("mc type field", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (tmpdata)
+        {
+            FAL_FIELD_FLG_SET(entry->field_flg, FAL_ACL_FIELD_MC_TYPE);
+            cmd_data_check_element("mc type", "0x0",
+                                   "usage: the format is 0x0-0x7"
+                                   "(0x1 Non-MC, 0x2 IP MC, 0x4 Non-IP MC)\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x7,
+                                           0x0));
+            entry->mc_type = tmpdata;
+
+            cmd_data_check_element("mc type mask", "0x0",
+                                   "usage: the format is 0x0-0x7"
+                                   "(0x1 Non-MC, 0x2 IP MC, 0x4 Non-IP MC)\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1F,
+                                           0x0));
+            entry->mc_type_mask = tmpdata;
+        }
+    }
     return SW_OK;
 }
 
@@ -7149,11 +7253,19 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     if (A_TRUE == tmpdata)
     {
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REMARK_STAG_VID);
-        cmd_data_check_element("stag format", NULL,
-                               "usage: 0-untaged, 1-pritagged or tagged\n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->stag_fmt = tmpdata & 0x1;
+
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+            cmd_data_check_element("stag format", NULL,
+                                   "usage: 0-delete, 1-add or replace, 2-copy from original SVID,"
+                                   "3-copy from original CVID\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+        } else {
+            cmd_data_check_element("stag format", NULL,
+                                   "usage: 0-untaged, 1-pritagged or tagged\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1, 0x0));
+        }
+        entry->stag_fmt = tmpdata;
     }
 
     /* chang stag pri action configuration */
@@ -7162,6 +7274,20 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                    sizeof (a_bool_t)));
     if (A_TRUE == tmpdata)
     {
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+            cmd_data_check_element("stag pri change cmd", NULL,
+                                   "usage: 1-replace, 2-copy from original spcp,"
+                                   "3-copy from original cpcp,"
+                                   "4-deprive from dscp to pcp mapping,"
+                                   "5-add tag and replace pcp,"
+                                   "6-add tag and copy from original spcp,"
+                                   "7-add tag and copy from original cpcp,"
+                                   "8-add tag and derive form dscp to pcp mapping\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x8, 0x1));
+            entry->stag_pri_change_cmd = tmpdata;
+        }
+
         cmd_data_check_element("stag pri", NULL,
                                "usage: the format is 0x1-0x7 or 0-7 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x7,
@@ -7177,6 +7303,15 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                    sizeof (a_bool_t)));
     if (A_TRUE == tmpdata)
     {
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+            cmd_data_check_element("stag dei change cmd", NULL,
+                                   "usage: 1-replace, 2-copy from original sdei,"
+                                   "3-copy from original cdei\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x1));
+            entry->stag_dei_change_cmd = tmpdata & 0x3;
+        }
+
         cmd_data_check_element("stag dei", NULL,
                                "usage: the format is 0x0-0x1 or 0-1 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x1,
@@ -7194,14 +7329,19 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     {
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REMARK_CTAG_VID);
 
-        cmd_data_check_element("ctag format", NULL,
-                               "usage: 0-untaged, 1-pritagged or tagged\n",
-                               cmd_data_check_integer, (cmd, &tmpdata, 0x1,
-                                       0x0));
-        entry->ctag_fmt = tmpdata & 0x1;
-
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+            cmd_data_check_element("ctag format", NULL,
+                                   "usage: 0-delete, 1-add or replace, 2-copy from original SVID,"
+                                   "3-copy from original CVID\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+        } else {
+            cmd_data_check_element("ctag format", NULL,
+                                   "usage: 0-untaged, 1-pritagged or tagged\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1, 0x0));
+        }
+        entry->ctag_fmt = tmpdata;
     }
-
 
     /* chang ctag pri action configuration */
     cmd_data_check_element("ctag pri change", "no", "usage: <yes/no/y/n>\n",
@@ -7209,6 +7349,20 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                    sizeof (a_bool_t)));
     if (A_TRUE == tmpdata)
     {
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+            cmd_data_check_element("ctag pri change cmd", "1",
+                                   "usage: 1-replace, 2-copy from original spcp,"
+                                   "3-copy from original cpcp,"
+                                   "4-deprive from dscp to pcp mapping,"
+                                   "5-add tag and replace pcp,"
+                                   "6-add tag and copy from origiinal spcp,"
+                                   "7-add tag and copy from original cpcp,"
+                                   "8-add tag and derive form dscp to pcp mapping\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x8, 0x1));
+            entry->ctag_pri_change_cmd = tmpdata;
+        }
+
         cmd_data_check_element("ctag pri", NULL,
                                "usage: the format is 0x1-0x7 or 0-7 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x7,
@@ -7224,6 +7378,15 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                                    sizeof (a_bool_t)));
     if (A_TRUE == tmpdata)
     {
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+            cmd_data_check_element("ctag cfi change cmd", "1",
+                                   "usage: 1-replace, 2-copy from original sdei,"
+                                   "3-copy from original cdei\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x1));
+            entry->ctag_cfi_change_cmd = tmpdata;
+        }
+
         cmd_data_check_element("ctag cfi", NULL,
                                "usage: the format is 0x0-0x1 or 0-1 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x1,
@@ -7231,6 +7394,51 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
         entry->ctag_cfi = tmpdata & 0x1;
 
         FAL_ACTION_FLG_SET(entry->action_flg, FAL_ACL_ACTION_REMARK_CTAG_CFI);
+    }
+
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        cmd_data_check_element("tags to remove", "0",
+                               "usage: the format is 0x0-0x2 or 0-2 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x2, 0x0));
+
+        if (tmpdata) {
+            FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_REMOVE_TAGS);
+            entry->tags_to_remove = tmpdata;
+        }
+
+        cmd_data_check_element("stag tpid change cmd", "0",
+                               "usage: 0-unchanged, 1-replace, 2-copy from original stpid index,"
+                               "3-copy from original ctpid index\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+        if (tmpdata) {
+            FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_REMARK_STAG_TPID);
+            entry->stag_tpid_cmd = tmpdata;
+        }
+
+        cmd_data_check_element("stag tpid index", "0",
+                               "usage: the format is 0x0-0x3 or 0-3 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+        entry->stag_tpid_index = tmpdata;
+
+        cmd_data_check_element("ctag tpid change cmd", "0",
+                               "usage: 0-unchanged, 1-replace, 2-copy from original stpid index,"
+                               "3-copy from original ctpid index\n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+        if (tmpdata) {
+            FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_REMARK_CTAG_TPID);
+            entry->ctag_tpid_cmd = tmpdata;
+        }
+
+        cmd_data_check_element("ctag tpid index", "0",
+                               "usage: the format is 0x0-0x3 or 0-3 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x3, 0x0));
+        entry->ctag_tpid_index = tmpdata;
+
+        cmd_data_check_element("dscp pcp mapping index", "0",
+                               "usage: the format is 0x0-0x1 or 0-1 \n",
+                               cmd_data_check_integer, (cmd, &tmpdata, 0x1, 0x0));
+        entry->dscp_pcp_mapping_index = tmpdata;
     }
 
     /* police action configuration */
@@ -7376,7 +7584,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_IN_VLAN_MISS);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_IN_VLAN_MISS);
         }
 
         cmd_data_check_element("bypass source guard", "no", "usage: <yes/no/y/n>\n",
@@ -7384,7 +7592,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_SOUCE_GUARD);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_SOUCE_GUARD);
         }
 
         cmd_data_check_element("bypass MRU/MTU check", "no", "usage: <yes/no/y/n>\n",
@@ -7392,7 +7600,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_MRU_MTU_CHECK);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_MRU_MTU_CHECK);
         }
 
         cmd_data_check_element("bypass egress VSI member check", "no", "usage: <yes/no/y/n>\n",
@@ -7400,7 +7608,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VSI_MEMBER_CHECK);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_EG_VSI_MEMBER_CHECK);
         }
 
         cmd_data_check_element("bypass egress vlan translation", "no", "usage: <yes/no/y/n>\n",
@@ -7408,7 +7616,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VLAN_TRANSLATION);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_EG_VLAN_TRANSLATION);
         }
 
         cmd_data_check_element("bypass egress vlan tag control", "no", "usage: <yes/no/y/n>\n",
@@ -7416,7 +7624,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_VLAN_TAG_CTRL);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_EG_VLAN_TAG_CTRL);
         }
 
         cmd_data_check_element("bypass fdb learning", "no", "usage: <yes/no/y/n>\n",
@@ -7424,7 +7632,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FDB_LEARNING);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_FDB_LEARNING);
         }
 
         cmd_data_check_element("bypass fdb refresh", "no", "usage: <yes/no/y/n>\n",
@@ -7432,7 +7640,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FDB_REFRESH);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_FDB_REFRESH);
         }
 
         cmd_data_check_element("bypass L2 security", "no", "usage: <yes/no/y/n>\n",
@@ -7440,7 +7648,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_SECURITY);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_L2_SECURITY);
         }
 
         cmd_data_check_element("bypass management forward", "no", "usage: <yes/no/y/n>\n",
@@ -7448,7 +7656,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_MANAGEMENT_FWD);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_MANAGEMENT_FWD);
         }
 
         cmd_data_check_element("bypass L2 forward", "no", "usage: <yes/no/y/n>\n",
@@ -7456,7 +7664,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_FWD);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_L2_FWD);
         }
 
         cmd_data_check_element("bypass ingress STP check", "no", "usage: <yes/no/y/n>\n",
@@ -7464,7 +7672,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_IN_STP_CHECK);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_IN_STP_CHECK);
         }
 
         cmd_data_check_element("bypass egress STP check", "no", "usage: <yes/no/y/n>\n",
@@ -7472,7 +7680,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_EG_STP_CHECK);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_EG_STP_CHECK);
         }
 
         cmd_data_check_element("bypass source filter", "no", "usage: <yes/no/y/n>\n",
@@ -7480,7 +7688,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_SOURCE_FILTER);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_SOURCE_FILTER);
         }
 
         cmd_data_check_element("bypass policer", "no", "usage: <yes/no/y/n>\n",
@@ -7488,7 +7696,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POLICYER);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_POLICYER);
         }
 
         cmd_data_check_element("bypass L2 edit", "no", "usage: <yes/no/y/n>\n",
@@ -7496,7 +7704,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L2_EDIT);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_L2_EDIT);
         }
 
         cmd_data_check_element("bypass L3 edit", "no", "usage: <yes/no/y/n>\n",
@@ -7504,7 +7712,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_L3_EDIT);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_L3_EDIT);
         }
 
         cmd_data_check_element("bypass post acl routing check", "no", "usage: <yes/no/y/n>\n",
@@ -7512,7 +7720,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POST_ACL_CHECK_ROUTING);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_POST_ACL_CHECK_ROUTING);
         }
 
         cmd_data_check_element("bypass port isolation", "no", "usage: <yes/no/y/n>\n",
@@ -7520,7 +7728,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PORT_ISOLATION);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_PORT_ISOLATION);
         }
 
         /*new add bypass for IPQ60xx*/
@@ -7529,7 +7737,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FLOW_QOS);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_FLOW_QOS);
         }
 
         cmd_data_check_element("bypass pre acl qos", "no", "usage: <yes/no/y/n>\n",
@@ -7537,7 +7745,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PRE_ACL_QOS);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_PRE_ACL_QOS);
         }
 
         cmd_data_check_element("bypass post acl qos", "no", "usage: <yes/no/y/n>\n",
@@ -7545,7 +7753,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_POST_ACL_QOS);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_POST_ACL_QOS);
         }
 
         cmd_data_check_element("bypass dscp qos", "no", "usage: <yes/no/y/n>\n",
@@ -7553,7 +7761,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_DSCP_QOS);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_DSCP_QOS);
         }
 
         cmd_data_check_element("bypass pcp qos", "no", "usage: <yes/no/y/n>\n",
@@ -7561,7 +7769,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PCP_QOS);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_PCP_QOS);
         }
 
         cmd_data_check_element("bypass preheader qos", "no", "usage: <yes/no/y/n>\n",
@@ -7569,7 +7777,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                    sizeof (a_bool_t)));
         if (tmpdata)
         {
-            entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_PREHEADER_QOS);
+            entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_PREHEADER_QOS);
         }
 
         /*new add bypass for IPQ95xx*/
@@ -7583,7 +7791,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                        sizeof (a_bool_t)));
             if (tmpdata)
             {
-                entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FAKE_MAC_DROP);
+                entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_FAKE_MAC_DROP);
             }
 
             cmd_data_check_element("bypass tunnel context ", "no", "usage: <yes/no/y/n>\n",
@@ -7591,7 +7799,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                        sizeof (a_bool_t)));
             if (tmpdata)
             {
-                entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_TUNL_CONTEXT);
+                entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_TUNL_CONTEXT);
             }
 
             /*new add bypass for IPQ53xx*/
@@ -7605,8 +7813,86 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                            sizeof (a_bool_t)));
                 if (tmpdata)
                 {
-                    entry->bypass_bitmap |= (1<<FAL_ACL_BYPASS_FLOW_POLICER);
+                    entry->bypass_bitmap[0] |= (1<<FAL_ACL_BYPASS_FLOW_POLICER);
                 }
+            }
+            /* Pre ACL bypass bitmap for IPQ96xx */
+            if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+                ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+                cmd_data_check_element("bypass ingress vlan translation", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_XLT_BYP);
+
+                cmd_data_check_element("bypass default vlan", "no", "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_DEFAULT_VLAN_BYP);
+
+                cmd_data_check_element("bypass default pcp", "no", "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_DEFAULT_PCP_BYP);
+
+                cmd_data_check_element("bypass ingress vlan vid translation", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_VID_BYP);
+
+                cmd_data_check_element("bypass ingress vlan pcp translation", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_PCP_BYP);
+
+                cmd_data_check_element("bypass ingress vlan dei translation", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_DEI_BYP);
+
+                cmd_data_check_element("bypass ingress vlan translation counter", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_COUNTER_BYP);
+
+                cmd_data_check_element("bypass ingress vlan vsi translation", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_VSI_BYP);
+
+                cmd_data_check_element("bypass ingress vlan src info translation", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_SRC_INFO_BYP);
+
+                cmd_data_check_element("bypass ingress vlan dst info translation", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_DST_INFO_BYP);
+
+                cmd_data_check_element("bypass ingress vlan service code translation", "no",
+                                "usage: <yes/no/y/n>\n",
+                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                sizeof (a_bool_t)));
+                if (tmpdata)
+                    entry->bypass_bitmap[1] |= (1<<FAL_ACL_IN_VLAN_SERVICE_CODE_BYP);
             }
         }
     }
@@ -7812,6 +8098,49 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
             FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_LEARN_DIS);
         }
     }
+
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        if(FAL_ACL_RULE_TUNNEL_MAC == entry->rule_type ||
+            FAL_ACL_RULE_TUNNEL_IP4 == entry->rule_type ||
+            FAL_ACL_RULE_TUNNEL_IP6 == entry->rule_type ||
+            FAL_ACL_RULE_TUNNEL_UDF == entry->rule_type) {
+            cmd_data_check_element("src info enable", "no", "usage: <yes/no/y/n>\n",
+                                   cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                           sizeof (a_bool_t)));
+            if (A_TRUE == tmpdata) {
+                FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_SRC_INFO);
+                cmd_data_check_element("src_info_type", "vp",
+                                       "usage: vp: virtual port, l3_if: layer 3 interface\n",
+                                       cmd_data_check_srctype,
+                                       (cmd, 0, &entry->src_info_type,
+                                        sizeof(a_uint8_t)));
+
+                cmd_data_check_element("src_info", "0",
+                                       "usage: 0x0-0xFF or 0-255\n",
+                                       cmd_data_check_integer, (cmd, &tmpdata, 0xff,
+                                               0x0));
+                entry->src_info = tmpdata;
+            }
+        }
+
+        cmd_data_check_element("counter enable", "no", "usage: <yes/no/y/n>\n",
+                               cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
+                                       sizeof (a_bool_t)));
+        if (A_TRUE == tmpdata) {
+            FAL_ACTION_FLG_SET(entry->action_flg_ext, FAL_ACL_ACTION_COUNTER);
+            cmd_data_check_element("counter mode", "0",
+                                   "usage: 0-vlan mode, 1-Pon PM mode\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x1, 0x0));
+            entry->counter_mode = tmpdata;
+
+            cmd_data_check_element("counter id", "0",
+                                   "usage: 0x0-0x3F or 0-127\n",
+                                   cmd_data_check_integer, (cmd, &tmpdata, 0x7f, 0x0));
+            entry->counter_id = tmpdata;
+        }
+    }
+
     return SW_OK;
 }
 
@@ -7940,6 +8269,18 @@ void acl_rule_field_convert(fal_acl_rule_t * rule,
         rule_field->udf3_mask = rule->udf3_mask;
         rule_field->udfprofile_val = rule->udfprofile_val;
         rule_field->udfprofile_mask = rule->udfprofile_mask;
+
+	/* ext vlan rule fields */
+	rule_field->stag_tpid_index_val = rule->stag_tpid_index_val;
+	rule_field->stag_tpid_index_mask = rule->stag_tpid_index_mask;
+	rule_field->ctag_tpid_index_val = rule->ctag_tpid_index_val;
+	rule_field->ctag_tpid_index_mask = rule->ctag_tpid_index_mask;
+	rule_field->l2_proto_type = rule->l2_proto_type;
+	rule_field->l2_proto_type_mask  = rule->l2_proto_type_mask;
+	rule_field->dhcp_type = rule->dhcp_type;
+	rule_field->dhcp_type_mask = rule->dhcp_type_mask;
+	rule_field->mc_type = rule->mc_type;
+	rule_field->mc_type_mask = rule->mc_type_mask;
     }
     else
     {
@@ -8064,6 +8405,18 @@ void acl_rule_field_convert(fal_acl_rule_t * rule,
         rule->udf3_mask = rule_field->udf3_mask;
         rule->udfprofile_val = rule_field->udfprofile_val;
         rule->udfprofile_mask = rule_field->udfprofile_mask;
+
+	/* ext vlan rule fields */
+	rule->stag_tpid_index_val = rule_field->stag_tpid_index_val;
+	rule->stag_tpid_index_mask = rule_field->stag_tpid_index_mask;
+	rule->ctag_tpid_index_val = rule_field->ctag_tpid_index_val;
+	rule->ctag_tpid_index_mask = rule_field->ctag_tpid_index_mask;
+	rule->l2_proto_type = rule_field->l2_proto_type;
+	rule->l2_proto_type_mask = rule_field->l2_proto_type_mask;
+	rule->dhcp_type = rule_field->dhcp_type;
+	rule->dhcp_type_mask = rule_field->dhcp_type_mask;
+	rule->mc_type = rule_field->mc_type;
+	rule->mc_type_mask = rule_field->mc_type_mask;
     }
     return;
 }
@@ -8329,6 +8682,22 @@ static void cmd_data_print_acl_bypass_bitmap(a_uint32_t bitmap)
 	return;
 }
 
+static void cmd_data_print_pre_acl_bypass_bitmap(a_uint32_t bitmap)
+{
+    dprintf("\t[bypass_in_vlan_xlt]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_XLT_BYP)&0x1);
+    dprintf("\t[bypass_default_vlan]:0x%x\n", (bitmap>>FAL_ACL_DEFAULT_VLAN_BYP)&0x1);
+    dprintf("\t[bypass_default_pcp]:0x%x\n", (bitmap>>FAL_ACL_DEFAULT_PCP_BYP)&0x1);
+    dprintf("\t[bypass_in_vlan_vid]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_VID_BYP)&0x1);
+    dprintf("\t[bypass_in_vlan_pcp]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_PCP_BYP)&0x1);
+    dprintf("\t[bypass_in_vlan_dei]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_DEI_BYP)&0x1);
+    dprintf("\t[bypass_in_vlan_counter]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_COUNTER_BYP)&0x1);
+    dprintf("\t[bypass_in_vlan_vsi]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_VSI_BYP)&0x1);
+    dprintf("\t[bypass_in_vlan_src_info]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_SRC_INFO_BYP)&0x1);
+    dprintf("\t[bypass_in_vlan_dst_info]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_DST_INFO_BYP)&0x1);
+    dprintf("\t[bypass_in_vlan_service_code]:0x%x\n", (bitmap>>FAL_ACL_IN_VLAN_SERVICE_CODE_BYP)&0x1);
+    return;
+}
+
 void acl_rule_field_print(fal_acl_rule_t * rule)
 {
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_FAKE_MAC_HEADER))
@@ -8496,6 +8865,42 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
         }
         if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_MAC_CTAG_VID))
             dprintf("  [is_inverse]: YES");
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_STAG_TPID_INDEX) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_STAG_TPID_INDEX))
+    {
+        dprintf("\n[stag_tpid_index_val]:%d", rule->stag_tpid_index_val);
+        dprintf("  [stag_tpid_index_mask]:%d", rule->stag_tpid_index_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_STAG_TPID_INDEX))
+            dprintf("  [is_inverse]: YES");
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_CTAG_TPID_INDEX) ||
+        FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_CTAG_TPID_INDEX))
+    {
+        dprintf("\n[ctag_tpid_index_val]:%d", rule->ctag_tpid_index_val);
+        dprintf("  [ctag_tpid_index_mask]:%d", rule->ctag_tpid_index_mask);
+        if (FAL_FIELD_FLG_TST(rule->inverse_field_flg, FAL_ACL_FIELD_CTAG_TPID_INDEX))
+            dprintf("  [is_inverse]: YES");
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_L2_PROTO))
+    {
+        dprintf("\n[l2_proto_type]:0x%x", rule->l2_proto_type);
+        dprintf("  [l2_proto_type_mask]:0x%x", rule->l2_proto_type_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_DHCP_TYPE))
+    {
+        dprintf("\n[dhcp_type]:0x%x", rule->dhcp_type);
+        dprintf("  [dhcp_type_mask]:0x%x", rule->dhcp_type_mask);
+    }
+
+    if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_MC_TYPE))
+    {
+        dprintf("\n[mc_type]:0x%x", rule->mc_type);
+        dprintf("  [mc_type_mask]:0x%x", rule->mc_type_mask);
     }
 
     if (FAL_FIELD_FLG_TST(rule->field_flg, FAL_ACL_FIELD_VSI_VALID))
@@ -9059,25 +9464,77 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REMARK_STAG_PRI))
     {
         dprintf("\n[change_stag_pri]:yes");
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+                dprintf("  [stag_pri_change_cmd]:%d", rule->stag_pri_change_cmd);
+        }
         dprintf("  [stag_pri]:%d", rule->stag_pri);
     }
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REMARK_STAG_DEI))
     {
         dprintf("\n[change_stag_dei]:yes");
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+                dprintf("  [stag_dei_change_cmd]:%d", rule->stag_dei_change_cmd);
+        }
         dprintf("  [stag_dei]:%d", rule->stag_dei);
     }
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REMARK_CTAG_PRI))
     {
         dprintf("\n[change_ctag_pri]:yes");
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+                dprintf("  [ctag_pri_change_cmd]:%d", rule->ctag_pri_change_cmd);
+        }
         dprintf("  [ctag_pri]:%d", rule->ctag_pri);
     }
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_REMARK_CTAG_CFI))
     {
         dprintf("\n[change_ctag_cfi]:yes");
+        if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+                dprintf("  [ctag_cfi_change_cmd ]:%d", rule->ctag_cfi_change_cmd );
+        }
         dprintf("  [ctag_cfi]:%d", rule->ctag_cfi);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_REMARK_STAG_TPID))
+    {
+        dprintf("\n[change_stag_tpid]:yes");
+        dprintf("  [stag_tpid_cmd]:%d", rule->stag_tpid_cmd);
+        dprintf("  [stag_tpid_index]:%d", rule->stag_tpid_index);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_REMARK_CTAG_TPID))
+    {
+        dprintf("\n[change_ctag_tpid]:yes");
+        dprintf("  [ctag_tpid_cmd]:%d", rule->ctag_tpid_cmd);
+        dprintf("  [ctag_tpid_index]:%d", rule->ctag_tpid_index);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_REMOVE_TAGS))
+    {
+        dprintf("\n[remove_tags]:yes");
+        dprintf("  [tags_to_remove]: %d", rule->tags_to_remove);
+    }
+    dprintf("\n[dscp_pcp_mapping_index ]: %d", rule->dscp_pcp_mapping_index);
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_SRC_INFO))
+    {
+        dprintf("\n[change_src_info]:yes");
+        cmd_data_print_srctype(" [src_info_type]:", rule->src_info_type,
+                        sizeof(rule->src_info_type));
+        dprintf("  [src_info]:%d", rule->src_info);
+    }
+
+    if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_COUNTER))
+    {
+        dprintf("\n[enable_counter]:yes");
+        dprintf("  [counter_mode]:%d", rule->counter_mode);
+        dprintf("  [counter_id]:%d", rule->counter_id);
     }
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_POLICER_EN))
@@ -9138,10 +9595,16 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         dprintf("\n[trigger_intr]:yes");
     }
 
-    if (rule->bypass_bitmap != 0)
+    if (rule->bypass_bitmap[0] != 0)
     {
-        dprintf("\n[bypass_bitmap]:0x%x\n", rule->bypass_bitmap);
-        cmd_data_print_acl_bypass_bitmap(rule->bypass_bitmap);
+        dprintf("\n[bypass_bitmap0]:0x%x\n", rule->bypass_bitmap[0]);
+        cmd_data_print_acl_bypass_bitmap(rule->bypass_bitmap[0]);
+    }
+
+    if (rule->bypass_bitmap[1] != 0)
+    {
+        dprintf("\n[bypass_bitmap1]:0x%x\n", rule->bypass_bitmap[1]);
+        cmd_data_print_pre_acl_bypass_bitmap(rule->bypass_bitmap[1]);
     }
 
     if (FAL_ACTION_FLG_TST(rule->action_flg, FAL_ACL_ACTION_ENQUEUE_PRI))
