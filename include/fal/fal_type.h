@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014, 2016-2017, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -30,12 +30,14 @@ extern "C" {
     typedef a_uint32_t fal_port_t;
 
 /*fal_port_t definition,
-	bit31-bit24: port_type, 0-physical port, 1-trunk port, 2-virtual port, 3-virtual port group
+	bit31-bit24: port_type, 0-physical port, 1-trunk port, 2-virtual port, 3-virtual port group,
+		4-gem port
 	bit23-bit0: physical port id or trunk id or virtual port id*/
 #define FAL_PORT_TYPE_PPORT 0
 #define FAL_PORT_TYPE_TRUNK 1
 #define FAL_PORT_TYPE_VPORT 2
 #define FAL_PORT_TYPE_VP_GROUP 3
+#define FAL_PORT_TYPE_GEM_PORT 4
 
 #define FAL_PORT_ID_TYPE(port_id) (((port_id)>>24)&0xff)
 #define FAL_PORT_ID_VALUE(port_id) ((port_id)&0xffffff)
@@ -45,6 +47,7 @@ extern "C" {
 #define FAL_IS_TRUNK(port_id) (((FAL_PORT_ID_TYPE(port_id))==FAL_PORT_TYPE_TRUNK)?1:0)
 #define FAL_IS_VPORT(port_id) (((FAL_PORT_ID_TYPE(port_id))==FAL_PORT_TYPE_VPORT)?1:0)
 #define FAL_IS_VP_GROUP(port_id) (((FAL_PORT_ID_TYPE(port_id))==FAL_PORT_TYPE_VP_GROUP)?1:0)
+#define FAL_IS_GEM_PORT(port_id) (((FAL_PORT_ID_TYPE(port_id))==FAL_PORT_TYPE_GEM_PORT)?1:0)
 
 /*
 * Source info change types for vlan translation/tunnel decap

@@ -702,6 +702,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_PT_VLAN_DIRECTION, cmd_data_check_port_vlan_direction, cmd_data_print_port_vlan_direction),
     SW_TYPE_DEF(SW_PT_VLAN_TRANS_ADV_RULE, cmd_data_check_port_vlan_translation_adv_rule, cmd_data_print_port_vlan_translation_adv_rule),
     SW_TYPE_DEF(SW_PT_VLAN_TRANS_ADV_ACTION, cmd_data_check_port_vlan_translation_adv_action, cmd_data_print_port_vlan_translation_adv_action),
+    SW_TYPE_DEF(SW_PT_VLAN_TRANS_ADV_RULE_WITH_PORT, cmd_data_check_port_vlan_translation_adv_rule_with_port,
+    	cmd_data_print_port_vlan_translation_adv_rule),
     SW_TYPE_DEF(SW_PT_VLAN_COUNTER, NULL, cmd_data_print_port_vlan_counter),
     SW_TYPE_DEF(SW_TAG_PROPAGATION, cmd_data_check_tag_propagation, cmd_data_print_tag_propagation),
     SW_TYPE_DEF(SW_EGRESS_MODE, cmd_data_check_egress_mode, cmd_data_print_egress_mode),
@@ -26947,6 +26949,162 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 		}
 		while (talk_mode && (SW_OK != rv));
+
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+			do
+			{
+				cmd = get_sub_cmd("stpid_idx_en", "yes");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: <yes/no/y/n>\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.stpid_idx_en,
+							sizeof (a_bool_t));
+					if (SW_OK != rv)
+						dprintf("usage: <yes/no/y/n>\n");
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("stpid_idx", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: stpid_idx value\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: stpid_idx value\n");
+					else
+						entry.stpid_idx = tmp;
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("ctpid_idx_en", "yes");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: <yes/no/y/n>\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.ctpid_idx_en,
+							sizeof (a_bool_t));
+					if (SW_OK != rv)
+						dprintf("usage: <yes/no/y/n>\n");
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("ctpid_idx", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: ctpid_idx value\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: ctpid_idx value\n");
+					else
+						entry.ctpid_idx = tmp;
+				}
+
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("dhcp_type", "0x7");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: dhcp_type value: Bit 0 = Non-DHCP\n"
+						"Bit 1 = DHCP v4, Bit 2 = DHCP v6\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: dhcp_type value: Bit 0 = Non-DHCP\n"
+							"Bit 1 = DHCP v4, Bit 2 = DHCP v6\n");
+					else
+						entry.dhcp_type = tmp;
+				}
+
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("mc_type", "0x7");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: mc_type value: Bit 0 = Non_MC\n"
+						"Bit 1 = IP_MC, Bit 2 = NONIP_MC\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: mc_type value: Bit 0 = Non_MC\n"
+						"Bit 1 = IP_MC, Bit 2 = NONIP_MC\n");
+					else
+						entry.mc_type = tmp;
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+		}
 	}
 
 	*val = entry;
@@ -26991,7 +27149,35 @@ cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name,
 		dprintf("\n[vni_resv_enable]:%s  [vni_resv_type]:%s  [vni_resv]:0x%x\n\n",
 				entry->vni_resv_enable?"ENABLE":"DISABLE",
 				entry->vni_resv_type?"VNI_RESV":"VNI_ONLY", entry->vni_resv);
+
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+			dprintf("\n[stpid_idx_en]:%s  [stpid_idx]:0x%x  [ctpid_idx_en]:%s  [ctpid_idx]:0x%x",
+					entry->stpid_idx_en?"ENABLE":"DISABLE",
+					entry->stpid_idx,
+					entry->ctpid_idx_en?"ENABLE":"DISABLE",
+					entry->ctpid_idx);
+
+			dprintf("\n[dhcp_type]:0x%x  [mc_type]:0x%x\n\n", entry->dhcp_type, entry->mc_type);
+		}
 	}
+}
+
+sw_error_t
+cmd_data_check_port_vlan_translation_adv_rule_with_port(char *info,
+				fal_vlan_trans_adv_rule_t *val, a_uint32_t size)
+{
+	sw_error_t rv;
+	char *cmd = NULL;
+
+	rv = cmd_data_check_port_vlan_translation_adv_rule(info, val, size);
+	if (SW_OK != rv)
+		return rv;
+
+	cmd_data_check_element("port_info", "0x0",
+			"usage: physical portbitmap, virtual port id, vp group, gem port(ingress).\n",
+			cmd_data_check_uint32, (cmd, &(val->port_bitmap), 4));
+
+	return SW_OK;
 }
 
 sw_error_t
@@ -27041,14 +27227,23 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: 0 for unchanged, 1 for add and replace and 2 for delete tag\n");
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
+					"3 for copy from original svid, 4 for copy from original cvid. \n");
+			else
+				dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
 			rv = cmd_data_check_uint32(cmd, &entry.svid_xlt_cmd, sizeof (a_uint32_t));
-			if (SW_OK != rv)
-				dprintf("usage: 0 for unchanged, 1 for add and replace and 2 for delete tag\n");
+			if (SW_OK != rv) {
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+					dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
+						"3 for copy from original svid, 4 for copy from original cvid. \n");
+				else
+					dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag\n");
+			}
 		}
 	}
 	while (talk_mode && (SW_OK != rv));
@@ -27093,14 +27288,23 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: 0 for unchanged, 1 for add and replace and 2 for delete tag\n");
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
+					"3 for copy from original svid, 4 for copy from original cvid. \n");
+			else
+				dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
 			rv = cmd_data_check_uint32(cmd, &entry.cvid_xlt_cmd, sizeof (a_uint32_t));
-			if (SW_OK != rv)
-				dprintf("usage: 0 for unchanged, 1 for add and replace and 2 for delete tag\n");
+			if (SW_OK != rv) {
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+					dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
+						"3 for copy from original svid, 4 for copy from original cvid. \n");
+				else
+					dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag\n");
+			}
 		}
 	}
 	while (talk_mode && (SW_OK != rv));
@@ -27161,7 +27365,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 
 	do
 	{
-		cmd = get_sub_cmd("spcp_translation_en", "yes");
+		cmd = get_sub_cmd("spcp_translation_cmd", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -27170,15 +27374,32 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: <yes/no/y/n>\n");
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				dprintf("usage: 0 for unchanged, 1 for replace spcp, \n"
+					"2 for copy from original spcp, 3 for copy from original cpcp, \n"
+					"4 for map from dhcp, \n"
+					"5 for add tag and replace spcp. 6 for for add tag and copy from original spcp, \n"
+					"7 for add tag and copy from original cpcp. \n"
+					"8 for for add tag and map from dhcp.\n");
+			else
+				dprintf("usage: 0 for unchanged, 1 for replace spcp.\n");
+
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.spcp_xlt_enable,
-					sizeof (a_bool_t));
-			if (SW_OK != rv)
-				dprintf("usage: <yes/no/y/n>\n");
+			rv = cmd_data_check_uint32(cmd, &entry.spcp_xlt_cmd, sizeof (a_uint32_t));
+			if (SW_OK != rv) {
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+					dprintf("usage: 0 for unchanged, 1 for replace spcp, \n"
+						"2 for copy from original spcp, 3 for copy from original cpcp, \n"
+						"4 for map from dhcp, \n"
+						"5 for add tag and replace spcp. 6 for for add tag and copy from original spcp, \n"
+						"7 for add tag and copy from original cpcp. \n"
+						"8 for for add tag and map from dhcp.\n");
+				else
+					dprintf("usage: 0 for unchanged, 1 for replace spcp.\n");
+			}
 		}
 
 	}
@@ -27215,7 +27436,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 
 	do
 	{
-		cmd = get_sub_cmd("cpcp_translation_en", "yes");
+		cmd = get_sub_cmd("cpcp_translation_cmd", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -27224,15 +27445,32 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: <yes/no/y/n>\n");
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				dprintf("usage: 0 for unchanged, 1 for replace cpcp, \n"
+					"2 for copy from original spcp, 3 for copy from original cpcp, \n"
+					"4 for map from dhcp, \n"
+					"5 for add tag and replace cpcp. 6 for for add tag and copy from original spcp, \n"
+					"7 for add tag and copy from original cpcp. \n"
+					"8 for for add tag and map from dhcp.\n");
+			else
+				dprintf("usage: 0 for unchanged, 1 for replace cpcp.\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.cpcp_xlt_enable,
-					sizeof (a_bool_t));
-			if (SW_OK != rv)
-				dprintf("usage: <yes/no/y/n>\n");
+			rv = cmd_data_check_uint32(cmd, &entry.cpcp_xlt_cmd, sizeof (a_uint32_t));
+			if (SW_OK != rv) {
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+					dprintf("usage: 0 for unchanged, 1 for replace cpcp, \n"
+						"2 for copy from original spcp, 3 for copy from original cpcp, \n"
+						"4 for map from dhcp, \n"
+						"5 for add tag and replace cpcp. 6 for for add tag and copy from original spcp, \n"
+						"7 for add tag and copy from original cpcp. \n"
+						"8 for for add tag and map from dhcp.\n");
+				else
+					dprintf("usage: 0 for unchanged, 1 for replace cpcp.\n");
+
+			}
 		}
 
 	}
@@ -27294,7 +27532,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 
 	do
 	{
-		cmd = get_sub_cmd("sdei_translation_en", "yes");
+		cmd = get_sub_cmd("sdei_translation_cmd", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -27303,15 +27541,24 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: <yes/no/y/n>\n");
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				dprintf("usage: 0 for unchanged, 1 for replace sdei, \n"
+					"2 for copy from original sdei, 3 for copy from original cdei. \n");
+			else
+				dprintf("usage: 0 for unchanged, 1 for replace sdei.\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.sdei_xlt_enable,
-					sizeof (a_bool_t));
-			if (SW_OK != rv)
-				dprintf("usage: <yes/no/y/n>\n");
+			rv = cmd_data_check_uint32(cmd, &entry.sdei_xlt_cmd, sizeof (a_uint32_t));
+			if (SW_OK != rv)  {
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+					dprintf("usage: 0 for unchanged, 1 for replace sdei, \n"
+						"2 for copy from original sdei, 3 for copy from original cdei. \n");
+				else
+					dprintf("usage: 0 for unchanged, 1 for replace sdei.\n");
+
+			}
 		}
 
 	}
@@ -27348,7 +27595,7 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 
 	do
 	{
-		cmd = get_sub_cmd("cdei_translation_en", "yes");
+		cmd = get_sub_cmd("cdei_translation_cmd", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
@@ -27357,15 +27604,23 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: <yes/no/y/n>\n");
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				dprintf("usage: 0 for unchanged, 1 for replace cdei, \n"
+					"2 for copy from original sdei, 3 for copy from original cdei. \n");
+			else
+				dprintf("usage: 0 for unchanged, 1 for replace cdei.\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
-			rv = cmd_data_check_confirm(cmd, A_TRUE, &entry.cdei_xlt_enable,
-					sizeof (a_bool_t));
-			if (SW_OK != rv)
-				dprintf("usage: <yes/no/y/n>\n");
+			rv = cmd_data_check_uint32(cmd, &entry.cdei_xlt_cmd, sizeof (a_uint32_t));
+			if (SW_OK != rv) {
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+					dprintf("usage: 0 for unchanged, 1 for replace cdei, \n"
+						"2 for copy from original sdei, 3 for copy from original cdei. \n");
+				else
+					dprintf("usage: 0 for unchanged, 1 for replace cdei.\n");
+			}
 		}
 
 	}
@@ -27424,6 +27679,35 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 
 	}
 	while (talk_mode && (SW_OK != rv));
+
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		do
+		{
+			cmd = get_sub_cmd("pm_counter_mode", "No");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4))
+			{
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4))
+			{
+				dprintf("usage: <yes/no/y/n>\n");
+				rv = SW_BAD_VALUE;
+			}
+			else
+			{
+				rv = cmd_data_check_confirm(cmd, A_FALSE, (a_bool_t *)&tmp,
+						sizeof (a_bool_t));
+				if (SW_OK != rv)
+					dprintf("usage: <yes/no/y/n>\n");
+				else
+					entry.counter_mode = tmp;
+			}
+
+		}
+		while (talk_mode && (SW_OK != rv));
+	}
 
 	do
 	{
@@ -27637,6 +27921,278 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 
 		}
 		while (talk_mode && (SW_OK != rv));
+
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+			do
+			{
+				cmd = get_sub_cmd("tags_to_rm", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: how many tags need to be removed.\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: how many tags need to be removed.\n");
+					else
+						entry.tags_to_rm = tmp;
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("stpid_idx_xlt_cmd", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: 0 for unchanged, 1 for replace stpid_idx, \n"
+							"2 for copy from original stpid_idx, 3 for copy from original ctpid_idx. \n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint32(cmd, &entry.stpid_idx_xlt_cmd, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: 0 for unchanged, 1 for replace stpid_idx, \n"
+							"2 for copy from original stpid_idx, 3 for copy from original ctpid_idx. \n");
+				}
+
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("stpid_idx_xlt", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: the range is 0 -- 3\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+					{
+						dprintf("usage: the range is 0 -- 3\n");
+					}
+					else
+					{
+						entry.stpid_idx_xlt = tmp;
+					}
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("ctpid_idx_xlt_cmd", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: 0 for unchanged, 1 for replace ctpid_idx, \n"
+							"2 for copy from original stpid_idx, 3 for copy from original ctpid_idx. \n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint32(cmd, &entry.ctpid_idx_xlt_cmd, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: 0 for unchanged, 1 for replace ctpid_idx, \n"
+							"2 for copy from original stpid_idx, 3 for copy from original ctpid_idx. \n");
+				}
+
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("ctpid_idx_xlt", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: the range is 0 -- 3\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+					{
+						dprintf("usage: the range is 0 -- 3\n");
+					}
+					else
+					{
+						entry.ctpid_idx_xlt = tmp;
+					}
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("dscp_map_idx", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: the range is 0 -- 1\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint32_t));
+					if (SW_OK != rv)
+					{
+						dprintf("usage: the range is 0 -- 1\n");
+					}
+					else
+					{
+						entry.dscp_map_idx = tmp;
+					}
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("fwd_action", "forward");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: forward/drop/rdtcpu/cpycpu\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_maccmd(cmd, &(entry.fwd_cmd), sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: forward/drop/rdtcpu/cpycpu\n");
+				}
+			}while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("svc_code_en", "no");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: <yes/no/y/n>\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.svc_code_en,
+							sizeof (a_bool_t));
+					if (SW_OK != rv)
+						dprintf("usage: <yes/no/y/n>\n");
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("svc_code", "0");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: service code value\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: service code value\n");
+					else
+						entry.svc_code = tmp;
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			do
+			{
+				cmd = get_sub_cmd("dst_valid", "no");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: <yes/no/y/n>\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_confirm(cmd, A_FALSE, &entry.dst_valid,
+							sizeof (a_bool_t));
+					if (SW_OK != rv)
+						dprintf("usage: <yes/no/y/n>\n");
+				}
+			}
+			while (talk_mode && (SW_OK != rv));
+
+			cmd_data_check_element("dest_info_type", "port_id",
+								"usage:dest_info_type:port_bitmap/port_id, etc\n",
+								cmd_data_check_attr, ("dest_info_type", cmd,
+								&(entry.dst_port.dest_info_type),
+								sizeof(entry.dst_port.dest_info_type)));
+
+			cmd_data_check_element("dest_info_value", "0",
+								"usage:dest_info_value, port_id/port_bmp, etc\n",
+								cmd_data_check_uint32, (cmd, &(entry.dst_port.dest_info_value),
+								sizeof (entry.dst_port.dest_info_value)));
+		}
 	}
 
 	*val = entry;
@@ -27660,17 +28216,17 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 			entry->cvid_xlt);
 	dprintf("\n[swap_spcp_cpcp]:%s  ",
 			entry->swap_spcp_cpcp?"ENABLE":"DISABLE");
-	dprintf("\n[spcp_translation_en]:%s  [spcptranslation]:%d  [cpcp_translation_en]:%s  [cpcptranslation]:%d  ",
-			entry->spcp_xlt_enable?"ENABLE":"DISABLE",
+	dprintf("\n[spcp_translation_cmd]:%#x  [spcptranslation]:%d  [cpcp_translation_cmd]:%#x  [cpcptranslation]:%d  ",
+			entry->spcp_xlt_cmd,
 			entry->spcp_xlt,
-			entry->cpcp_xlt_enable?"ENABLE":"DISABLE",
+			entry->cpcp_xlt_cmd,
 			entry->cpcp_xlt);
 	dprintf("\n[swap_sdei_cdei]:%s",
 			entry->swap_sdei_cdei?"ENABLE":"DISABLE");
-	dprintf("\n[sdei_translation_en]:%s  [sdeitranslation]:%d  [cdei_translation_en]:%s  [cdeitranslation]:%d  ",
-			entry->sdei_xlt_enable?"ENABLE":"DISABLE",
+	dprintf("\n[sdei_translation_cmd]:%#x  [sdeitranslation]:%d  [cdei_translation_cmd]:%#x  [cdeitranslation]:%d  ",
+			entry->sdei_xlt_cmd,
 			entry->sdei_xlt,
-			entry->cdei_xlt_enable?"ENABLE":"DISABLE",
+			entry->cdei_xlt_cmd,
 			entry->cdei_xlt);
 	dprintf("\n[counter_en]:%s  [counter_id]:%d",
 			entry->counter_enable?"ENABLE":"DISABLE",
@@ -27691,6 +28247,28 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 
 		dprintf("\n[vni_resv_enable]:%s  [vni_resv]:0x%x\n\n",
 				entry->vni_resv_enable?"ENABLE":"DISABLE", entry->vni_resv);
+
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+			dprintf("\n[stpid_idx_xlt_cmd]:0x%x  [stpid_idx_xlt]:0x%x  [ctpid_idx_xlt_cmd]:0x%x  [ctpid_idx_xlt]:0x%x",
+					entry->stpid_idx_xlt_cmd, entry->stpid_idx_xlt, entry->ctpid_idx_xlt_cmd, entry->ctpid_idx_xlt);
+			dprintf("\n[tags_to_rm]:0x%x  [dscp_map_idx]:0x%x  [counter_mode]:0x%x",
+					entry->tags_to_rm, entry->dscp_map_idx, entry->counter_mode);
+			dprintf("\n[svc_code_en]:%s  [svc_code]:0x%x",
+					entry->svc_code_en?"ENABLE":"DISABLE", entry->svc_code);
+
+			dprintf("\n[dst_valid]:%s\n", entry->dst_valid?"Yes":"No");
+		    cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
+		        &(entry->dst_port.dest_info_type),
+		        sizeof(entry->dst_port.dest_info_type));
+		    dprintf("\n");
+		    cmd_data_print_uint32("dest_info_value",
+		        &(entry->dst_port.dest_info_value),
+		        sizeof(entry->dst_port.dest_info_value));
+		    dprintf("\n");
+
+   			cmd_data_print_maccmd("fwd_action", (a_uint32_t *) & (entry->fwd_cmd), 4);
+		    dprintf("\n\n");
+		}
 	}
 }
 

@@ -821,6 +821,9 @@ void
 cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
+cmd_data_check_port_vlan_translation_adv_rule_with_port(char *info, fal_vlan_trans_adv_rule_t *val, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_port_vlan_translation_adv_action(char *info, fal_vlan_trans_adv_action_t *val, a_uint32_t size);
 
 void
