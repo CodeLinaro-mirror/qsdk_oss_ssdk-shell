@@ -475,6 +475,12 @@ struct cmd_des_t gcmd_des[] =
 		    "<ingress|egress> <index>", SW_API_PT_VLAN_TRANS_ADV_SET, NULL},
             {"translationAdv", "get", "get a vlan translation entry based on direction and index",
 		    "<ingress|egress> <index>", SW_API_PT_VLAN_TRANS_ADV_GET, NULL},
+	    {"trans_dscp_pcp_mapping", "set", "set vlan translation dscp to pcp mapping",
+		    "<ingress|egress|all> <group_id> <dscp> <pcp>",
+		    SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_SET, NULL},
+	    {"trans_dscp_pcp_mapping", "get", "get vlan translation dscp to pcp mapping",
+		    "<ingress|egress> <group_id> <dscp>",
+		    SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

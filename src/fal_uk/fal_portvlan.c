@@ -815,3 +815,23 @@ fal_port_egress_vlan_filter_get(a_uint32_t dev_id,
     rv = sw_uk_exec(SW_API_PT_EGRESS_VLAN_FILTER_GET, dev_id, port_id, filter);
     return rv;
 }
+
+sw_error_t
+fal_vlan_trans_dscp_pcp_mapping_set(a_uint32_t dev_id, fal_port_vlan_direction_t direction,
+		a_uint8_t group_id, a_uint8_t dscp, a_uint8_t pcp)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_SET, dev_id, direction, group_id, dscp, pcp);
+    return rv;
+}
+
+sw_error_t
+fal_vlan_trans_dscp_pcp_mapping_get(a_uint32_t dev_id, fal_port_vlan_direction_t direction,
+		a_uint8_t group_id, a_uint8_t dscp, a_uint8_t *pcp)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_GET, dev_id, direction, group_id, dscp, pcp);
+    return rv;
+}

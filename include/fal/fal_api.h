@@ -407,7 +407,9 @@ extern "C" {
     SW_API_DEF(SW_API_PT_EGRESS_VLAN_FILTER_SET, fal_port_egress_vlan_filter_set), \
     SW_API_DEF(SW_API_PT_EGRESS_VLAN_FILTER_GET, fal_port_egress_vlan_filter_get), \
     SW_API_DEF(SW_API_PT_VLAN_TRANS_ADV_SET, fal_port_vlan_trans_adv_set),  \
-    SW_API_DEF(SW_API_PT_VLAN_TRANS_ADV_GET, fal_port_vlan_trans_adv_get),
+    SW_API_DEF(SW_API_PT_VLAN_TRANS_ADV_GET, fal_port_vlan_trans_adv_get), \
+    SW_API_DEF(SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_SET, fal_vlan_trans_dscp_pcp_mapping_set), \
+    SW_API_DEF(SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_GET, fal_vlan_trans_dscp_pcp_mapping_get),
 
 #define PORTVLAN_API_PARAM \
     SW_API_DESC(SW_API_PT_ING_MODE_GET) \
@@ -489,7 +491,9 @@ extern "C" {
     SW_API_DESC(SW_API_PT_EGRESS_VLAN_FILTER_SET) \
     SW_API_DESC(SW_API_PT_EGRESS_VLAN_FILTER_GET) \
     SW_API_DESC(SW_API_PT_VLAN_TRANS_ADV_SET) \
-    SW_API_DESC(SW_API_PT_VLAN_TRANS_ADV_GET)
+    SW_API_DESC(SW_API_PT_VLAN_TRANS_ADV_GET) \
+    SW_API_DESC(SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_SET) \
+    SW_API_DESC(SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_GET)
 #else
 #define PORTVLAN_API
 #define PORTVLAN_API_PARAM
