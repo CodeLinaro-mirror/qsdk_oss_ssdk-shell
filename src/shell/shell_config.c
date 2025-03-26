@@ -470,6 +470,10 @@ struct cmd_des_t gcmd_des[] =
 		    "<port_id> <filter_cmd>", SW_API_PT_EGRESS_VLAN_FILTER_SET, NULL},
             {"egressfilter", "get", "get port egress filter",
 		    "<port_id>", SW_API_PT_EGRESS_VLAN_FILTER_GET, NULL},
+            {"translationAdv", "set", "set a vlan translation entry based on direction and index",
+		    "<ingress|egress> <index>", SW_API_PT_VLAN_TRANS_ADV_SET, NULL},
+            {"translationAdv", "get", "get a vlan translation entry based on direction and index",
+		    "<ingress|egress> <index>", SW_API_PT_VLAN_TRANS_ADV_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

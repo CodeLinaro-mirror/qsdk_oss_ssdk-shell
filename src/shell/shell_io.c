@@ -26763,6 +26763,7 @@ cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name,
 	entry = (fal_vlan_trans_adv_rule_t *) buf;
 
 	dprintf("\n\n rule field: ");
+	dprintf("\n[index]:0x%x", entry->index);
 	dprintf("\n[port_bitmap]:0x%x", entry->port_bitmap);
 	cmd_data_print_vlan_xlt_tag_fmt("\n[stagformat]:", entry->s_tagged,
 			sizeof(entry->s_tagged));
