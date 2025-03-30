@@ -581,6 +581,10 @@ struct cmd_des_t gcmd_des[] =
                     SW_API_ACL_VPGROUP_GET, NULL},
             {"macentry", "set", "set mac entry", "<entry>", SW_API_ACL_MAC_ENTRY_SET, NULL},
             {"counter", "get", "get acl counter", "<entry_index>", SW_API_ACL_COUNTER_GET, NULL},
+	    {"rulePriority", "set", "set rule priority", "<list_id> <rule_id> <priority>",
+		    SW_API_ACL_RULE_PRIORITY_SET, NULL},
+	    {"rulePriority", "get", "get rule priority", "<list_id> <rule_id>",
+		    SW_API_ACL_RULE_PRIORITY_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

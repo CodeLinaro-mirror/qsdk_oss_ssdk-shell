@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2016-2017, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2022-2023, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2025, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -312,5 +312,25 @@ fal_acl_counter_get(a_uint32_t dev_id, a_uint32_t entry_index, fal_entry_counter
     sw_error_t rv = SW_OK;
 
     rv = sw_uk_exec(SW_API_ACL_COUNTER_GET, dev_id, entry_index, acl_counter);
+    return rv;
+}
+
+sw_error_t
+fal_acl_rule_priority_set(a_uint32_t dev_id, a_uint32_t list_id,
+		a_uint32_t rule_id, a_uint32_t priority)
+{
+    sw_error_t rv = SW_OK;
+
+    rv = sw_uk_exec(SW_API_ACL_RULE_PRIORITY_SET, dev_id, list_id, rule_id, priority);
+    return rv;
+}
+
+sw_error_t
+fal_acl_rule_priority_get(a_uint32_t dev_id, a_uint32_t list_id,
+		a_uint32_t rule_id, a_uint32_t *priority)
+{
+    sw_error_t rv = SW_OK;
+
+    rv = sw_uk_exec(SW_API_ACL_RULE_PRIORITY_GET, dev_id, list_id, rule_id, priority);
     return rv;
 }
