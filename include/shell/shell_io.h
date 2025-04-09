@@ -361,7 +361,11 @@ void
 cmd_data_print_fdb_smode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 void
-cmd_data_print_fdb_ctrl_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+cmd_data_print_fdb_learning_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_fdb_learning_ctrl(char* cmd_str, a_uint32_t *arg_val, a_uint32_t);
+
 sw_error_t
 cmd_data_check_fx100_config(char *cmd_str, void * arg_val, a_uint32_t size);
 

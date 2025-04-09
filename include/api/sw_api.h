@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022-2024, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2025, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -111,7 +111,7 @@ typedef enum
 	SW_PHYCONFIG,
 	SW_DATA_MAX,
 	SW_FDBSMODE,
-	SW_FDB_CTRL_MODE,
+	SW_FDB_LEARN_CTRL,
 	SW_FX100CONFIG,
 	SW_SGENTRY,
 	SW_SEC_MAC,
