@@ -646,6 +646,8 @@ struct cmd_des_t gcmd_des[] =
 	{"dequeue", "set", "dequeue control set", "<queue_id> <ctrl>", SW_API_QOS_SCHEDULER_DEQUEU_CTRL_SET, NULL},
 	{"portscheduler", "reset", "reset queue scheduler config", "<port_id>", SW_API_QOS_PORT_SCHEDULER_CFG_RESET, NULL},
 	{"schedulerresource", "get", "get port scheduler resource", "<port_id>", SW_API_QOS_PORT_SCHEDULER_RESOURCE_GET, NULL},
+	{"pcpcfg", "set", "set pcp cfg", "<port_id> <pcpcfg>", SW_API_QOS_PORT_PCP_CFG_SET, NULL},
+	{"pcpcfg", "get", "get pcp cfg", "<port_id>", SW_API_QOS_PORT_PCP_CFG_GET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

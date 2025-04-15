@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022-2024, Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2025, Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,8 +14,6 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
-
 
 #ifndef _SW_API_H
 #define _SW_API_H
@@ -324,6 +322,7 @@ typedef enum
 	SW_FLOW_NPT66_IID_CAL,
 	SW_FLOW_NPT66_IID,
 	SW_PKTEDIT_PADDING,
+	SW_PCP_CFG,
 /* auto_insert_flag */
 } sw_data_type_e;
 
