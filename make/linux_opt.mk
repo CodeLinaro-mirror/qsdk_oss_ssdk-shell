@@ -178,6 +178,10 @@ ifeq (TRUE, $(IN_PKTEDIT))
   MODULE_CFLAG += -DIN_PKTEDIT
 endif
 
+ifeq (TRUE, $(IN_SAMPL))
+  MODULE_CFLAG += -DIN_SAMPL
+endif
+
 #auto_insert_flag
 
 #ifdef UK_NL_PROT

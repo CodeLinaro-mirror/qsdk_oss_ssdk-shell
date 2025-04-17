@@ -2507,6 +2507,44 @@ extern "C" {
 #define PKTEDIT_API_PARAM
 #endif
 
+#ifdef IN_SAMPL
+#define SAMPL_API \
+	SW_API_DEF(SW_API_SAMPL_TIME_SET, fal_sampling_time_set), \
+	SW_API_DEF(SW_API_SAMPL_TIME_GET, fal_sampling_time_get), \
+	SW_API_DEF(SW_API_SAMPL_BUFF_STATUS_GET, \
+			fal_sampling_buff_status_get), \
+	SW_API_DEF(SW_API_SAMPL_BUFF_STATUS_CLEAR, \
+			fal_sampling_buff_status_clear), \
+	SW_API_DEF(SW_API_SAMPL_DONE_MISS_CNT_GET, \
+			fal_sampling_done_miss_counter_get), \
+	SW_API_DEF(SW_API_SAMPL_DONE_MISS_CNT_CLEAR, \
+			fal_sampling_done_miss_counter_clear), \
+	SW_API_DEF(SW_API_SAMPL_BURST_CFG_SET, fal_sampling_burst_cfg_set), \
+	SW_API_DEF(SW_API_SAMPL_BURST_CFG_GET, fal_sampling_burst_cfg_get), \
+	SW_API_DEF(SW_API_SAMPL_CTRL_SET, fal_sampling_ctrl_set), \
+	SW_API_DEF(SW_API_SAMPL_CTRL_GET, fal_sampling_ctrl_get), \
+	SW_API_DEF(SW_API_SAMPL_WINDOW_EN_SET, fal_sampling_window_en_set), \
+	SW_API_DEF(SW_API_SAMPL_WINDOW_EN_GET, fal_sampling_window_en_get), \
+	SW_API_DEF(SW_API_SAMPL_COUNTER_GET, fal_sampling_counter_get),
+#define SAMPL_API_PARAM \
+	SW_API_DESC(SW_API_SAMPL_TIME_SET) \
+	SW_API_DESC(SW_API_SAMPL_TIME_GET) \
+	SW_API_DESC(SW_API_SAMPL_BUFF_STATUS_GET) \
+	SW_API_DESC(SW_API_SAMPL_BUFF_STATUS_CLEAR) \
+	SW_API_DESC(SW_API_SAMPL_DONE_MISS_CNT_GET) \
+	SW_API_DESC(SW_API_SAMPL_DONE_MISS_CNT_CLEAR) \
+	SW_API_DESC(SW_API_SAMPL_BURST_CFG_SET) \
+	SW_API_DESC(SW_API_SAMPL_BURST_CFG_GET) \
+	SW_API_DESC(SW_API_SAMPL_CTRL_SET) \
+	SW_API_DESC(SW_API_SAMPL_CTRL_GET) \
+	SW_API_DESC(SW_API_SAMPL_WINDOW_EN_SET) \
+	SW_API_DESC(SW_API_SAMPL_WINDOW_EN_GET) \
+	SW_API_DESC(SW_API_SAMPL_COUNTER_GET)
+#else
+#define SAMPL_API
+#define SAMPL_API_PARAM
+#endif
+
 /* auto_insert_flag */
 
 /*qca808x_start*/
@@ -2560,6 +2598,7 @@ extern "C" {
     TUNNEL_PROGRAM_API \
     ATHTAG_API \
     PKTEDIT_API \
+    SAMPL_API \
 /* auto_insert_flag_1 */ \
 /*qca808x_start*/\
     SW_API_DEF(SW_API_MAX, NULL),
@@ -2617,6 +2656,7 @@ extern "C" {
     TUNNEL_PROGRAM_API_PARAM \
     ATHTAG_API_PARAM \
     PKTEDIT_API_PARAM \
+    SAMPL_API_PARAM \
 /* auto_insert_flag_2 */ \
 /*qca808x_start*/\
     SW_PARAM_DEF(SW_API_MAX, SW_UINT32, 4, SW_PARAM_IN, "Dev ID"),
