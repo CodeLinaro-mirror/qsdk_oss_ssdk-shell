@@ -1231,7 +1231,7 @@ struct cmd_des_t gcmd_des[] =
             {"portbasedvsi", "get", "Get port based vsi", "<port_id>", SW_API_PORT_VSI_GET, NULL},
             {"vlanbasedvsi", "set", "Set vlan vsi", "<port_id> <stag_vid> <ctag_vid> <vsi>", SW_API_PORT_VLAN_VSI_SET, NULL},
             {"vlanbasedvsi", "get", "Get vlan vsi", "<port_id> <stag_vid> <ctag_vid>", SW_API_PORT_VLAN_VSI_GET, NULL},
-            {"table", "dump", "Dump VSI SW and HW table", "", SW_API_VSI_TBL_DUMP, NULL},
+            {"table", "dump", "Dump VSI SW and HW table", "", SW_CMD_VSI_TBL_DUMP, cmd_show_vsi},
             {"learnctrl", "set", "Set vsi based new address learn", "<vsi> <lrn_en> <action>", SW_API_VSI_NEWADDR_LRN_SET, NULL},
             {"learnctrl", "get", "Get vsi based new address learn", "<vsi>", SW_API_VSI_NEWADDR_LRN_GET, NULL},
             {"stationmove", "set", "Set vsi based station move", "<vsi> <stamove_en> <action>", SW_API_VSI_STAMOVE_SET, NULL},

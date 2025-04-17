@@ -676,6 +676,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_VSI_MEMBER, cmd_data_check_vsi_member, cmd_data_print_vsi_member_entry),
     SW_TYPE_DEF(SW_VSI_BRIDGE_VSI, cmd_data_check_vsi_bridge_vsi, cmd_data_print_vsi_bridge_vsi),
     SW_TYPE_DEF(SW_VSI_INVALIDVSI_CTRL, cmd_data_check_vsi_invalidvsi_ctrl, cmd_data_print_vsi_invalidvsi_ctrl),
+    SW_TYPE_DEF(SW_VSI_TBL_INFO, NULL, cmd_data_print_vsi_tbl),
     SW_TYPE_DEF(SW_VSI_COUNTER, NULL, cmd_data_print_vsi_counter),
     SW_TYPE_DEF(SW_MTU_INFO, NULL, cmd_data_print_mtu_info),
     SW_TYPE_DEF(SW_MRU_INFO, NULL, cmd_data_print_mru_info),
@@ -18051,6 +18052,37 @@ cmd_data_print_vsi_bridge_vsi(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     dprintf("\n");
     cmd_data_print_uint32("bridge_vsi_id", &bridge_vsi->bridge_vsi_id,
         sizeof(bridge_vsi->bridge_vsi_id));
+
+    return;
+}
+
+void
+cmd_data_print_vsi_tbl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    a_uint32_t i = 0;
+    ref_vsi_info_t *vsi_info = NULL;
+
+    vsi_info = (ref_vsi_info_t *) buf;
+
+    if(vsi_info->valid == 0)
+        return;
+    dprintf("vsi %d, pport bitmap 0x%x\n",vsi_info->vsi_id,
+        vsi_info->port_info.pport_bitmap);
+    for(i = 0; i < SSDK_MAX_VIRTUAL_PORT_NUM/32; i++)
+    {
+        dprintf("vsi %d, vport bitmap[%d] 0x%x\n",
+        vsi_info->vsi_id, i, vsi_info->port_info.vport_bitmap[i]);
+    }
+    for (i = 0; i < VSI_VLAN_XLT_RULE_NUM; i++)
+    {
+        if(vsi_info->vlan_info[i].vlan_port_bitmap != 0)
+        {
+            dprintf("%8s svlan %d, cvlan %d, port bitmap 0x%x\n","",
+            vsi_info->vlan_info[i].stag_vid,
+            vsi_info->vlan_info[i].ctag_vid,
+            vsi_info->vlan_info[i].vlan_port_bitmap);
+        }
+    }
 
     return;
 }

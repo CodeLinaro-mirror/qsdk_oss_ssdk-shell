@@ -1,15 +1,18 @@
 /*
  * Copyright (c) 2016-2017, 2021, The Linux Foundation. All rights reserved.
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
+ * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
 
@@ -30,6 +33,7 @@ extern "C" {
 
 #define FAL_VSI_INVALID 0xffff
 #define FAL_VLAN_INVALID 0xffff
+#define FAL_VSI_MAX 63
 
 typedef struct{
 	a_uint32_t lrn_en; /*0: disable new address learn, 1: enable new address learn*/
@@ -94,6 +98,26 @@ typedef struct
 	fal_dest_info_t dest_info;
 } fal_vsi_invalidvsi_ctrl_t;
 
+typedef struct {
+	a_uint32_t stag_vid;
+	a_uint32_t ctag_vid;
+	fal_pbmp_t vlan_port_bitmap; /*vlan based vsi*/
+}ref_vsi_vlan_info_t;
+
+typedef struct{
+	a_uint32_t pport_bitmap; /*port based vsi*/
+	a_uint32_t vport_bitmap[SSDK_MAX_VIRTUAL_PORT_NUM/32];
+}ref_vsi_port_info_t;
+
+#define VSI_VLAN_XLT_RULE_NUM 128
+
+typedef struct {
+	a_uint32_t vsi_id;
+	a_uint32_t valid;
+	ref_vsi_port_info_t port_info;
+	ref_vsi_vlan_info_t vlan_info[VSI_VLAN_XLT_RULE_NUM];
+} ref_vsi_info_t;
+
 sw_error_t
 fal_vsi_alloc(a_uint32_t dev_id, a_uint32_t *vsi);
 
@@ -113,7 +137,7 @@ sw_error_t
 fal_port_vlan_vsi_get(a_uint32_t dev_id, fal_port_t port_id, a_uint32_t stag_vid, a_uint32_t ctag_vid, a_uint32_t *vsi_id);
 
 sw_error_t
-fal_vsi_tbl_dump(a_uint32_t dev_id);
+ref_vsi_tbl_dump(a_uint32_t dev_id, a_uint32_t vsi_id, ref_vsi_info_t *vsi_info);
 
 sw_error_t
 fal_vsi_newaddr_lrn_set(a_uint32_t dev_id, a_uint32_t vsi_id, fal_vsi_newaddr_lrn_t *newaddr_lrn);
