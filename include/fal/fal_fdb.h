@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
- * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2023, 2025 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -154,6 +154,13 @@ enum {
         fal_fwd_cmd_t action; /* the action when port learn number exceed limit*/
     } fal_maclimit_ctrl_t;
 
+    typedef enum
+    {
+        DIS_LAERNING = 0,
+        HW_CTRL_LEARNING,
+        SW_CTRL_LEARNING
+    } fal_fdb_learning_ctrl;
+
 	sw_error_t
     fal_fdb_rfs_set(a_uint32_t dev_id, fal_fdb_rfs_t * entry);
 
@@ -232,11 +239,11 @@ enum {
 
 
     sw_error_t
-    fal_fdb_learning_ctrl_set(a_uint32_t dev_id, a_bool_t enable);
+    fal_fdb_learning_ctrl_set(a_uint32_t dev_id, fal_fdb_learning_ctrl ctrl);
 
 
     sw_error_t
-    fal_fdb_learning_ctrl_get(a_uint32_t dev_id, a_bool_t * enable);
+    fal_fdb_learning_ctrl_get(a_uint32_t dev_id, fal_fdb_learning_ctrl * ctrl);
 
 
     sw_error_t

@@ -634,7 +634,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_MACCONFIG, cmd_data_check_mac_config, cmd_data_print_mac_config),
     SW_TYPE_DEF(SW_PHYCONFIG, cmd_data_check_phy_config, cmd_data_print_phy_config),
     SW_TYPE_DEF(SW_FDBSMODE, cmd_data_check_fdb_smode, cmd_data_print_fdb_smode),
-    SW_TYPE_DEF(SW_FDB_CTRL_MODE, NULL, cmd_data_print_fdb_ctrl_mode),
+    SW_TYPE_DEF(SW_FDB_LEARN_CTRL, cmd_data_check_fdb_learning_ctrl, cmd_data_print_fdb_learning_ctrl),
     SW_TYPE_DEF(SW_FX100CONFIG, cmd_data_check_fx100_config, cmd_data_print_fx100_config),
     SW_TYPE_DEF(SW_SGENTRY, cmd_data_check_multi, cmd_data_print_multi),
     SW_TYPE_DEF(SW_SEC_MAC, cmd_data_check_sec_mac, NULL),
@@ -16105,21 +16105,48 @@ cmd_data_print_fdb_smode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
 }
 
 void
-cmd_data_print_fdb_ctrl_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+cmd_data_print_fdb_learning_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 {
     dprintf("[%s]:", param_name);
     if (*(a_uint32_t *) buf == 0)
     {
-        dprintf("auto mode");
+        dprintf("disable");
     }
     else if (*(a_uint32_t *) buf == 1)
     {
-        dprintf("control mode");
+        dprintf("hw_ctrl");
+    }
+    else if (*(a_uint32_t *) buf == 2)
+    {
+        dprintf("sw_ctrl");
     }
     else
     {
         dprintf("UNKNOWN VALUE");
     }
+}
+
+sw_error_t
+cmd_data_check_fdb_learning_ctrl(char* cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+    if (!strncasecmp(cmd_str, "disable", 10))
+    {
+        *arg_val = DIS_LAERNING;
+    }
+    else if (!strncasecmp(cmd_str, "hw_ctrl", 10))
+    {
+        *arg_val = HW_CTRL_LEARNING;
+    }
+    else if (!strncasecmp(cmd_str, "sw_ctrl", 10))
+    {
+       *arg_val = SW_CTRL_LEARNING;
+    }
+    else
+    {
+        return SW_BAD_VALUE;
+    }
+
+    return SW_OK;
 }
 
 sw_error_t
