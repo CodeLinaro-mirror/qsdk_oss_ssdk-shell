@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2016-2018, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -66,7 +66,9 @@ cmd_show_fdb(a_ulong_t *arg_val)
 			(ssdk_cfg.init_cfg.chip_type == CHIP_DESS) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE) ||
-		    (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE)) {
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)) {
 		sw_error_t rtn;
 		a_uint32_t cnt = 0, type = 0;
 		a_uint16_t rtn_size = sizeof(sw_error_t);
