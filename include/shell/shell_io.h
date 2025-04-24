@@ -608,6 +608,12 @@ cmd_data_print_queue_scheduler(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 sw_error_t
 cmd_data_check_ring_queue(char *cmd_str, void * val, a_uint32_t size);
 
+sw_error_t
+cmd_data_check_pcp_cfg(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_pcp_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
 void
 cmd_data_print_ring_queue(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 

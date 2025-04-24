@@ -591,3 +591,24 @@ fal_port_scheduler_resource_get(
     rv = sw_uk_exec(SW_API_QOS_PORT_SCHEDULER_RESOURCE_GET, dev_id, port_id, cfg);
     return rv;
 }
+
+sw_error_t
+fal_qos_port_pcp_cfg_set(a_uint32_t dev_id, fal_port_t port_id,
+		fal_qos_pcp_cfg_t *pcp_cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QOS_PORT_PCP_CFG_SET, dev_id, port_id, pcp_cfg);
+    return rv;
+}
+
+sw_error_t
+fal_qos_port_pcp_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
+		fal_qos_pcp_cfg_t *pcp_cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QOS_PORT_PCP_CFG_GET, dev_id, port_id, pcp_cfg);
+    return rv;
+}
+

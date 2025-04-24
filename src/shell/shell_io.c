@@ -727,6 +727,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_PORTPRI, cmd_data_check_port_pri, cmd_data_print_port_pri),
     SW_TYPE_DEF(SW_COSMAP, cmd_data_check_cosmap, cmd_data_print_cosmap),
     SW_TYPE_DEF(SW_SCHEDULER, cmd_data_check_queue_scheduler, cmd_data_print_queue_scheduler),
+    SW_TYPE_DEF(SW_PCP_CFG, cmd_data_check_pcp_cfg, cmd_data_print_pcp_cfg),
     SW_TYPE_DEF(SW_QUEUEBMP, cmd_data_check_ring_queue, cmd_data_print_ring_queue),
     SW_TYPE_DEF(SW_PORT_SHAPER_TOKEN_CONFIG, cmd_data_check_port_shaper_token_config,
 		    cmd_data_print_port_shaper_token_config),
@@ -21731,6 +21732,51 @@ cmd_data_print_queue_scheduler(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 			entry->sp_id, entry->e_pri, entry->c_pri, entry->c_drr_id, entry->e_drr_id);
     dprintf("\n[e_drr_wt]:0x%x [c_drr_wt]:0x%x [c_drr_unit]:0x%x [e_drr_unit]:0x%x [drr_frame_mode]:0x%x ",
 			entry->e_drr_wt, entry->c_drr_wt, entry->c_drr_unit, entry->e_drr_unit, entry->drr_frame_mode);
+}
+
+sw_error_t
+cmd_data_check_pcp_cfg(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    fal_qos_pcp_cfg_t entry;
+
+    aos_mem_zero(&entry, sizeof (fal_qos_pcp_cfg_t));
+
+    do
+    {
+        cmd = get_sub_cmd("pcp_mode", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        rv = cmd_data_check_uint8(cmd, (a_uint32_t *)&(entry.pcp_mode),
+                                   sizeof (a_uint8_t));
+
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("default_pcp_dei", "0");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        rv = cmd_data_check_uint8(cmd, (a_uint32_t *)&(entry.default_pcp_dei),
+                                   sizeof (a_uint8_t));
+
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    *(fal_qos_pcp_cfg_t *)val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_pcp_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_qos_pcp_cfg_t *entry;
+
+    entry = (fal_qos_pcp_cfg_t *) buf;
+
+    dprintf("\n[pcp_mode]:0x%x [default_pcp_dei]:0x%x", entry->pcp_mode, entry->default_pcp_dei);
 }
 
 sw_error_t
