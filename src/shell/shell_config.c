@@ -264,6 +264,7 @@ struct cmd_des_t gcmd_des[] =
 		SW_API_PT_ERP_STANDBY_ENTER, NULL},
 	    {"erpstandby", "exit", "exit standby", "",
 		SW_API_PT_ERP_STANDBY_EXIT, NULL},
+		{"loopbackport", "get", "get switch loopback port", "", SW_API_PT_SWITCH_LOOPBACK_PORT_GET, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },

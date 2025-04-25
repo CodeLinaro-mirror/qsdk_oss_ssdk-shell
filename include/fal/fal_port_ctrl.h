@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014, 2016-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -925,6 +925,9 @@ fal_erp_standby_enter (a_uint32_t dev_id, a_uint32_t active_pbmap);
 
 sw_error_t
 fal_erp_standby_exit (a_uint32_t dev_id);
+
+sw_error_t
+fal_switch_loopback_port_get(a_uint32_t dev_id, fal_port_t *port_id);
 
 /*qca808x_start*/
 #ifdef __cplusplus
