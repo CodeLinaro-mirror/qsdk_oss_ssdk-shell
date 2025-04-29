@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2017-2018, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -60,6 +60,7 @@ extern "C" {
     sw_error_t cmd_show_acl_udf_profile_entry(a_ulong_t *arg_val);
     sw_error_t cmd_show_ptp_timestamp(a_ulong_t *arg_val);
 	sw_error_t cmd_show_toeplitz_hash_config(a_ulong_t *arg_val);
+	sw_error_t cmd_show_vsi(a_ulong_t *arg_val);
 /*qca808x_start*/
 #ifdef __cplusplus
 }

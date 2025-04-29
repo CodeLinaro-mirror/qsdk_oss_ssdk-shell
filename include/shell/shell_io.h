@@ -714,6 +714,9 @@ void
 cmd_data_print_vsi_invalidvsi_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 void
+cmd_data_print_vsi_tbl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void
 cmd_data_print_vsi_counter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t

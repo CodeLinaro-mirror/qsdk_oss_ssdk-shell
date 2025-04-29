@@ -151,6 +151,29 @@ cmd_show_fdb(a_ulong_t *arg_val)
 }
 
 sw_error_t
+cmd_show_vsi(a_ulong_t *arg_val)
+{
+	a_uint32_t vsi_id = 0;
+	a_uint16_t rtn_size = sizeof(sw_error_t);
+	a_uint16_t p_size = sizeof(a_ulong_t);
+	ref_vsi_info_t *vsi_info =
+		(ref_vsi_info_t *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
+
+	dprintf("########Software VSI mapping table\n");
+	for(vsi_id = 0; vsi_id <= FAL_VSI_MAX; vsi_id++) {
+		aos_mem_zero(vsi_info, sizeof (ref_vsi_info_t));
+		arg_val[0] = SW_API_VSI_TBL_DUMP;
+		arg_val[1] = (a_ulong_t) ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = vsi_id;
+		arg_val[4] = (a_ulong_t) vsi_info;
+		cmd_exec_api(arg_val);
+	}
+
+	return SW_OK;
+}
+
+sw_error_t
 cmd_show_ctrlpkt(a_ulong_t *arg_val)
 {
 	sw_error_t rtn;

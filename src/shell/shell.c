@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014, 2017-2018, The Linux Foundation. All rights reserved.
  *
- * Copyright (c) 2021-2024 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
  *
  * Permission to use, copy, modify, and/or distribute this software for
  * any purpose with or without fee is hereby granted, provided that the
@@ -340,6 +340,7 @@ cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
 
     /*args number check */
     if ((arg_index == 0 && (api_id == SW_CMD_VLAN_SHOW ||
+				    api_id == SW_CMD_VSI_TBL_DUMP ||
 				    api_id == SW_CMD_RESV_FDB_SHOW ||
 				    api_id == SW_CMD_HOST_SHOW ||
 				    api_id == SW_CMD_HOST_IPV4_SHOW ||
