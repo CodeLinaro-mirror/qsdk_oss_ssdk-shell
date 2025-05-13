@@ -35647,6 +35647,7 @@ static const a_char_t *rule_src2_str[FAL_TUNNEL_RULE_SRC2_DATA_INVALID] = {
 	"tunnel_vni",
 	"proto_map0",
 	"proto_map1",
+	"flow_cookie",
 };
 
 sw_error_t
@@ -35681,6 +35682,7 @@ cmd_data_print_rule_src2(a_char_t *param_name,
 	    case FAL_TUNNEL_RULE_SRC2_TUNNEL_VNI:
 	    case FAL_TUNNEL_RULE_SRC2_PROTO_MAP0:
 	    case FAL_TUNNEL_RULE_SRC2_PROTO_MAP1:
+	    case FAL_TUNNEL_RULE_SRC2_FLOW_COOKIE:
 		    dprintf("%s", rule_src2_str[*buf]);
 		    break;
 	    default:
@@ -35697,6 +35699,7 @@ static const a_char_t *rule_src3_str[FAL_TUNNEL_RULE_SRC3_DATA_INVALID] = {
 	"hash_value",
 	"proto_map0",
 	"proto_map1",
+	"flow_cookie",
 };
 
 sw_error_t
@@ -35732,6 +35735,7 @@ cmd_data_print_rule_src3(a_char_t *param_name,
 	    case FAL_TUNNEL_RULE_SRC3_HASH_VALUE:
 	    case FAL_TUNNEL_RULE_SRC3_PROTO_MAP0:
 	    case FAL_TUNNEL_RULE_SRC3_PROTO_MAP1:
+	    case FAL_TUNNEL_RULE_SRC3_FLOW_COOKIE:
 		    dprintf("%s", rule_src3_str[*buf]);
 		    break;
 	    default:
@@ -36188,6 +36192,7 @@ cmd_data_check_tunnel_encap_rule_entry(char *cmd_str,
 					"\ttunnel_vni"
 					"\tproto_map0"
 					"\tproto_map1"
+					"\tflow_cookie"
 					"\n");
 			rv = SW_BAD_VALUE;
 		}
@@ -36202,6 +36207,7 @@ cmd_data_check_tunnel_encap_rule_entry(char *cmd_str,
 						"\ttunnel_vni"
 						"\tproto_map0"
 						"\tproto_map1"
+						"\tflow_cookie"
 						"\n");
 			}
 		}
@@ -36383,6 +36389,7 @@ cmd_data_check_tunnel_encap_rule_entry(char *cmd_str,
 					"\thash_value"
 					"\tproto_map0"
 					"\tproto_map1"
+					"\tflow_cookie"
 					"\n");
 			rv = SW_BAD_VALUE;
 		}
@@ -36398,6 +36405,7 @@ cmd_data_check_tunnel_encap_rule_entry(char *cmd_str,
 						"\thash_value"
 						"\tproto_map0"
 						"\tproto_map1"
+						"\tflow_cookie"
 						"\n");
 			}
 		}
