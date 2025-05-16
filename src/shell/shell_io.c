@@ -37740,6 +37740,27 @@ cmd_data_check_tunnel_encap_entry(char *cmd_str, fal_tunnel_encap_cfg_t *arg_val
 	} while(talk_mode && (SW_OK != rv));
 
 	do {
+		cmd = get_sub_cmd("ipv4_df_mode_ext", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: ipv4 df mode ext\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: ipv4 df mode ext\n");
+			else
+				entry.ipv4_df_mode_ext = tmp;
+		}
+
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
 		cmd = get_sub_cmd("ipv4_id_mode", "0");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
@@ -38022,6 +38043,7 @@ cmd_data_print_tunnel_encap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint3
 	cmd_data_print_confirm("[ip_proto_update]", entry->ip_proto_update,
 			sizeof(entry->ip_proto_update));
 	dprintf(" [ipv4_df_mode]:%d", entry->ipv4_df_mode);
+	dprintf(" [ipv4_df_mode_ext]:%d", entry->ipv4_df_mode_ext);
 	dprintf(" [ipv4_id_mode]:%d", entry->ipv4_id_mode);
 	dprintf(" [ipv6_flowlable_mode]:%d", entry->ipv6_flowlable_mode);
 
