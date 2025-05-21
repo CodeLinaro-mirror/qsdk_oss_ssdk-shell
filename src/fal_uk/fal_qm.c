@@ -1,18 +1,8 @@
 /*
  * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ * SPDX-License-Identifier: ISC
  */
-
-
 
 #include "sw.h"
 #include "sw_ioctl.h"
@@ -421,3 +411,91 @@ fal_qm_enqueue_config_get(a_uint32_t dev_id,
     rv = sw_uk_exec(SW_API_QM_ENQUEUE_CFG_GET, dev_id, enqueue_cfg);
     return rv;
 }
+
+sw_error_t
+fal_qm_counter_monitor_en_set(a_uint32_t dev_id, a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_EN_SET, dev_id, enable);
+    return rv;
+}
+
+sw_error_t
+fal_qm_counter_monitor_en_get(a_uint32_t dev_id, a_bool_t *enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_EN_GET, dev_id, enable);
+    return rv;
+}
+
+sw_error_t
+fal_qm_counter_monitor_stats_cleanup(a_uint32_t dev_id)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_STATS_CLEANUP, dev_id);
+    return rv;
+}
+
+sw_error_t
+fal_qm_counter_monitor_status_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
+	a_uint32_t cnt_id, a_bool_t *status)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_STATUS_GET, type, cnt_id, status);
+    return rv;
+}
+
+sw_error_t
+fal_qm_counter_monitor_map_set(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t map_id, fal_qm_monitor_map_t *monitor_map)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_MAP_SET, type, map_id, monitor_map);
+    return rv;
+}
+
+sw_error_t
+fal_qm_counter_monitor_map_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t map_id, fal_qm_monitor_map_t *monitor_map)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_MAP_GET, type, map_id, monitor_map);
+    return rv;
+}
+
+sw_error_t
+fal_qm_counter_monitor_ctrl_set(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t cnt_id, fal_qm_monitor_ctrl_t *monitor_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_CTRL_SET, type, cnt_id, monitor_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_qm_counter_monitor_ctrl_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t cnt_id, fal_qm_monitor_ctrl_t *monitor_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_CTRL_GET, type, cnt_id, monitor_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_qm_counter_monitor_stats_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t cnt_id, fal_qm_monitor_stats_t *monitor_stats)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_STATS_GET, type, cnt_id, monitor_stats);
+    return rv;
+}
+		

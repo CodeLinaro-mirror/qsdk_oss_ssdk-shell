@@ -1,19 +1,8 @@
 /*
  * Copyright (c) 2016-2018, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
- *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ * SPDX-License-Identifier: ISC
  */
-
 
 /**
  * @defgroup fal_qos FAL_QM
@@ -166,6 +155,28 @@ enum {
 	FUNC_QM_ENQUEUE_CFG_GET,
 	FUNC_QM_ENQUEUE_CFG_SET,
 };
+
+typedef enum {
+	  FAL_SRAM_UNIQ = 0,
+	  FAL_SRAM_MULTIQ,
+} fal_qm_queue_type_t;
+
+typedef struct {
+      a_bool_t cnt_en;
+      a_uint32_t cnt_id; /* means cnt id for unicast queue, means queue offset for multicast queue*/
+} fal_qm_monitor_map_t;
+
+typedef struct {
+      a_bool_t cnt_threshold_mode; /* 0 is byte mode, 1 is pkt mode*/
+      a_uint32_t cnt_threshold;
+} fal_qm_monitor_ctrl_t;
+
+typedef struct {
+      a_uint32_t packets;
+      a_uint32_t bytes;
+      a_uint32_t peak_packets;
+      a_uint32_t peak_bytes;
+} fal_qm_monitor_stats_t;
 
 sw_error_t
 fal_ac_ctrl_set(
@@ -359,6 +370,42 @@ sw_error_t
 fal_qm_enqueue_config_get(a_uint32_t dev_id,
 		fal_enqueue_cfg_t *enqueue_cfg);
 
+sw_error_t
+fal_qm_counter_monitor_en_set(a_uint32_t dev_id, a_bool_t enable);
+
+sw_error_t
+fal_qm_counter_monitor_en_get(a_uint32_t dev_id, a_bool_t *enable);
+
+sw_error_t
+fal_qm_counter_monitor_stats_cleanup(a_uint32_t dev_id);
+
+/* cnt_id means counter id for unicast queue, means port id for multicast queue type */
+sw_error_t
+fal_qm_counter_monitor_status_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t cnt_id, a_bool_t *status);
+
+/* map_id means queue id for unicast queue type, means port id for multicast queue type */
+sw_error_t
+fal_qm_counter_monitor_map_set(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t map_id, fal_qm_monitor_map_t *monitor_map);
+
+sw_error_t
+fal_qm_counter_monitor_map_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t map_id, fal_qm_monitor_map_t *monitor_map);
+
+/* cnt_id means counter id for unicast queue type, means port id for multicast queue type */
+sw_error_t
+fal_qm_counter_monitor_ctrl_set(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t cnt_id, fal_qm_monitor_ctrl_t *monitor_ctrl);
+
+sw_error_t
+fal_qm_counter_monitor_ctrl_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t cnt_id, fal_qm_monitor_ctrl_t *monitor_ctrl);
+
+/* cnt_id means counter id for unicast queue type, means port id for multicast queue type */
+sw_error_t
+fal_qm_counter_monitor_stats_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
+		a_uint32_t cnt_id, fal_qm_monitor_stats_t *monitor_stats);
 #ifdef __cplusplus
 }
 #endif                          /* __cplusplus */

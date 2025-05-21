@@ -324,6 +324,9 @@ typedef enum
 	SW_FLOW_NPT66_IID,
 	SW_PKTEDIT_PADDING,
 	SW_PCP_CFG,
+	SW_MONITOR_MAP,
+	SW_MONITOR_CTRL,
+	SW_MONITOR_STATS,
 /* auto_insert_flag */
 } sw_data_type_e;
 

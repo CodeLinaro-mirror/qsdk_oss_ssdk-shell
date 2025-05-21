@@ -477,6 +477,21 @@ void
 cmd_data_print_ac_obj(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 sw_error_t
+cmd_data_check_monitor_map(char *cmd_str, void * val, a_uint32_t size);
+
+sw_error_t
+cmd_data_check_monitor_ctrl(char *cmd_str, void * val, a_uint32_t size);
+
+void
+cmd_data_print_monitor_stats(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void
+cmd_data_print_monitor_map(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+void
+cmd_data_print_monitor_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+
+sw_error_t
 cmd_data_check_vsi_intf(char *cmd_str, void * val, a_uint32_t size);
 
 void
