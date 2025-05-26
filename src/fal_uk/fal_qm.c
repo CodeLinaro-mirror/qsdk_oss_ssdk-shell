@@ -498,4 +498,21 @@ fal_qm_counter_monitor_stats_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
     rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_STATS_GET, type, cnt_id, monitor_stats);
     return rv;
 }
-		
+
+sw_error_t fal_qm_tcont_get(a_uint32_t dev_id, a_uint32_t queue_id,
+		fal_queue_tcont_cfg_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_TCONT_GET, dev_id, queue_id, cfg);
+    return rv;
+}
+
+sw_error_t fal_qm_tcont_set(a_uint32_t dev_id, a_uint32_t queue_id,
+		fal_queue_tcont_cfg_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_TCONT_SET, dev_id, queue_id, cfg);
+    return rv;
+}

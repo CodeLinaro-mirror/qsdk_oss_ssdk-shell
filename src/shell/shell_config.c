@@ -1,18 +1,7 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2025, Qualcomm Innovation Center, Inc. All rights reserved.
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ * SPDX-License-Identifier: ISC
  */
 
 /*qca808x_start*/
@@ -1302,15 +1291,19 @@ struct cmd_des_t gcmd_des[] =
 		    SW_API_QM_ENQUEUE_CFG_GET, NULL},
 	    {"enqueue_cfg", "set", "set enqueue config", "<enqueue_rule>",
 		    SW_API_QM_ENQUEUE_CFG_SET, NULL},
-		{"cntmonitoren", "set", "set cnt monitor enable", "<enable|disable>", SW_API_QM_COUNTER_MONITOR_EN_SET, NULL},
-		{"cntmonitoren", "get", "get cnt monitor enable", "", SW_API_QM_COUNTER_MONITOR_EN_GET, NULL},
-		{"cntmonitorstats", "cleanup", "cleanup all cnts stats", "", SW_API_QM_COUNTER_MONITOR_STATS_CLEANUP, NULL},
-		{"cntmonitorstats", "get", "get specfied cnts stats", "<queue_type> <cnt_id>", SW_API_QM_COUNTER_MONITOR_STATS_GET, NULL},
-		{"cntmonitorstatus", "get", "get cnt status", "<queue_type> <cnt_id>", SW_API_QM_COUNTER_MONITOR_STATUS_GET, NULL},
-		{"cntmonitormap", "set", "set mapping between map_id and cnt_id", "<queue_type> <map_id> <map>", SW_API_QM_COUNTER_MONITOR_MAP_SET, NULL},
-		{"cntmonitormap", "get", "get mapping between map_id and cnt_id", "<queue_type> <map_id>", SW_API_QM_COUNTER_MONITOR_MAP_GET, NULL},
-		{"cntmonitorctrl", "set", "set cnt_id ctrl", "<queue_type> <cnt_id> <ctrl>", SW_API_QM_COUNTER_MONITOR_CTRL_SET, NULL},
-		{"cntmonitorctrl", "get", "get cnt_id ctrl", "<queue_type> <cnt_id>", SW_API_QM_COUNTER_MONITOR_CTRL_GET, NULL},
+	    {"cntmonitoren", "set", "set cnt monitor enable", "<enable|disable>", SW_API_QM_COUNTER_MONITOR_EN_SET, NULL},
+	    {"cntmonitoren", "get", "get cnt monitor enable", "", SW_API_QM_COUNTER_MONITOR_EN_GET, NULL},
+	    {"cntmonitorstats", "cleanup", "cleanup all cnts stats", "", SW_API_QM_COUNTER_MONITOR_STATS_CLEANUP, NULL},
+	    {"cntmonitorstats", "get", "get specfied cnts stats", "<queue_type> <cnt_id>", SW_API_QM_COUNTER_MONITOR_STATS_GET, NULL},
+	    {"cntmonitorstatus", "get", "get cnt status", "<queue_type> <cnt_id>", SW_API_QM_COUNTER_MONITOR_STATUS_GET, NULL},
+	    {"cntmonitormap", "set", "set mapping between map_id and cnt_id", "<queue_type> <map_id> <map>", SW_API_QM_COUNTER_MONITOR_MAP_SET, NULL},
+	    {"cntmonitormap", "get", "get mapping between map_id and cnt_id", "<queue_type> <map_id>", SW_API_QM_COUNTER_MONITOR_MAP_GET, NULL},
+	    {"cntmonitorctrl", "set", "set cnt_id ctrl", "<queue_type> <cnt_id> <ctrl>", SW_API_QM_COUNTER_MONITOR_CTRL_SET, NULL},
+	    {"cntmonitorctrl", "get", "get cnt_id ctrl", "<queue_type> <cnt_id>", SW_API_QM_COUNTER_MONITOR_CTRL_GET, NULL},
+	    {"tcont", "get", "get queue tcont config", "<queue_id>",
+		    SW_API_QM_TCONT_GET, NULL},
+	    {"tcont", "set", "set queue tcont config", "<queue_id> <tcont_cfg>",
+		    SW_API_QM_TCONT_SET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

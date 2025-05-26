@@ -1,18 +1,7 @@
 /*
  * Copyright (c) 2014-2019, 2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2021-2025, Qualcomm Innovation Center, Inc. All rights reserved.
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ * SPDX-License-Identifier: ISC
  */
 
 /*qca808x_start*/
@@ -1740,7 +1729,9 @@ extern "C" {
     SW_API_DEF(SW_API_QM_COUNTER_MONITOR_MAP_GET, fal_qm_counter_monitor_map_get), \
     SW_API_DEF(SW_API_QM_COUNTER_MONITOR_CTRL_SET, fal_qm_counter_monitor_ctrl_set), \
     SW_API_DEF(SW_API_QM_COUNTER_MONITOR_CTRL_GET, fal_qm_counter_monitor_ctrl_get), \
-    SW_API_DEF(SW_API_QM_COUNTER_MONITOR_STATS_GET, fal_qm_counter_monitor_stats_get),
+    SW_API_DEF(SW_API_QM_COUNTER_MONITOR_STATS_GET, fal_qm_counter_monitor_stats_get), \
+    SW_API_DEF(SW_API_QM_TCONT_GET, fal_qm_tcont_get), \
+    SW_API_DEF(SW_API_QM_TCONT_SET, fal_qm_tcont_set),
 
 #define QM_API_PARAM \
     SW_API_DESC(SW_API_UCAST_QUEUE_BASE_PROFILE_SET) \
@@ -1786,7 +1777,10 @@ extern "C" {
     SW_API_DESC(SW_API_QM_COUNTER_MONITOR_MAP_GET) \
     SW_API_DESC(SW_API_QM_COUNTER_MONITOR_CTRL_SET) \
     SW_API_DESC(SW_API_QM_COUNTER_MONITOR_CTRL_GET) \
-    SW_API_DESC(SW_API_QM_COUNTER_MONITOR_STATS_GET)
+    SW_API_DESC(SW_API_QM_COUNTER_MONITOR_STATS_GET) \
+    SW_API_DESC(SW_API_QM_TCONT_GET) \
+    SW_API_DESC(SW_API_QM_TCONT_SET)
+
 #else
 #define QM_API
 #define QM_API_PARAM

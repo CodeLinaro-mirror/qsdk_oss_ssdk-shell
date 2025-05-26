@@ -118,6 +118,11 @@ typedef struct {
 	a_uint64_t drop_bytes[FAL_QM_DROP_ITEMS];
 } fal_queue_stats_t;
 
+typedef struct {
+	a_bool_t valid;
+	a_uint32_t tcont_id;
+} fal_queue_tcont_cfg_t;
+
 enum {
 	FUNC_UCAST_HASH_MAP_SET = 0,
 	FUNC_AC_DYNAMIC_THRESHOLD_GET,
@@ -177,6 +182,16 @@ typedef struct {
       a_uint32_t peak_packets;
       a_uint32_t peak_bytes;
 } fal_qm_monitor_stats_t;
+
+sw_error_t
+fal_qm_tcont_set(a_uint32_t dev_id,
+		 a_uint32_t queue_id,
+		 fal_queue_tcont_cfg_t *cfg);
+
+sw_error_t
+fal_qm_tcont_get(a_uint32_t dev_id,
+		 a_uint32_t queue_id,
+		 fal_queue_tcont_cfg_t *cfg);
 
 sw_error_t
 fal_ac_ctrl_set(

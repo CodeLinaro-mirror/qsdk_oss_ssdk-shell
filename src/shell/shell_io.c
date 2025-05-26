@@ -1,18 +1,7 @@
 /*
  * Copyright (c) 2014-2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022-2025, Qualcomm Innovation Center, Inc. All rights reserved.
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ * SPDX-License-Identifier: ISC
  */
 
 /*qca808x_start*/
@@ -911,6 +900,7 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_MONITOR_MAP, cmd_data_check_monitor_map, cmd_data_print_monitor_map),
 	SW_TYPE_DEF(SW_MONITOR_CTRL, cmd_data_check_monitor_ctrl, cmd_data_print_monitor_ctrl),
 	SW_TYPE_DEF(SW_MONITOR_STATS, NULL, cmd_data_print_monitor_stats),
+    SW_TYPE_DEF(SW_TCONT_CFG, cmd_data_check_tcont_cfg, cmd_data_print_tcont_cfg),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -42851,4 +42841,40 @@ cmd_data_print_pktedit_padding(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 		(entry->tunnel_ip_len_gap_exp_en) ? "YES" : "NO");
 }
 
+sw_error_t
+cmd_data_check_tcont_cfg(char *info, fal_queue_tcont_cfg_t *arg_val, a_uint32_t size)
+{
+	fal_queue_tcont_cfg_t tcont_cfg;
+	a_uint32_t tmp;
+	char *cmd;
+
+	aos_mem_zero(&tcont_cfg, sizeof(fal_queue_tcont_cfg_t));
+
+        cmd_data_check_element("tcont_valid", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &tcont_cfg.valid,
+			sizeof(a_bool_t)));
+
+	cmd_data_check_element("tcont_id", "0",
+			"usage: tcont_id 0-31\n",
+			cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
+
+	tcont_cfg.tcont_id = tmp;
+
+	*arg_val = tcont_cfg;
+	return SW_OK;
+}
+
+void
+cmd_data_print_tcont_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_queue_tcont_cfg_t *entry;
+
+	entry = (fal_queue_tcont_cfg_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+	cmd_data_print_enable("tcont_valid", &entry->valid, sizeof(a_bool_t));
+	cmd_data_print_uint32("tcont_id", &entry->tcont_id, sizeof(a_uint32_t));
+	dprintf("\n");
+}
 /* auto_insert_flag_1 */
