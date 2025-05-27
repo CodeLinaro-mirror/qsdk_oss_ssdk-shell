@@ -917,6 +917,7 @@ static sw_data_type_t sw_data_type[] =
 		cmd_data_print_sampl_ctrl_cfg),
     SW_TYPE_DEF(SW_SAMPL_COUNTER, NULL, cmd_data_print_sampl_counter_entry),
 
+    SW_TYPE_DEF(SW_FLOW_KEY, cmd_data_check_flow_key_cfg, cmd_data_print_flow_key_cfg),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -23567,6 +23568,45 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 	    }
     }
 
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)) {
+	    a_bool_t enable = A_FALSE;
+
+	    cmd_data_check_element("route_nat_type", "0",
+			    "usage: 0: no nat, 1: snat, 2: dnat\n",
+			    cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
+	    entry.nat_action = tmp;
+
+	    cmd_data_check_element("route_en", "no",
+			    "usage: <yes/no/y/n>\n",
+			    cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				    sizeof(a_bool_t)));
+	    entry.route_en = enable;
+
+	    cmd_data_check_element("udf0_en", "no",
+			    "usage: <yes/no/y/n>\n",
+			    cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				    sizeof(a_bool_t)));
+	    entry.udf0_en = enable;
+
+	    cmd_data_check_element("udf1_en", "no",
+			    "usage: <yes/no/y/n>\n",
+			    cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				    sizeof(a_bool_t)));
+	    entry.udf1_en = enable;
+
+	    cmd_data_check_element("match_more", "0",
+			    "usage: SPI value for NATT, UDF0+UDF1 for flow key gen\n",
+			    cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
+	    entry.match_more = tmp;
+
+	    cmd_data_check_element("sampling_id", "0",
+			    "usage: STC counter ID\n",
+			    cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
+	    entry.sampling_id = tmp;
+    }
+
+
     cmd_data_check_flow_qos(cmd_str, flow_qos, size);
 
     *(fal_flow_entry_t *)val = entry;
@@ -23623,6 +23663,20 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 				    entry->policer_valid, sizeof(a_bool_t));
 		    dprintf(" [policer_index]:0x%x", entry->policer_index);
 	    }
+    }
+
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)) {
+
+	    dprintf(" [route_nat_type]:0x%x", entry->nat_action);
+	    cmd_data_print_confirm(" [route_en]:",
+			    entry->route_en, sizeof(a_bool_t));
+	    cmd_data_print_confirm(" [udf0_en]:",
+			    entry->udf0_en, sizeof(a_bool_t));
+	    cmd_data_print_confirm(" [udf1_en]:",
+			    entry->udf1_en, sizeof(a_bool_t));
+	    dprintf(" [match_more]:0x%x", entry->match_more);
+	    dprintf(" [sampling_id]:0x%x", entry->sampling_id);
     }
 
     if ((entry->entry_type & FAL_FLOW_IP4_5TUPLE_ADDR) ||
@@ -43622,4 +43676,225 @@ cmd_data_print_sampl_counter_entry(a_uint8_t * param_name, a_uint32_t * buf, a_u
 	return;
 }
 
+sw_error_t
+cmd_data_check_flow_key_cfg(char *cmd_str, fal_flow_key_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_flow_key_t entry;
+	a_uint32_t tmp = 0;
+	a_bool_t enable = A_FALSE;
+
+	aos_mem_zero(&entry, sizeof(fal_flow_key_t));
+
+        cmd_data_check_element("l3_type_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_L3_TYPE);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_L3_TYPE);
+
+	cmd_data_check_element("l3_type", "0",
+			"usage: L3 type value\n",
+			cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint32_t)));
+
+	entry.l3_type = tmp;
+
+        cmd_data_check_element("l4_type_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_L4_TYPE);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_L4_TYPE);
+
+	cmd_data_check_element("l4_type", "0",
+			"usage: L4 type value\n",
+			cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint32_t)));
+
+	entry.l4_type = tmp;
+
+        cmd_data_check_element("app_type_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_APP_TYPE);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_APP_TYPE);
+
+	cmd_data_check_element("app_type", "0",
+			"usage: APP type value\n",
+			cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint32_t)));
+
+	entry.app_type = tmp;
+
+        cmd_data_check_element("key_sip_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_SIP);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_SIP);
+
+        cmd_data_check_element("key_dip_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_DIP);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_DIP);
+
+        cmd_data_check_element("key_l4proto_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_IP_PROTOCOL);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_IP_PROTOCOL);
+
+        cmd_data_check_element("key_sport_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_SPORT);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_SPORT);
+
+        cmd_data_check_element("key_dport_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_DPORT);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_DPORT);
+
+        cmd_data_check_element("key_udf0_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_UDF0);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_UDF0);
+
+	cmd_data_check_element("udf0_idx", "0",
+			"usage: udf0 id to select\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+
+	entry.udf0_idx = tmp;
+
+	cmd_data_check_element("udf0_mask", "0",
+			"usage: udf0 mask value\n",
+			cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
+
+	entry.udf0_mask = tmp;
+
+        cmd_data_check_element("key_udf1_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+	if (enable == A_TRUE)
+		entry.key_bmp |= BIT(FAL_FLOW_KEY_UDF1);
+	else
+		entry.key_bmp &= ~BIT(FAL_FLOW_KEY_UDF1);
+
+	cmd_data_check_element("udf1_idx", "0",
+			"usage: udf1 id to select\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.udf1_idx = tmp;
+
+	cmd_data_check_element("udf1_mask", "0",
+			"usage: udf1 mask value\n",
+			cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
+	entry.udf1_mask = tmp;
+
+	*arg_val = entry;
+
+	return SW_OK;
+}
+
+static const a_char_t *flow_key_str[FAL_FLOW_KEY_MAX] = {
+	"key_l3_type",
+	"key_l4_type",
+	"key_app_type",
+	"key_sip",
+	"key_dip",
+	"key_l4proto",
+	"key_sport",
+	"key_dport",
+	"key_udf0",
+	"key_udf1",
+};
+
+void
+cmd_data_print_flow_key(a_char_t *param_name,
+		a_uint16_t *buf, a_uint32_t size)
+{
+	a_uint16_t key_bmp = *buf;
+	a_uint16_t key_index = 0;
+
+	dprintf("%s:", param_name);
+	while (key_bmp) {
+		if (key_bmp & 1) {
+			switch (key_index) {
+				case FAL_FLOW_KEY_L3_TYPE:
+				case FAL_FLOW_KEY_L4_TYPE:
+				case FAL_FLOW_KEY_APP_TYPE:
+				case FAL_FLOW_KEY_SIP:
+				case FAL_FLOW_KEY_DIP:
+				case FAL_FLOW_KEY_IP_PROTOCOL:
+				case FAL_FLOW_KEY_SPORT:
+				case FAL_FLOW_KEY_DPORT:
+				case FAL_FLOW_KEY_UDF0:
+				case FAL_FLOW_KEY_UDF1:
+					dprintf("%s ", flow_key_str[key_index]);
+					break;
+				default:
+					dprintf("UNKNOWN VALUE %d", key_index);
+					break;
+			}
+		}
+		key_bmp >>= 1;
+		key_index++;
+	}
+}
+
+void
+cmd_data_print_flow_key_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_flow_key_t *entry;
+
+	entry = (fal_flow_key_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_flow_key("[key_include]", &entry->key_bmp, sizeof(a_uint32_t));
+
+	cmd_data_print_uint16("l3_type", (a_uint32_t *)&entry->l3_type, sizeof(a_uint32_t));
+	cmd_data_print_uint16("l4_type", (a_uint32_t *)&entry->l4_type, sizeof(a_uint32_t));
+	cmd_data_print_uint16("app_type", (a_uint32_t *)&entry->app_type, sizeof(a_uint32_t));
+	cmd_data_print_uint8("udf0_idx", (a_uint32_t *)&entry->udf0_idx, sizeof(a_uint32_t));
+	cmd_data_print_uint16("udf0_mask", (a_uint32_t *)&entry->udf0_mask, sizeof(a_uint32_t));
+	cmd_data_print_uint8("udf1_idx", (a_uint32_t *)&entry->udf1_idx, sizeof(a_uint32_t));
+	cmd_data_print_uint16("udf1_mask", (a_uint32_t *)&entry->udf1_mask, sizeof(a_uint32_t));
+
+	dprintf("\n");
+}
 /* auto_insert_flag_1 */
