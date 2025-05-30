@@ -927,10 +927,15 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_SAMPL_CTRL, cmd_data_check_sampl_ctrl_cfg,
 		cmd_data_print_sampl_ctrl_cfg),
     SW_TYPE_DEF(SW_SAMPL_COUNTER, NULL, cmd_data_print_sampl_counter_entry),
-
     SW_TYPE_DEF(SW_FLOW_KEY, cmd_data_check_flow_key_cfg, cmd_data_print_flow_key_cfg),
     SW_TYPE_DEF(SW_VLAN_KEY, cmd_data_check_vlan_key_cfg, cmd_data_print_vlan_key_cfg),
     SW_TYPE_DEF(SW_EIP_LOOKUP_MODE, cmd_data_check_eip_lookup_mode_cfg, NULL),
+    SW_TYPE_DEF(SW_GEMPORT_GLB_CFG, cmd_data_check_gemport_global_cfg, cmd_data_print_gemport_global_cfg),
+    SW_TYPE_DEF(SW_GEMPORT_GEN_DFT, cmd_data_check_gemport_gen_default, cmd_data_print_gemport_gen_default),
+	SW_TYPE_DEF(SW_GEMPORT_GEN, cmd_data_check_gemport_gen_entry, cmd_data_print_gemport_gen_entry),
+	SW_TYPE_DEF(SW_GEMPORT_MAP, cmd_data_check_gemport_map, cmd_data_print_gemport_map),
+    SW_TYPE_DEF(SW_GEMPORT_CFG, cmd_data_check_gemport_cfg, cmd_data_print_gemport_cfg),
+    SW_TYPE_DEF(SW_GEMPORT_PLC, cmd_data_check_gemport_policer, cmd_data_print_gemport_policer),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -44196,6 +44201,7 @@ cmd_data_check_tcont_cfg(char *info, fal_queue_tcont_cfg_t *arg_val, a_uint32_t 
 	tcont_cfg.tcont_id = tmp;
 
 	*arg_val = tcont_cfg;
+
 	return SW_OK;
 }
 
@@ -44678,4 +44684,395 @@ cmd_data_check_eip_lookup_mode_cfg(char *cmd_str, fal_flow_eip_lookup_mode_t *ar
                     arg_val, sizeof(*arg_val));
 }
 
+sw_error_t
+cmd_data_check_gemport_global_cfg(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_gemport_global_cfg_t entry;
+    a_uint32_t tmp;
+
+	memset(&entry, 0, sizeof (fal_gemport_global_cfg_t));
+
+	cmd_data_check_element("gen_rule_miss_action", "forward",
+			"usage: <forward/drop/cpycpu/rdtcpu>\n", cmd_data_check_maccmd,
+			(cmd, &entry.gen_miss_cmd, sizeof(fal_fwd_cmd_t)));
+
+	cmd_data_check_element("vlan mode", "0", "usage: <0/1>\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.vlan_mode = tmp;
+
+	cmd_data_check_element("pcp mode", "0", "usage: <0/1>\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.pcp_mode = tmp;
+
+	*(fal_gemport_global_cfg_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_gemport_global_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_gemport_global_cfg_t *entry = (fal_gemport_global_cfg_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_maccmd("gen_rule_miss_action", &entry->gen_miss_cmd, sizeof(fal_fwd_cmd_t));
+	dprintf("\n[vlan_mode]:%u", entry->vlan_mode);
+	dprintf("\n[pcp_mode]:%u\n", entry->pcp_mode);
+}
+
+sw_error_t
+cmd_data_check_gemport_gen_default(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_gemport_gen_default_t entry;
+    a_uint32_t tmp;
+
+	memset(&entry, 0, sizeof (fal_gemport_gen_default_t));
+
+	cmd_data_check_element("vid", "0", "usage: <0-4095>\n",
+			cmd_data_check_uint32, (cmd, &entry.vlan_id, sizeof(a_uint32_t)));
+	cmd_data_check_element("pcp", "0", "usage: <0-7>\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.pcp = tmp;
+	cmd_data_check_element("dei", "0", "usage: <0-1>\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.dei = tmp;
+	cmd_data_check_element("dscp", "0", "usage: <0-63>\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.dscp = tmp;
+	cmd_data_check_element("dscp_mask", "0", "usage: <0x0-0x3f>\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.dscp_mask = tmp;
+
+	*(fal_gemport_gen_default_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_gemport_gen_default(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_gemport_gen_default_t *entry = (fal_gemport_gen_default_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("\n[vid]:%u", entry->vlan_id);
+	dprintf("\n[pcp]:%u", entry->pcp);
+	dprintf("\n[dei]:%u", entry->dei);
+	dprintf("\n[dscp]:%u", entry->dscp);
+	dprintf("\n[dscp_mask]:%#x\n", entry->dscp_mask);
+}
+
+sw_error_t
+cmd_data_check_gemport_gen_entry(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_gemport_gen_t entry;
+    a_uint32_t tmp;
+
+	memset(&entry, 0, sizeof (fal_gemport_gen_t));
+
+	cmd_data_check_element("src_info_valid", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.src_info_valid, sizeof(a_bool_t)));
+	if (entry.src_info_valid) {
+		cmd_data_check_element("src_info", "0", "port bitmap or vp\n",
+				cmd_data_check_uint32, (cmd, &entry.src_info, sizeof(a_uint32_t)));
+	}
+
+	cmd_data_check_element("dest_info_valid", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.dest_info_valid, sizeof (a_bool_t)));
+	if (entry.dest_info_valid) {
+		cmd_data_check_element("dest_info_type", "port_id",
+					"usage: port_id\n", cmd_data_check_attr,("dest_info_type", cmd,
+					&(entry.dest_info.dest_info_type), sizeof(entry.dest_info.dest_info_type)));
+		cmd_data_check_element("dest_port_id", "0", "physical or virtual port id.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.dest_info.dest_info_value = tmp;
+	}
+
+	cmd_data_check_element("vlan_id_valid", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.vlan_id_valid, sizeof (a_bool_t)));
+	if (entry.vlan_id_valid) {
+		cmd_data_check_element("vlan_id", "0", "usage: <0-4095>.\n",
+				cmd_data_check_uint32, (cmd, &entry.vlan_id, sizeof(a_uint32_t)));
+	}
+
+	cmd_data_check_element("pri_type", "0", "usage: <0-1>\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.pri_type = tmp;
+	if (entry.pri_type == 0) {
+		cmd_data_check_element("pcp_valid", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.pcp_valid, sizeof (a_bool_t)));
+		if (entry.pcp_valid) {
+			cmd_data_check_element("pcp", "0", "usage: <0-7>.\n",
+					cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+			entry.pcp = tmp;
+		}
+		cmd_data_check_element("dei_valid", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.dei_valid, sizeof (a_bool_t)));
+		if (entry.dei_valid) {
+			cmd_data_check_element("dei", "0", "usage: <0-1>.\n",
+					cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+			entry.dei = tmp;
+		}
+	} else if (entry.pri_type == 1) {
+		cmd_data_check_element("dscp_valid", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.dscp_valid, sizeof (a_bool_t)));
+		if (entry.dscp_valid) {
+			cmd_data_check_element("dscp", "0", "usage: <0-1>.\n",
+					cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+			entry.dscp = tmp;
+		}
+	}
+
+	cmd_data_check_element("gemport", "0", "usage: <0-127>.\n",
+						cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.gemport = tmp;
+
+	*(fal_gemport_gen_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_gemport_gen_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_gemport_gen_t *entry = (fal_gemport_gen_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("\n[src_info_valid]:%s\t[src_info]:%#x", entry->src_info_valid?"YES":"NO", entry->src_info);
+
+	dprintf("\n[dest_info_valid]:%s\t", entry->dest_info_valid?"YES":"NO");
+	cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
+		&(entry->dest_info.dest_info_type),
+		sizeof(entry->dest_info.dest_info_type));
+	dprintf("\t");
+	cmd_data_print_uint32("dest_info_value",
+		&(entry->dest_info.dest_info_value),
+		sizeof(entry->dest_info.dest_info_value));
+	dprintf("\n");
+
+	dprintf("\n[vlan_id_valid]:%s\t[vlan_id]:%d", entry->vlan_id_valid?"YES":"NO", entry->vlan_id);
+
+	dprintf("\n[pri_type]:%d", entry->pri_type);
+	dprintf("\n[pcp_valid]:%s\t[pcp]:%d", entry->pcp_valid?"YES":"NO", entry->pcp);
+	dprintf("\t[dei_valid]:%s\t[dei]:%d", entry->dei_valid?"YES":"NO", entry->dei);
+	dprintf("\n[dscp_valid]:%s\t[dscp]:%d", entry->dscp_valid?"YES":"NO", entry->dscp);
+
+	dprintf("\n[gemport]:%d\n", entry->gemport);
+}
+
+sw_error_t
+cmd_data_check_gemport_map(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_gemport_map_t entry;
+    a_uint32_t tmp;
+
+	memset(&entry, 0, sizeof (fal_gemport_map_t));
+
+	cmd_data_check_element("src_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.src_en, sizeof(a_bool_t)));
+	if (entry.src_en) {
+		cmd_data_check_element("src_port", "0", "port id, pp or vp.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.src_port = tmp;
+	}
+
+	cmd_data_check_element("int_pri_dp_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.int_pri_dp_en, sizeof(a_bool_t)));
+	if (entry.int_pri_dp_en) {
+		cmd_data_check_element("int_pri", "0", "internal priority 0-15.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.int_pri = tmp;
+		cmd_data_check_element("int_dp", "0", "Internal drop precedence.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.int_dp = tmp;
+	}
+
+	cmd_data_check_element("dest_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.dest_en, sizeof(a_bool_t)));
+	if (entry.dest_en) {
+		cmd_data_check_element("dest_info_type", "port_id",
+				"usage: port_bmp or port_id\n", cmd_data_check_attr,("dest_info_type", cmd,
+				&(entry.dest_info.dest_info_type), sizeof(entry.dest_info.dest_info_type)));
+		cmd_data_check_element("dest_port_id", "0", "physical or virtual port id or port bitmap.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.dest_info.dest_info_value = tmp;
+	}
+
+	cmd_data_check_element("service_code", "0", "usage: <0-255>.\n",
+						cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.service_code = tmp;
+
+	*(fal_gemport_map_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_gemport_map(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_gemport_map_t *entry = (fal_gemport_map_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("\n[src_en]:%s\t[src_port]:%d", entry->src_en?"YES":"NO", entry->src_port);
+
+	dprintf("\n[int_pri_dp_en]:%s\t[int_pri]:%d\t[int_dp]:%d", entry->int_pri_dp_en?"YES":"NO",
+		entry->int_pri, entry->int_dp);
+
+	dprintf("\n[dest_en]:%s\t", entry->dest_en?"YES":"NO");
+	cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
+		&(entry->dest_info.dest_info_type),
+		sizeof(entry->dest_info.dest_info_type));
+	dprintf("\t");
+	cmd_data_print_uint32("dest_info_value",
+		&(entry->dest_info.dest_info_value),
+		sizeof(entry->dest_info.dest_info_value));
+	dprintf("\n");
+
+	dprintf("\n[service_code]:%d\n", entry->service_code);
+}
+
+sw_error_t
+cmd_data_check_gemport_cfg(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_gemport_cfg_t entry;
+    a_uint32_t tmp;
+
+	memset(&entry, 0, sizeof(fal_gemport_cfg_t));
+
+	cmd_data_check_element("service_code_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.service_code_en, sizeof(a_bool_t)));
+	if (entry.service_code_en) {
+		cmd_data_check_element("service_code", "0", "usage: <0-255>.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.service_code = tmp;
+	}
+
+	cmd_data_check_element("int_pri_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.int_pri_en, sizeof(a_bool_t)));
+	if (entry.int_pri_en) {
+		cmd_data_check_element("int_pri", "0", "internal priority 0-15.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.int_pri = tmp;
+	}
+
+	cmd_data_check_element("int_dp_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.int_dp_en, sizeof(a_bool_t)));
+	if (entry.int_dp_en) {
+		cmd_data_check_element("int_dp", "0", "Internal drop precedence.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.int_dp = tmp;
+	}
+
+	cmd_data_check_element("enq_vp_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.enq_vp_en, sizeof(a_bool_t)));
+	if (entry.enq_vp_en) {
+		cmd_data_check_element("enq_vp", "0", "enqueue vp\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.enq_vp = tmp;
+	}
+
+	cmd_data_check_element("dest_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.dest_en, sizeof(a_bool_t)));
+	if (entry.dest_en) {
+		cmd_data_check_element("dest_pp", "0", "dest physical portid.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.dest_pp = tmp;
+		cmd_data_check_element("dest_vp", "0", "dest virtual portid.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.dest_vp = tmp;
+	}
+
+	cmd_data_check_element("fwd_cmd", "forward",
+			"usage: <forward/drop/cpycpu/rdtcpu>\n", cmd_data_check_maccmd,
+			(cmd, &entry.fwd_cmd, sizeof(fal_fwd_cmd_t)));
+
+	cmd_data_check_element("bypass_bitmap", "0", "qm, sawf bypassbitmap.\n",
+			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	entry.bypass_bitmap = tmp;
+
+	*(fal_gemport_cfg_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_gemport_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_gemport_cfg_t *entry = (fal_gemport_cfg_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("\n[service_code_en]:%s\t[service_code]:%d", entry->service_code_en?"YES":"NO", entry->service_code);
+	dprintf("\n[int_pri_en]:%s\t[int_pri]:%d", entry->int_pri_en?"YES":"NO", entry->int_pri);
+	dprintf("\n[int_dp_en]:%s\t[int_dp]:%d", entry->int_dp_en?"YES":"NO", entry->int_dp);
+	dprintf("\n[enq_vp_en]:%s\t[enq_vp]:%d", entry->enq_vp_en?"YES":"NO", entry->enq_vp);
+
+	dprintf("\n[dest_en]:%s\t[dest_pp]:%d\t[dest_vp]:%d", entry->dest_en?"YES":"NO",
+		entry->dest_pp, entry->dest_vp);
+
+	cmd_data_print_maccmd("fwd_cmd", &entry->fwd_cmd, sizeof(fal_fwd_cmd_t));
+
+	dprintf("\n[bypass_bitmap]:%#x\n", entry->bypass_bitmap);
+
+}
+
+sw_error_t
+cmd_data_check_gemport_policer(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_gemport_policer_t entry;
+    a_uint32_t tmp;
+
+	memset(&entry, 0, sizeof(fal_gemport_policer_t));
+
+	cmd_data_check_element("us_policer_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.us_policer_en, sizeof(a_bool_t)));
+	cmd_data_check_element("ds_policer_en", "no",
+			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			(cmd, A_FALSE, &entry.ds_policer_en, sizeof(a_bool_t)));
+	if (entry.us_policer_en || entry.ds_policer_en) {
+		cmd_data_check_element("us_policer_idx", "0", "usage: <0-511>.\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.us_policer_idx = tmp;
+	}
+
+	*(fal_gemport_policer_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_gemport_policer(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_gemport_policer_t *entry = (fal_gemport_policer_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	dprintf("\n[us_policer_en]:%s\t[ds_policer_en]:%s", entry->us_policer_en?"YES":"NO",
+		entry->ds_policer_en?"YES":"NO");
+	dprintf("\n[us_policer_idx]:%d\n", entry->us_policer_idx);
+}
 /* auto_insert_flag_1 */

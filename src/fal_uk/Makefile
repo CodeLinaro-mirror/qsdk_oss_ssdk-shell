@@ -162,12 +162,16 @@ ifeq (TRUE, $(IN_ATHTAG))
   SRC_LIST += fal_athtag.c
 endif
 
-ifeq (TRUE, $(IN_ATHTAG))
+ifeq (TRUE, $(IN_PKTEDIT))
   SRC_LIST += fal_pktedit.c
 endif
 
 ifeq (TRUE, $(IN_SAMPL))
   SRC_LIST += fal_sampling.c
+endif
+
+ifeq (TRUE, $(IN_PON))
+  SRC_LIST += fal_pon.c
 endif
 
 #auto_insert_flag
