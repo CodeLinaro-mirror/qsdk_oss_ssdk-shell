@@ -1,18 +1,7 @@
 /*
  * Copyright (c) 2014, 2016-2018, The Linux Foundation. All rights reserved.
- *
- * Copyright (c) 2021-2025 Qualcomm Innovation Center, Inc. All rights reserved.
- *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ * SPDX-License-Identifier: ISC
  */
 
 /*qca808x_start*/
@@ -1017,7 +1006,7 @@ cmd_show_tunnel_program_entry(a_ulong_t *arg_val)
 	program_type = arg_val[1];
 	cnt = 0;
 
-	if (program_type > FAL_TUNNEL_PROGRAM_TYPE_5) {
+	if (program_type >= FAL_TUNNEL_PROGRAM_TYPE_BUTT) {
 		return SW_BAD_PARAM;
 	}
 
@@ -1061,7 +1050,7 @@ cmd_show_tunnel_program_udf(a_ulong_t *arg_val)
 	program_type = arg_val[1];
 	cnt = 0;
 
-	if (program_type > FAL_TUNNEL_PROGRAM_TYPE_5) {
+	if (program_type >= FAL_TUNNEL_PROGRAM_TYPE_BUTT) {
 		return SW_BAD_PARAM;
 	}
 
@@ -1259,4 +1248,38 @@ cmd_show_toeplitz_hash_config(a_ulong_t *arg_val)
 	return SW_OK;
 }
 
+sw_error_t
+cmd_show_tunnel_tuple_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt = 0;
+	a_uint16_t rtn_size = sizeof(sw_error_t);
+	a_uint16_t p_size = sizeof(a_ulong_t);
+	fal_tunnel_tuple_entry_t *entry =
+		(fal_tunnel_tuple_entry_t  *)(ioctl_buf+(rtn_size+p_size-1)/p_size);
 
+	aos_mem_zero(entry, sizeof (fal_tunnel_tuple_entry_t ));
+	arg_val[0] = SW_API_TUNNEL_TUPLE_ENTRY_GETFIRST;
+
+	while (1)
+	{
+		arg_val[1] = (a_ulong_t) ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = (a_ulong_t) entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t) (*ioctl_buf)))
+		{
+			break;
+		}
+		arg_val[0] = SW_API_TUNNEL_TUPLE_ENTRY_GETNEXT;
+		cnt++;
+	}
+
+	if((rtn != SW_OK) && (rtn != SW_NO_MORE))
+		cmd_print_error(rtn);
+	else
+		dprintf("\ntotal %d entries\n", cnt);
+
+	return SW_OK;
+}

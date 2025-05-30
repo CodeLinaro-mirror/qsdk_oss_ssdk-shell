@@ -17,7 +17,7 @@
     do { if ((rtn) == NULL) return SW_BAD_PARAM; } while(0);
 
 #define DEFAULT_FLAG "default"
-#define MAX_ARRT_NUM 16
+#define MAX_ARRT_NUM 33
 #define INVALID_ARRT_VALUE 0xFFFFFFFF
 static char **full_cmdstrp;
 static int talk_mode = 1;
@@ -93,12 +93,32 @@ struct attr_des_t g_attr_des[] =
 			{"program3", FAL_TUNNEL_PROGRAM_TYPE_3},
 			{"program4", FAL_TUNNEL_PROGRAM_TYPE_4},
 			{"program5", FAL_TUNNEL_PROGRAM_TYPE_5},
+			{"program6", FAL_TUNNEL_PROGRAM_TYPE_6},
+			{"program7", FAL_TUNNEL_PROGRAM_TYPE_7},
+			{"program8", FAL_TUNNEL_PROGRAM_TYPE_8},
+			{"program9", FAL_TUNNEL_PROGRAM_TYPE_9},
+			{"program10", FAL_TUNNEL_PROGRAM_TYPE_10},
+			{"program11", FAL_TUNNEL_PROGRAM_TYPE_11},
+			{"program12", FAL_TUNNEL_PROGRAM_TYPE_12},
+			{"program13", FAL_TUNNEL_PROGRAM_TYPE_13},
+			{"program14", FAL_TUNNEL_PROGRAM_TYPE_14},
+			{"program15", FAL_TUNNEL_PROGRAM_TYPE_15},
 			{"0", FAL_TUNNEL_PROGRAM_TYPE_0},
 			{"1", FAL_TUNNEL_PROGRAM_TYPE_1},
 			{"2", FAL_TUNNEL_PROGRAM_TYPE_2},
 			{"3", FAL_TUNNEL_PROGRAM_TYPE_3},
 			{"4", FAL_TUNNEL_PROGRAM_TYPE_4},
 			{"5", FAL_TUNNEL_PROGRAM_TYPE_5},
+			{"6", FAL_TUNNEL_PROGRAM_TYPE_6},
+			{"7", FAL_TUNNEL_PROGRAM_TYPE_7},
+			{"8", FAL_TUNNEL_PROGRAM_TYPE_8},
+			{"9", FAL_TUNNEL_PROGRAM_TYPE_9},
+			{"10", FAL_TUNNEL_PROGRAM_TYPE_10},
+			{"11", FAL_TUNNEL_PROGRAM_TYPE_11},
+			{"12", FAL_TUNNEL_PROGRAM_TYPE_12},
+			{"13", FAL_TUNNEL_PROGRAM_TYPE_13},
+			{"14", FAL_TUNNEL_PROGRAM_TYPE_14},
+			{"15", FAL_TUNNEL_PROGRAM_TYPE_15},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -246,6 +266,7 @@ struct attr_des_t g_attr_des[] =
 			{"vxlan_ipv6", FAL_TUNNEL_TYPE_VXLAN_OVER_IPV6},
 			{"vxlan_gpe_ipv4", FAL_TUNNEL_TYPE_VXLAN_GPE_OVER_IPV4},
 			{"vxlan_gpe_ipv6", FAL_TUNNEL_TYPE_VXLAN_GPE_OVER_IPV6},
+			{"tuple_tunnel_6", FAL_TUNNEL_TYPE_TUPLE_TUNNEL6},
 			{"ipv4_ipv6", FAL_TUNNEL_TYPE_IPV4_OVER_IPV6},
 			{"program0", FAL_TUNNEL_TYPE_PROGRAM0},
 			{"program1", FAL_TUNNEL_TYPE_PROGRAM1},
@@ -255,6 +276,22 @@ struct attr_des_t g_attr_des[] =
 			{"program5", FAL_TUNNEL_TYPE_PROGRAM5},
 			{"geneve_ipv4", FAL_TUNNEL_TYPE_GENEVE_OVER_IPV4},
 			{"geneve_ipv6", FAL_TUNNEL_TYPE_GENEVE_OVER_IPV6},
+			{"program6", FAL_TUNNEL_TYPE_PROGRAM6},
+			{"program7", FAL_TUNNEL_TYPE_PROGRAM7},
+			{"program8", FAL_TUNNEL_TYPE_PROGRAM8},
+			{"program9", FAL_TUNNEL_TYPE_PROGRAM9},
+			{"program10", FAL_TUNNEL_TYPE_PROGRAM10},
+			{"program11", FAL_TUNNEL_TYPE_PROGRAM11},
+			{"program12", FAL_TUNNEL_TYPE_PROGRAM12},
+			{"program13", FAL_TUNNEL_TYPE_PROGRAM13},
+			{"program14", FAL_TUNNEL_TYPE_PROGRAM14},
+			{"program15", FAL_TUNNEL_TYPE_PROGRAM15},
+			{"tuple_tunnel_26", FAL_TUNNEL_TYPE_TUPLE_TUNNEL26},
+			{"tuple_tunnel_27", FAL_TUNNEL_TYPE_TUPLE_TUNNEL27},
+			{"tuple_tunnel_28", FAL_TUNNEL_TYPE_TUPLE_TUNNEL28},
+			{"tuple_tunnel_29", FAL_TUNNEL_TYPE_TUPLE_TUNNEL29},
+			{"tuple_tunnel_30", FAL_TUNNEL_TYPE_TUPLE_TUNNEL30},
+			{"tuple_tunnel_31", FAL_TUNNEL_TYPE_TUPLE_TUNNEL31},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -940,6 +977,10 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_PON_PM_COUNTER_ENTRY, cmd_data_check_pon_pm_counter_entry,
 			cmd_data_print_pon_pm_counter_entry),
 	SW_TYPE_DEF(SW_PON_PM_COUNTER, NULL, cmd_data_print_pon_pm_counter),
+	SW_TYPE_DEF(SW_TUNNEL_TUPLE_ENTRY, cmd_data_check_tunnel_tuple_entry,
+		    cmd_data_print_tunnel_tuple_entry),
+	SW_TYPE_DEF(SW_TUNNEL_DECAP_MISS_ACTION, cmd_data_check_tunnel_decap_miss_action,
+		    cmd_data_print_tunnel_decap_miss_action),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -36293,6 +36334,9 @@ static const a_char_t *decap_key_str[FAL_TUNNEL_KEY_MAX] = {
 	"key_tunnelinfo",
 	"key_udf0",
 	"key_udf1",
+	"key_tunnelinfo_udf0",
+	"key_tunnelinfo_udf1",
+	"key_sip_lpm_prefix_en",
 };
 
 void
@@ -36314,6 +36358,9 @@ cmd_data_print_decap_key(a_char_t *param_name,
 				case FAL_TUNNEL_KEY_TLINFO_EN:
 				case FAL_TUNNEL_KEY_UDF0_EN:
 				case FAL_TUNNEL_KEY_UDF1_EN:
+				case FAL_TUNNEL_KEY_TLINFO_UDF0_EN:
+				case FAL_TUNNEL_KEY_TLINFO_UDF1_EN:
+				case FAL_TUNNEL_KEY_SIP_LPM_PREFIX_EN:
 					dprintf("%s ", decap_key_str[key_index]);
 					break;
 				default:
@@ -38478,6 +38525,109 @@ cmd_data_check_tunnel_decap_action_entry(char *cmd_str,
 		}
 	} while(talk_mode && (SW_OK != rv));
 
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		do {
+			cmd = get_sub_cmd("inner_type_en", "no");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: <yes/no/y/n>\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_confirm(cmd, A_FALSE,
+						&(entry_action.inner_type_en), sizeof(a_bool_t));
+				if (SW_OK != rv)
+					dprintf("usage: <yes/no/y/n>\n");
+			}
+		} while(talk_mode && (SW_OK != rv));
+
+		do {
+			cmd = get_sub_cmd("inner_type", "ethernet");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: ethernet, ipv4, ipv6\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_attr ("hdr_type", cmd, &tmp, sizeof(tmp));
+				if (SW_OK != rv)
+					dprintf("usage: ethernet, ipv4, ipv6\n");
+				else
+					entry_action.inner_type = tmp & 0x3;
+			}
+		} while(talk_mode && (SW_OK != rv));
+
+		do {
+			cmd = get_sub_cmd("inner_offset_en", "no");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: <yes/no/y/n>\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_confirm(cmd, A_FALSE,
+						&(entry_action.inner_offset_en), sizeof(a_bool_t));
+				if (SW_OK != rv)
+					dprintf("usage: <yes/no/y/n>\n");
+			}
+		} while(talk_mode && (SW_OK != rv));
+
+		do {
+			cmd = get_sub_cmd("inner_offset_mode", "0");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: 0 inner offset update from l4,"
+					"1 inner offset update from original\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+				if (SW_OK != rv)
+					dprintf("usage: 0 inner offset update from l4,"
+						"1 inner offset update from original\n");
+				else
+					entry_action.inner_offset_mode = tmp;
+			}
+		} while(talk_mode && (SW_OK != rv));
+
+		do {
+			cmd = get_sub_cmd("inner_offset", "0");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: the format is 0x0-0x3e, must be even\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_integer(cmd, &tmp, 0x3e, 0x0);
+				if (SW_OK != rv)
+					dprintf("usage: the format is 0x0-0x3e, must be even\n");
+				else
+					entry_action.inner_offset = tmp;
+			}
+		} while (talk_mode && (SW_OK != rv));
+	}
+
 	*arg_val = entry_action;
 	return SW_OK;
 }
@@ -38556,6 +38706,7 @@ void
 cmd_data_print_tunnel_decap_action_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 {
 	fal_tunnel_action_t *entry_action;
+	a_uint32_t tmpdata = 0;
 
 	entry_action = (fal_tunnel_action_t *)buf;
 
@@ -38615,6 +38766,18 @@ cmd_data_print_tunnel_decap_action_entry(a_uint8_t *param_name, a_ulong_t *buf, 
 	cmd_data_print_tunnel_mode(" [dscp_mode]", entry_action->dscp_mode,
 			sizeof(entry_action->dscp_mode));
 	dprintf(" [ecn_mode]:%d", entry_action->ecn_mode);
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		cmd_data_print_confirm("\n[inner_type_en]", entry_action->inner_type_en,
+			sizeof(entry_action->inner_type_en));
+		tmpdata = entry_action->inner_type;
+		cmd_data_print_attr("hdr_type", " [inner_type]:",
+						&tmpdata, sizeof(tmpdata));
+		cmd_data_print_confirm("\n[inner_offset_en]", entry_action->inner_offset_en,
+			sizeof(entry_action->inner_type_en));
+		dprintf(" [inner_offset_mode]:0x%x", entry_action->inner_offset_mode);
+		dprintf(" [inner_offset]:0x%x", entry_action->inner_offset);
+	}
 	dprintf("\n");
 }
 
@@ -40145,6 +40308,36 @@ cmd_data_check_tunnel_program_entry(char * cmd_str, void * val, a_uint32_t size)
                                &tmpdata, sizeof(tmpdata)));
     entry.outer_hdr_type = tmpdata & 0xf;
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        cmd_data_check_element("protocol_pos_valid", "no",
+                        "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                        (cmd, A_FALSE, &entry.protocol_pos_valid, sizeof (a_bool_t)));
+        if (entry.protocol_pos_valid) {
+            cmd_data_check_element("protocol_pos_mode", "end",
+                            "usage: end for end of outer hdr, start for start of outer hdr\n",
+                            cmd_data_check_attr, ("tunnel_program_pos_mode", cmd,
+                            &tmpdata, sizeof(tmpdata)));
+            entry.protocol_pos_mode= tmpdata & 0x1;
+
+            cmd_data_check_element("protocol_pos_offset", "0",
+                            "usage: the format is 0x0-0x7e or 0-126, must be even\n",
+                            cmd_data_check_integer, (cmd, &tmpdata, 0x7e, 0x0));
+            entry.protocol_pos_offset = tmpdata;
+
+            cmd_data_check_element("protocol", "0",
+                            "usage: the format is 0x0-0xffffffff or 0-4294967295\n",
+                            cmd_data_check_integer, (cmd, &tmpdata, 0xffffffff, 0x0));
+            entry.protocol = tmpdata & 0xffffffff;
+
+            cmd_data_check_element("protocol mask", "0",
+                            "usage: the format is 0x0-0xffffffff or 0-4294967295\n",
+                            cmd_data_check_integer, (cmd, &tmpdata, 0xffffffff, 0x0));
+            entry.protocol_mask = tmpdata & 0xffffffff;
+            goto tuple_id_config;
+        }
+    }
+
     if(entry.outer_hdr_type == FAL_ETHERNET_HDR)
     {
         cmd_data_check_element("ethernet type", NULL,
@@ -40213,11 +40406,17 @@ cmd_data_check_tunnel_program_entry(char * cmd_str, void * val, a_uint32_t size)
                                    0xffffffff, 0x0));
         entry.protocol_mask = tmpdata & 0xffffffff;
     }
-    else
-    {
-        dprintf("%s", "usage: ethernet, ipv4, ipv6, udp, udp-lite, "
-                        "tcp, gre, vxlan, vxlan-gpe, geneve\n");
-        return SW_BAD_PARAM;
+
+tuple_id_config:
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        cmd_data_check_element("tuple_id_valid", "no",
+                        "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+                        (cmd, A_FALSE, &entry.tuple_id_valid, sizeof (a_bool_t)));
+        cmd_data_check_element("tuple_id", "0",
+                        "usage: the format is 0x0-0x1f or 0-31\n",
+                        cmd_data_check_integer, (cmd, &tmpdata, 0x1f, 0x0));
+        entry.tuple_id = tmpdata & 0x1f;
     }
 
     *(fal_tunnel_program_entry_t *) val = entry;
@@ -40240,6 +40439,21 @@ cmd_data_print_tunnel_program_entry(a_uint8_t * param_name, a_uint32_t * buf, a_
     tmpdata = entry->outer_hdr_type;
     cmd_data_print_attr("hdr_type", " [outer_hdr_type]:",
                     &tmpdata, sizeof(tmpdata));
+
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        cmd_data_print_confirm("\n[protocol_pos_valid]:",
+                        entry->protocol_pos_valid, sizeof(a_uint32_t));
+        if (entry->protocol_pos_valid) {
+            tmpdata = entry->protocol_pos_mode;
+            cmd_data_print_attr("tunnel_program_pos_mode", "\n[protocol_pos_mode]:",
+                        &tmpdata, sizeof(tmpdata));
+            dprintf("  [protocol_pos_offset]:0x%x", entry->protocol_pos_offset);
+            dprintf("\n[protocol]:0x%x", entry->protocol);
+            dprintf("  [protocol_mask]:0x%x", entry->protocol_mask);
+            goto tuple_id_config;
+        }
+    }
 
     if(entry->outer_hdr_type == FAL_ETHERNET_HDR)
     {
@@ -40268,6 +40482,14 @@ cmd_data_print_tunnel_program_entry(a_uint8_t * param_name, a_uint32_t * buf, a_
         dprintf("\n[tunnel_hdr_f32bit]:0x%x", entry->protocol);
         dprintf("  [tunnel_hdr_f32bit_mask]:0x%x", entry->protocol_mask);
     }
+tuple_id_config:
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        cmd_data_print_confirm("\n[tuple_id_valid]:",
+                        entry->tuple_id_valid, sizeof(a_uint32_t));
+        dprintf("  [tuple_id]:0x%x", entry->tuple_id);
+    }
+
     dprintf("\n");
     return;
 }
@@ -43131,6 +43353,46 @@ cmd_data_check_tunnel_key(char *cmd_str, fal_tunnel_decap_key_t *arg_val, a_uint
 			cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
 	entry.udf1_mask = tmp;
 
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		cmd_data_check_element("key_tlinfo_udf0_en", "no",
+				"usage: <yes/no/y/n>\n",
+				cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				sizeof(a_bool_t)));
+		if (enable == A_TRUE)
+			entry.key_bmp |= BIT(FAL_TUNNEL_KEY_TLINFO_UDF0_EN);
+		else
+			entry.key_bmp &= ~BIT(FAL_TUNNEL_KEY_TLINFO_UDF0_EN);
+
+		cmd_data_check_element("key_tlinfo_udf1_en", "no",
+				"usage: <yes/no/y/n>\n",
+				cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				sizeof(a_bool_t)));
+		if (enable == A_TRUE)
+			entry.key_bmp |= BIT(FAL_TUNNEL_KEY_TLINFO_UDF1_EN);
+		else
+			entry.key_bmp &= ~BIT(FAL_TUNNEL_KEY_TLINFO_UDF1_EN);
+
+		cmd_data_check_element("key_sip_lpm_prefix_en", "no",
+				"usage: <yes/no/y/n>\n",
+				cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				sizeof(a_bool_t)));
+		if (enable == A_TRUE)
+			entry.key_bmp |= BIT(FAL_TUNNEL_KEY_SIP_LPM_PREFIX_EN);
+		else
+			entry.key_bmp &= ~BIT(FAL_TUNNEL_KEY_SIP_LPM_PREFIX_EN);
+
+		cmd_data_check_element("tlinfo_udf0_idx", "0",
+				"usage: tunnel info udf0 id to select\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.tunnel_info_udf0_idx = tmp;
+
+		cmd_data_check_element("tlinfo_udf1_idx", "0",
+				"usage: tunnel info udf1 id to select\n",
+				cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+		entry.tunnel_info_udf1_idx = tmp;
+	}
+
 	*arg_val = entry;
 
 	return SW_OK;
@@ -43154,6 +43416,13 @@ cmd_data_print_tunnel_key(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size
 	cmd_data_print_uint16("udf0_mask", &entry->udf0_mask, sizeof(entry->udf0_mask));
 	cmd_data_print_uint8("udf1_idx", &entry->udf1_idx, sizeof(entry->udf1_idx));
 	cmd_data_print_uint16("udf1_mask", &entry->udf1_mask, sizeof(entry->udf1_mask));
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		cmd_data_print_uint8("tunnel_info_udf0_idx",
+				&entry->tunnel_info_udf0_idx, sizeof(entry->tunnel_info_udf0_idx));
+		cmd_data_print_uint8("tunnel_info_udf1_idx",
+				&entry->tunnel_info_udf1_idx, sizeof(entry->tunnel_info_udf1_idx));
+	}
 
 	dprintf("\n");
 }
@@ -45215,5 +45484,437 @@ cmd_data_print_pon_pm_counter(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t
 			entry->packets_512to1023octets, sizeof(a_uint64_t));
 	dprintf("\n[packets_1024to1518octets]:%lld",
 			entry->packets_1024to1518octets, sizeof(a_uint64_t));
+}
+
+sw_error_t
+cmd_data_check_tunnel_tuple_entry(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_tunnel_tuple_entry_t tuple_entry;
+	a_bool_t enable = A_FALSE;
+	sw_error_t rv = SW_OK;
+	a_uint32_t tmp;
+
+	aos_mem_zero(&tuple_entry, sizeof(fal_tunnel_tuple_entry_t));
+
+	do {
+		cmd = get_sub_cmd("ip_ver", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: 0 for ipv4, 1 for ipv6\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: 0 for ipv4, 1 for ipv6\n");
+			else
+				tuple_entry.ip_ver = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	cmd_data_check_element("sip_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable, sizeof(a_bool_t)));
+	if (enable == A_TRUE)
+		tuple_entry.key_bmp |= BIT(FAL_TUNNEL_KEY_SIP_EN);
+	else
+		tuple_entry.key_bmp &= ~BIT(FAL_TUNNEL_KEY_SIP_EN);
+
+	if(tuple_entry.ip_ver == 0) {
+		cmd_data_check_element("sip4_addr", "0.0.0.0",
+				"usage: the format is xx.xx.xx.xx \n",
+				cmd_data_check_ip4addr,
+				(cmd, &(tuple_entry.sip.ip4_addr), 4));
+	} else {
+		cmd_data_check_element("sip6_addr", "0::0",
+				"usage: the format is xxxx::xxxx \n",
+				cmd_data_check_ip6addr,
+				(cmd, &(tuple_entry.sip.ip6_addr), 16));
+	}
+
+	cmd_data_check_element("dip_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable, sizeof(a_bool_t)));
+	if (enable == A_TRUE)
+		tuple_entry.key_bmp |= BIT(FAL_TUNNEL_KEY_DIP_EN);
+	else
+		tuple_entry.key_bmp &= ~BIT(FAL_TUNNEL_KEY_DIP_EN);
+
+	if(tuple_entry.ip_ver == 0) {
+		cmd_data_check_element("dip4_addr", "0.0.0.0",
+				"usage: the format is xx.xx.xx.xx \n",
+				cmd_data_check_ip4addr,
+				(cmd, &(tuple_entry.dip.ip4_addr), 4));
+	} else {
+		cmd_data_check_element("dip6_addr", "0::0",
+				"usage: the format is xxxx::xxxx \n",
+				cmd_data_check_ip6addr,
+				(cmd, &(tuple_entry.dip.ip6_addr), 16));
+	}
+
+	cmd_data_check_element("l4_proto_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable, sizeof(a_bool_t)));
+	if (enable == A_TRUE)
+		tuple_entry.key_bmp |= BIT(FAL_TUNNEL_KEY_L4PROTO_EN);
+	else
+		tuple_entry.key_bmp &= ~BIT(FAL_TUNNEL_KEY_L4PROTO_EN);
+
+	do {
+		cmd = get_sub_cmd("l4_proto", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: layer4 proto\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: layer4 proto\n");
+			else
+				tuple_entry.l4_proto = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	cmd_data_check_element("sport_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable, sizeof(a_bool_t)));
+	if (enable == A_TRUE)
+		tuple_entry.key_bmp |= BIT(FAL_TUNNEL_KEY_SPORT_EN);
+	else
+		tuple_entry.key_bmp &= ~BIT(FAL_TUNNEL_KEY_SPORT_EN);
+
+	do {
+		cmd = get_sub_cmd("sport", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: src port\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: source port\n");
+			else
+				tuple_entry.sport = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	cmd_data_check_element("dport_en", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable, sizeof(a_bool_t)));
+	if (enable == A_TRUE)
+		tuple_entry.key_bmp |= BIT(FAL_TUNNEL_KEY_DPORT_EN);
+	else
+		tuple_entry.key_bmp &= ~BIT(FAL_TUNNEL_KEY_DPORT_EN);
+
+	do {
+		cmd = get_sub_cmd("dport", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: dst port\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: dst port\n");
+			else
+				tuple_entry.dport = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("tuple_context_type", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: 0 for tunnel type, 1 for tuple id\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: 0 for tunnel type, 1 for tuple id\n");
+			else
+				tuple_entry.context_type = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	if(tuple_entry.context_type == FAL_TUNNEL_TUPLE_CONTEXT_TUNNEL_TYPE) {
+		do {
+			cmd = get_sub_cmd("tunnel_type", "gre_tap_ipv4");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: tunnel_type:"
+						" gre_tap_ipv4"
+						" gre_tap_ipv6"
+						" vxlan_ipv4"
+						" vxlan_ipv6"
+						" vxlan_gpe_ipv4"
+						" vxlan_gpe_ipv6"
+						" tuple_tunnel_6"
+						" ipv4_ipv6"
+						" program0"
+						" program1"
+						" program2"
+						" program3"
+						" program4"
+						" program5"
+						" geneve_ipv4"
+						" geneve_ipv6"
+						" program6",
+						" program7",
+						" program8",
+						" program9",
+						" program10",
+						" program11",
+						" program12",
+						" program13",
+						" program14",
+						" program15",
+						" tuple_tunnel_26",
+						" tuple_tunnel_27",
+						" tuple_tunnel_28",
+						" tuple_tunnel_29",
+						" tuple_tunnel_30",
+						" tuple_tunnel_31"
+						"\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_attr("tunnel_type",
+						cmd, &(tuple_entry.context.tunnel_type),
+						sizeof(tuple_entry.context.tunnel_type));
+				if (SW_OK != rv) {
+					dprintf("usage: tunnel_type:"
+						" gre_tap_ipv4"
+						" gre_tap_ipv6"
+						" vxlan_ipv4"
+						" vxlan_ipv6"
+						" vxlan_gpe_ipv4"
+						" vxlan_gpe_ipv6"
+						" tuple_tunnel_6"
+						" ipv4_ipv6"
+						" program0"
+						" program1"
+						" program2"
+						" program3"
+						" program4"
+						" program5"
+						" geneve_ipv4"
+						" geneve_ipv6"
+						" program6",
+						" program7",
+						" program8",
+						" program9",
+						" program10",
+						" program11",
+						" program12",
+						" program13",
+						" program14",
+						" program15",
+						" tuple_tunnel_26",
+						" tuple_tunnel_27",
+						" tuple_tunnel_28",
+						" tuple_tunnel_29",
+						" tuple_tunnel_30",
+						" tuple_tunnel_31"
+						"\n");
+				}
+			}
+		} while(talk_mode && (SW_OK != rv));
+	} else {
+		do {
+			cmd = get_sub_cmd("tuple_id", "0");
+			SW_RTN_ON_NULL_PARAM(cmd);
+
+			if (!strncasecmp(cmd, "quit", 4)) {
+				return SW_BAD_VALUE;
+			}
+			else if (!strncasecmp(cmd, "help", 4)) {
+				dprintf("usage: tuple id\n");
+				rv = SW_BAD_VALUE;
+			}
+			else {
+				rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+				if (SW_OK != rv)
+					dprintf("usage: tuple id\n");
+				else
+					tuple_entry.context.tuple_id = tmp;
+			}
+		} while(talk_mode && (SW_OK != rv));
+	}
+
+	*(fal_tunnel_tuple_entry_t *) val = tuple_entry;
+	return SW_OK;
+}
+
+void
+cmd_data_print_tunnel_tuple_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_tunnel_tuple_entry_t *tuple_entry;
+
+	tuple_entry = (fal_tunnel_tuple_entry_t *)buf;
+
+	dprintf("\n[ip_ver]:%s\n", tuple_entry->ip_ver ? "IPv6" : "IPv4");
+
+	if (tuple_entry->key_bmp & BIT(FAL_TUNNEL_KEY_SIP_EN)) {
+		if(tuple_entry->ip_ver == 0) {
+			cmd_data_print_ip4addr("[sipv4_addr]:",
+					(a_uint32_t *) &(tuple_entry->sip.ip4_addr),
+					sizeof(fal_ip4_addr_t));
+		} else {
+			cmd_data_print_ip6addr("[sipv6_addr]:",
+					(a_uint32_t *) &(tuple_entry->sip.ip6_addr),
+					sizeof(fal_ip6_addr_t));
+		}
+	}
+
+	if (tuple_entry->key_bmp & BIT(FAL_TUNNEL_KEY_DIP_EN)) {
+		if(tuple_entry->ip_ver == 0) {
+			cmd_data_print_ip4addr("[dipv4_addr]:",
+					(a_uint32_t *) &(tuple_entry->dip.ip4_addr),
+					sizeof(fal_ip4_addr_t));
+		} else {
+			cmd_data_print_ip6addr("[dipv6_addr]:",
+					(a_uint32_t *) &(tuple_entry->dip.ip6_addr),
+					sizeof(fal_ip6_addr_t));
+		}
+	}
+
+	if (tuple_entry->key_bmp & BIT(FAL_TUNNEL_KEY_L4PROTO_EN)) {
+		dprintf(" [l4_proto]:%d ", tuple_entry->l4_proto);
+	}
+
+	if (tuple_entry->key_bmp & BIT(FAL_TUNNEL_KEY_SPORT_EN)) {
+		dprintf(" [sport]:%d", tuple_entry->sport);
+	}
+
+	if (tuple_entry->key_bmp & BIT(FAL_TUNNEL_KEY_DPORT_EN)) {
+		dprintf(" [dport]:%d", tuple_entry->dport);
+	}
+
+	if (tuple_entry->context_type == FAL_TUNNEL_TUPLE_CONTEXT_TUNNEL_TYPE) {
+		cmd_data_print_attr("tunnel_type", "\n[tunnel_type]:",
+			&tuple_entry->context.tunnel_type, sizeof(a_uint32_t));
+	} else {
+		dprintf("\n[tuple_id]:0x%x", tuple_entry->context.tuple_id);
+	}
+	dprintf("\n[addr_map]:0x%x", tuple_entry->addr_map);
+	dprintf(" [port_map]:0x%x", tuple_entry->port_map);
+	dprintf(" [index]:0x%x", tuple_entry->index);
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_tunnel_decap_miss_action(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_tunnel_decap_miss_action_t miss_action;
+	sw_error_t rv = SW_OK;
+	a_uint32_t tmp;
+
+	aos_mem_zero(&miss_action, sizeof(fal_tunnel_decap_miss_action_t));
+
+	do {
+		cmd = get_sub_cmd("decap_en", "no");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(miss_action.decap_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("service_code_en", "no");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(miss_action.service_code_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("service_code", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: updated service code\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: updated service code\n");
+			else
+				miss_action.service_code = tmp;
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_tunnel_decap_miss_action_t *) val = miss_action;
+	return SW_OK;
+}
+
+void
+cmd_data_print_tunnel_decap_miss_action(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_tunnel_decap_miss_action_t *miss_action;
+
+	miss_action = (fal_tunnel_decap_miss_action_t *)buf;
+
+	dprintf("decapsulation miss action:\n");
+	cmd_data_print_confirm("[decap_en]", miss_action->decap_en,
+			sizeof(miss_action->decap_en));
+	cmd_data_print_confirm("\n[service_code_en]", miss_action->service_code_en,
+			sizeof(miss_action->service_code_en));
+	dprintf(" [service_code]:%d ", miss_action->service_code);
 }
 /* auto_insert_flag_1 */
