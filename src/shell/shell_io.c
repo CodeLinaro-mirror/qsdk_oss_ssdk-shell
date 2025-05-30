@@ -28688,8 +28688,8 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 		}
 		else
 		{
-			rv = cmd_data_check_uint32(cmd, &entry.field_update_bitmap,
-				sizeof (a_uint32_t));
+			rv = cmd_data_check_uint64(cmd, &entry.field_update_bitmap,
+				sizeof (a_uint64_t));
 			if (SW_OK != rv)
 				dprintf("usage: refer to service spec\n");
 		}
