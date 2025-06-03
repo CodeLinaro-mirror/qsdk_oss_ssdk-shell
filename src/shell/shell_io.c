@@ -918,6 +918,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_SAMPL_COUNTER, NULL, cmd_data_print_sampl_counter_entry),
 
     SW_TYPE_DEF(SW_FLOW_KEY, cmd_data_check_flow_key_cfg, cmd_data_print_flow_key_cfg),
+    SW_TYPE_DEF(SW_VLAN_KEY, cmd_data_check_vlan_key_cfg, cmd_data_print_vlan_key_cfg),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -18591,6 +18592,55 @@ cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
 		}
     }
 
+    if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+	    a_bool_t enable = A_FALSE;
+
+	    cmd_data_check_element("vlan_key_from_port", "no",
+			    "usage: <yes/no/y/n>\n",
+			    cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				    sizeof(a_bool_t)));
+	    entry.vlan_key_from_port = enable;
+
+	    cmd_data_check_vlan_key_cfg(cmd_str, &(entry.vlan_key), sizeof(entry.vlan_key));
+
+	    cmd_data_check_element("l3_dst_valid", "no",
+			    "usage: <yes/no/y/n>\n",
+			    cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				    sizeof(a_bool_t)));
+	    entry.l3_dst_valid = enable;
+
+	    cmd_data_check_element("l3_dst_port", "0",
+			    "usage: L3 destination port\n",
+			    cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	    entry.l3_dst_port = tmp;
+
+	    do {
+		    cmd = get_sub_cmd("l3_dst_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_maccmd(cmd, &(entry.l3_dst_action),
+					    sizeof (fal_fwd_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    }
+
+	    } while (talk_mode && (SW_OK != rv));
+
+	    cmd_data_check_ip_mcmode(cmd_str, &(entry.mc_mode_cfg), sizeof(entry.mc_mode_cfg));
+    }
+
     *(fal_intf_entry_t *)val = entry;
     return SW_OK;
 }
@@ -24416,6 +24466,57 @@ cmd_data_check_ip_sg(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+	    do
+	    {
+		    cmd = get_sub_cmd("ipv4_sg_pass_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_maccmd(cmd, &(entry.ipv4_sg_pass_action),
+					    sizeof (fal_fwd_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    }
+
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do
+	    {
+		    cmd = get_sub_cmd("ipv6_sg_pass_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_maccmd(cmd, &(entry.ipv6_sg_pass_action),
+					    sizeof (fal_fwd_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    }
+
+	    } while (talk_mode && (SW_OK != rv));
+    }
+
     *(fal_sg_cfg_t *)val = entry;
     return SW_OK;
 }
@@ -24435,6 +24536,14 @@ cmd_data_print_ip_sg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
             entry->ipv6_sg_en, entry->ipv6_sg_vio_action, entry->ipv6_sg_port_en);
     dprintf("\n[ipv6_sg_svlan_en]:0x%x  [ipv6_sg_cvlan_en]:0x%x [ipv6_src_unk_action]:0x%x ",
             entry->ipv6_sg_svlan_en, entry->ipv6_sg_cvlan_en, entry->ipv6_src_unk_action);
+
+    if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+	    cmd_data_print_maccmd("ipv4_sg_pass_action", (a_uint32_t *) &(entry->ipv4_sg_pass_action),
+			    sizeof (fal_fwd_cmd_t));
+	    cmd_data_print_maccmd("ipv6_sg_pass_action", (a_uint32_t *) &(entry->ipv6_sg_pass_action),
+			    sizeof (fal_fwd_cmd_t));
+    }
 }
 
 sw_error_t
@@ -24872,6 +24981,23 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
                            sizeof (fal_mac_addr_t));
 	}
 
+	if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+
+		cmd_data_print_confirm("\n[vlan_key_from_port]", entry->vlan_key_from_port,
+				sizeof(a_bool_t));
+
+		cmd_data_print_vlan_key_cfg(param_name, (a_ulong_t *)(&entry->vlan_key), sizeof(entry->vlan_key));
+
+		cmd_data_print_confirm("\n[l3_dst_valid]", entry->l3_dst_valid,
+				sizeof(a_bool_t));
+
+		dprintf(" [l3_dst_port]:%d", entry->l3_dst_port);
+		cmd_data_print_maccmd("l3_dst_action", (a_uint32_t *)&entry->l3_dst_action, sizeof(entry->l3_dst_action));
+
+		cmd_data_print_ip_mcmode(param_name, (a_uint32_t *)&(entry->mc_mode_cfg), sizeof(entry->mc_mode_cfg));
+	}
+
     dprintf("\n[rx_pkt]:0x%x  [rx_byte]:0x%x  [rx_drop_pkt]:0x%x "
 				"[rx_drop_byte]:0x%x  ",
 				entry->counter.rx_pkt_counter, entry->counter.rx_byte_counter,
@@ -25175,7 +25301,59 @@ cmd_data_check_arp_sg(char *cmd_str, void * val, a_uint32_t size)
         }
 
     }
+
     while (talk_mode && (SW_OK != rv));
+
+    if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+	    do
+	    {
+		    cmd = get_sub_cmd("ipv4_arp_sg_pass_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_maccmd(cmd, &(entry.ipv4_arp_sg_pass_action),
+					    sizeof (fal_fwd_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    }
+
+	    } while (talk_mode && (SW_OK != rv));
+
+	    do
+	    {
+		    cmd = get_sub_cmd("ip_nd_sg_pass_action", "forward");
+		    SW_RTN_ON_NULL_PARAM(cmd);
+
+		    if (!strncasecmp(cmd, "quit", 4))
+		    {
+			    return SW_BAD_VALUE;
+		    }
+		    else if (!strncasecmp(cmd, "help", 4))
+		    {
+			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+			    rv = SW_BAD_VALUE;
+		    }
+		    else
+		    {
+			    rv = cmd_data_check_maccmd(cmd, &(entry.ip_nd_sg_pass_action),
+					    sizeof (fal_fwd_cmd_t));
+			    if (SW_OK != rv)
+				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    }
+
+	    } while (talk_mode && (SW_OK != rv));
+    }
 
     *(fal_arp_sg_cfg_t *)val = entry;
     return SW_OK;
@@ -25196,6 +25374,14 @@ cmd_data_print_arp_sg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
             entry->ip_nd_sg_en, entry->ip_nd_sg_vio_action, entry->ip_nd_sg_port_en);
     dprintf("\n[nd_sg_svlan_en]:0x%x  [nd_sg_cvlan_en]:0x%x  [nd_src_unk_action]:0x%x",
             entry->ip_nd_sg_svlan_en, entry->ip_nd_sg_cvlan_en, entry->ip_nd_src_unk_action);
+
+    if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+	    cmd_data_print_maccmd("ipv4_arp_sg_pass_action", (a_uint32_t *) &(entry->ipv4_arp_sg_pass_action),
+			    sizeof (fal_fwd_cmd_t));
+	    cmd_data_print_maccmd("ip_nd_sg_pass_action", (a_uint32_t *) &(entry->ip_nd_sg_pass_action),
+			    sizeof (fal_fwd_cmd_t));
+    }
 }
 
 sw_error_t
@@ -42064,6 +42250,19 @@ cmd_data_check_ip_intf_mac_entry(char *cmd_str, fal_intf_macaddr_t *arg_val, a_u
 			"usage: the format is xx-xx-xx-xx-xx-xx \n",
 			cmd_data_check_macaddr, (cmd, &(entry.mac_addr), sizeof(fal_mac_addr_t)));
 
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		a_uint32_t tmp = 0;
+
+		cmd_data_check_element("vsi_valid", "no", "usage: <yes/no/y/n>\n",
+				cmd_data_check_confirm, (cmd, A_FALSE, &entry.vsi_valid,
+					sizeof (a_bool_t)));
+
+		cmd_data_check_element("vsi", "0", "usage: vsi value\n",
+				cmd_data_check_uint32, (cmd, &tmp, sizeof(tmp)));
+		entry.vsi = tmp;
+	}
+
 	*arg_val = entry;
 
 	return SW_OK;
@@ -42082,6 +42281,12 @@ cmd_data_print_ip_intf_mac_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32
 			&(entry->direction), sizeof(entry->direction));
 	cmd_data_print_macaddr(" [mac_addr]: ",
 			(a_uint32_t *)&(entry->mac_addr), sizeof(fal_mac_addr_t));
+
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		cmd_data_print_enable("vsi_valid", &entry->vsi_valid, sizeof(a_bool_t));
+		cmd_data_print_uint32("vsi", (a_uint32_t *)&entry->vsi, sizeof(entry->vsi));
+	}
 
 	dprintf("\n");
 }
@@ -43904,5 +44109,90 @@ cmd_data_print_flow_key_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 	cmd_data_print_uint16("udf1_mask", (a_uint32_t *)&entry->udf1_mask, sizeof(a_uint32_t));
 
 	dprintf("\n");
+}
+
+static const a_char_t *vlan_key_str[FAL_IP_VLAN_AS_FLOW_KEY_DISABLED] = {
+	"outer",
+	"ctag",
+	"stag",
+};
+
+sw_error_t
+cmd_data_check_vlan_key_mode(char *cmd_str,
+		fal_ip_vlan_as_key_mode_t *arg_val, a_uint32_t size)
+{
+	fal_ip_vlan_as_key_mode_t type;
+	for (type = FAL_IP_VLAN_AS_FLOW_KEY_FROM_OUTER;
+			type < FAL_IP_VLAN_AS_FLOW_KEY_DISABLED; type++) {
+		if (!strcasecmp(cmd_str, vlan_key_str[type])) {
+			*arg_val = type;
+			break;
+		}
+	}
+
+	if (type == FAL_IP_VLAN_AS_FLOW_KEY_DISABLED) {
+		return SW_BAD_VALUE;
+	} else {
+		return SW_OK;
+	}
+}
+
+void
+cmd_data_print_vlan_key_mode(a_char_t *param_name,
+		fal_ip_vlan_as_key_mode_t buf, a_uint32_t size)
+{
+    dprintf("[%s]:", param_name);
+    switch (buf) {
+	    case FAL_IP_VLAN_AS_FLOW_KEY_FROM_OUTER:
+	    case FAL_IP_VLAN_AS_FLOW_KEY_FROM_CTAG:
+	    case FAL_IP_VLAN_AS_FLOW_KEY_FROM_STAG:
+		    dprintf("%s", vlan_key_str[buf]);
+		    break;
+	    default:
+		    dprintf("unknown value %d", buf);
+		    break;
+    }
+}
+
+sw_error_t
+cmd_data_check_vlan_key_cfg(char *info, fal_ip_vlan_as_flow_key_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_ip_vlan_as_flow_key_t entry;
+	a_bool_t enable = A_FALSE;
+
+	aos_mem_zero(&entry, sizeof(fal_ip_vlan_as_flow_key_t));
+
+        cmd_data_check_element("enable", "no",
+                        "usage: <yes/no/y/n>\n",
+                        cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+			sizeof(a_bool_t)));
+
+	entry.valid = enable;
+
+        cmd_data_check_element("vlan_mode", "outer",
+                        "usage: <outer/ctag/stag>\n",
+                        cmd_data_check_vlan_key_mode, (cmd, &(entry.mode),
+			sizeof(fal_ip_vlan_as_key_mode_t)));
+
+	*arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_vlan_key_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_ip_vlan_as_flow_key_t *entry;
+
+	entry = (fal_ip_vlan_as_flow_key_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_enable("enable", &entry->valid, sizeof(a_bool_t));
+	cmd_data_print_vlan_key_mode("vlan_mode", entry->mode, sizeof(entry->mode));
+
+	dprintf("\n");
+
 }
 /* auto_insert_flag_1 */

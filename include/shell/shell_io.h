@@ -1417,6 +1417,10 @@ sw_error_t
 cmd_data_check_flow_key_cfg(char *info, fal_flow_key_t *val, a_uint32_t size);
 void
 cmd_data_print_flow_key_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_vlan_key_cfg(char *info, fal_ip_vlan_as_flow_key_t *val, a_uint32_t size);
+void
+cmd_data_print_vlan_key_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 
 /* auto_insert_flag */
 
