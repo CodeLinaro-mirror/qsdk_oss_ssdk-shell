@@ -1304,6 +1304,10 @@ struct cmd_des_t gcmd_des[] =
 		    SW_API_QM_TCONT_GET, NULL},
 	    {"tcont", "set", "set queue tcont config", "<queue_id> <tcont_cfg>",
 		    SW_API_QM_TCONT_SET, NULL},
+	    {"cpucode_enqueue", "get", "get CPU code enqueue control", "<cpu_code>",
+		    SW_API_QM_CPUCODE_ENQUEUE_GET, NULL},
+	    {"cpucode_enqueue", "set", "set CPU code enqueue control", "<cpu_code> <enable>",
+		    SW_API_QM_CPUCODE_ENQUEUE_SET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
