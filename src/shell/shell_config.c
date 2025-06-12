@@ -1142,6 +1142,8 @@ struct cmd_des_t gcmd_des[] =
             {"sampling_id", "set", "set flow sampling ID", "<flow_index> <sampling_id>", SW_API_FLOW_SAMPLING_ID_SET, NULL},
             {"gro_en", "get", "get flow GRO status", "<flow_index>", SW_API_FLOW_GRO_EN_GET, NULL},
             {"gro_en", "set", "set flow GRO status", "<flow_index> <en>", SW_API_FLOW_GRO_EN_SET, NULL},
+            {"eip_lookup_mode", "get", "get flow EIP lookup mode", "", SW_API_FLOW_EIP_LOOKUP_MODE_GET, NULL},
+            {"eip_lookup_mode", "set", "set flow EIP lookup mode", "<mode>", SW_API_FLOW_EIP_LOOKUP_MODE_SET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

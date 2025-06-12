@@ -364,6 +364,17 @@ struct attr_des_t g_attr_des[] =
 			{"ip_pkt", FAL_SAMPL_CNT_IP_PKT},
 			{NULL, INVALID_ARRT_VALUE}
 		}
+
+	},
+	{
+		"eip_lookup_mode",
+		{
+			{"transform", FAL_FLOW_EIP_LOOKUP_MODE_TRANSFORM},
+			{"0", FAL_FLOW_EIP_LOOKUP_MODE_TRANSFORM},
+			{"flow", FAL_FLOW_EIP_LOOKUP_MODE_FLOW},
+			{"1", FAL_FLOW_EIP_LOOKUP_MODE_FLOW},
+			{NULL, INVALID_ARRT_VALUE}
+		}
 	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
@@ -919,6 +930,7 @@ static sw_data_type_t sw_data_type[] =
 
     SW_TYPE_DEF(SW_FLOW_KEY, cmd_data_check_flow_key_cfg, cmd_data_print_flow_key_cfg),
     SW_TYPE_DEF(SW_VLAN_KEY, cmd_data_check_vlan_key_cfg, cmd_data_print_vlan_key_cfg),
+    SW_TYPE_DEF(SW_EIP_LOOKUP_MODE, cmd_data_check_eip_lookup_mode_cfg, NULL),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -44195,4 +44207,12 @@ cmd_data_print_vlan_key_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 	dprintf("\n");
 
 }
+
+sw_error_t
+cmd_data_check_eip_lookup_mode_cfg(char *cmd_str, fal_flow_eip_lookup_mode_t *arg_val, a_uint32_t size)
+{
+    return cmd_data_check_attr("eip_lookup_mode", cmd_str,
+                    arg_val, sizeof(*arg_val));
+}
+
 /* auto_insert_flag_1 */

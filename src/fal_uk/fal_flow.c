@@ -367,3 +367,23 @@ sw_error_t fal_flow_gro_en_set(a_uint32_t dev_id, a_uint32_t flow_index,
 
 	return rv;
 }
+
+sw_error_t
+fal_flow_eip_lookup_mode_set(a_uint32_t dev_id, fal_flow_eip_lookup_mode_t mode)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_FLOW_EIP_LOOKUP_MODE_SET, dev_id, mode);
+
+	return rv;
+}
+
+sw_error_t
+fal_flow_eip_lookup_mode_get(a_uint32_t dev_id, fal_flow_eip_lookup_mode_t *mode)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_FLOW_EIP_LOOKUP_MODE_GET, dev_id, mode);
+
+	return rv;
+}
