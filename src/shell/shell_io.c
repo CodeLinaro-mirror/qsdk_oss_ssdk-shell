@@ -936,6 +936,9 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_GEMPORT_MAP, cmd_data_check_gemport_map, cmd_data_print_gemport_map),
     SW_TYPE_DEF(SW_GEMPORT_CFG, cmd_data_check_gemport_cfg, cmd_data_print_gemport_cfg),
     SW_TYPE_DEF(SW_GEMPORT_PLC, cmd_data_check_gemport_policer, cmd_data_print_gemport_policer),
+	SW_TYPE_DEF(SW_PON_PM_COUNTER_ENTRY, cmd_data_check_pon_pm_counter_entry,
+			cmd_data_print_pon_pm_counter_entry),
+	SW_TYPE_DEF(SW_PON_PM_COUNTER, NULL, cmd_data_print_pon_pm_counter),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -3517,6 +3520,9 @@ cmd_data_print_portmap(char * param_name, fal_pbmp_t val, a_uint32_t size)
 		    break;
 	    case FAL_PORT_TYPE_VP_GROUP:
 		    snprintf(tmp, sizeof(tmp), "[VP GROUP %d]", FAL_PORT_ID_VALUE(val));
+		    break;
+	    case FAL_PORT_TYPE_GEM_PORT:
+	    	    snprintf(tmp, sizeof(tmp), "[Gem Port %d]", FAL_PORT_ID_VALUE(val));
 		    break;
 	    default:
 		    snprintf(tmp, sizeof(tmp), "[Unknow port type 0x%x]", val);
@@ -45075,5 +45081,138 @@ cmd_data_print_gemport_policer(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 	dprintf("\n[us_policer_en]:%s\t[ds_policer_en]:%s", entry->us_policer_en?"YES":"NO",
 		entry->ds_policer_en?"YES":"NO");
 	dprintf("\n[us_policer_idx]:%d\n", entry->us_policer_idx);
+}
+
+sw_error_t
+cmd_data_check_pon_pm_counter_entry(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd, *cmd_find;
+	a_uint32_t tmpdata = 0;
+	sw_error_t rv;
+	fal_pon_pm_counter_entry_t entry;
+
+	memset(&entry, 0, sizeof (fal_pon_pm_counter_entry_t));
+
+	do
+	{
+		cmd = get_sub_cmd("port", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			 return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: physical port such as 1,2,3\n");
+			dprintf("       vp with highest 8bits as 0x2\n");
+			dprintf("       vp group with highest 8bits as 0x3\n");
+			dprintf("       Gem port with highest 8bits as 0x4\n");
+			return SW_BAD_VALUE;
+		}
+		else
+		{
+			cmd_find = strstr(cmd, ",");
+			if (cmd_find == NULL)
+			{
+				rv = cmd_data_check_portid(cmd, &entry.port_id, sizeof (fal_pbmp_t));
+				if(entry.port_id <= SW_MAX_NR_PORT)
+				{
+					entry.port_id = 1<<(entry.port_id);
+				}
+			}
+			else
+			{
+				rv = cmd_data_check_portmap(cmd, &entry.port_id, sizeof (fal_pbmp_t));
+			}
+			if(rv != SW_OK)
+			{
+				dprintf("usage: physical port such as 1,2,3\n");
+				dprintf("       vp with highest 8bits as 0x2\n");
+				dprintf("       vp group with highest 8bits as 0x3\n");
+				dprintf("       Gem port with highest 8bits as 0x4\n");
+			}
+		}
+	}while (talk_mode && (SW_OK != rv));
+
+	cmd_data_check_element("vlan_tag_fmt", "0",
+			       "usage: the format is 0x0-0x7\n",
+			       cmd_data_check_integer, (cmd, &tmpdata, 0x7, 0x0));
+	entry.vlan_tag_fmt = tmpdata & 0x7;
+
+	cmd_data_check_element("vlan_id_valid", "no",
+			       "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			       (cmd, A_FALSE, &entry.vlan_id_valid, sizeof (a_bool_t)));
+
+	cmd_data_check_element("vlan_id", "0",
+			       "usage: the format is 0x0-0xfff or 0-4095\n",
+			       cmd_data_check_integer, (cmd, &tmpdata,
+                                           0xfff, 0x0));
+	entry.vlan_id = tmpdata & 0xfff;
+
+	cmd_data_check_element("vlan_pcp_valid", "no",
+			       "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
+			       (cmd, A_FALSE, &entry.vlan_pcp_valid, sizeof (a_bool_t)));
+
+	cmd_data_check_element("vlan_pcp", "0",
+			       "usage: the format is 0x0-0x7 or 0-7\n",
+			       cmd_data_check_integer, (cmd, &tmpdata, 0x7, 0x0));
+	entry.vlan_pcp = tmpdata & 0x7;
+
+	cmd_data_check_element("ipmc_type", "0",
+			       "usage: the format is 0x0-0x7\n",
+			       cmd_data_check_integer, (cmd, &tmpdata, 0x7, 0x0));
+	entry.ipmc_type = tmpdata & 0x7;
+
+	cmd_data_check_element("counter_id", "0",
+			       "usage: the format is 0x0-0x1f or 0-31\n",
+			       cmd_data_check_integer, (cmd, &tmpdata, 0x1f, 0x0));
+	entry.counter_id = tmpdata & 0x1f;
+
+	*(fal_pon_pm_counter_entry_t *) val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_pon_pm_counter_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_pon_pm_counter_entry_t *entry;
+
+	entry = (fal_pon_pm_counter_entry_t *) buf;
+
+	cmd_data_print_portmap("\n[port]:", entry->port_id, sizeof (fal_pbmp_t));
+	dprintf("\n[vlan_tag_fmt]:0x%x", entry->vlan_tag_fmt);
+	cmd_data_print_confirm("\n[vlan_id_valid]:", entry->vlan_id_valid, sizeof(a_uint32_t));
+	dprintf("  [vlan_id]:0x%x", entry->vlan_id);
+	cmd_data_print_confirm("\n[vlan_pcp_valid]:", entry->vlan_pcp_valid, sizeof(a_uint32_t));
+	dprintf("  [vlan_pcp]:0x%x", entry->vlan_pcp);
+	dprintf("\n[ipmc_type]:0x%x", entry->ipmc_type);
+	dprintf("\n[counter_id]:0x%x", entry->counter_id);
+}
+
+void
+cmd_data_print_pon_pm_counter(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+	fal_pon_pm_counter_t *entry;
+
+	entry = (fal_pon_pm_counter_t *) buf;
+	dprintf("\n[packets_ucast]:%lld", entry->packets_ucast, sizeof(a_uint64_t));
+	dprintf("\n[packets_bcast]:%lld", entry->packets_bcast, sizeof(a_uint64_t));
+	dprintf("\n[packets_mcast]:%lld", entry->packets_mcast, sizeof(a_uint64_t));
+	dprintf("\n[packets_oversize]:%lld", entry->packets_oversize, sizeof(a_uint64_t));
+	dprintf("\n[bytes]:%lld", entry->bytes, sizeof(a_uint64_t));
+	dprintf("\n[crc_errors]:%lld", entry->crc_errors, sizeof(a_uint64_t));
+	dprintf("\n[packets_64octets]:%lld", entry->packets_64octets, sizeof(a_uint64_t));
+	dprintf("\n[packets_65to127octets]:%lld",
+			entry->packets_65to127octets, sizeof(a_uint64_t));
+	dprintf("\n[packets_128to255octets]:%lld",
+			entry->packets_128to255octets, sizeof(a_uint64_t));
+	dprintf("\n[packets_256to511octets]:%lld",
+			entry->packets_256to511octets, sizeof(a_uint64_t));
+	dprintf("\n[packets_512to1023octets]:%lld",
+			entry->packets_512to1023octets, sizeof(a_uint64_t));
+	dprintf("\n[packets_1024to1518octets]:%lld",
+			entry->packets_1024to1518octets, sizeof(a_uint64_t));
 }
 /* auto_insert_flag_1 */

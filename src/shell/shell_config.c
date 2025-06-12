@@ -2039,6 +2039,28 @@ struct cmd_des_t gcmd_des[] =
 	},
 #endif
 
+/* PON PM */
+#ifdef IN_PON_PM
+	{
+		"ponpm", "config pon pm",
+		{
+			{"counter_entry", "set", "set pon pm counter entry",
+				"<entry_index> <ingress|egress|both>",
+				SW_API_PON_PM_COUNTER_ENTRY_SET, NULL},
+			{"counter_entry", "get", "get pon pm counter entry",
+				"<entry_index> <ingress|egress>",
+				SW_API_PON_PM_COUNTER_ENTRY_GET, NULL},
+			{"counter", "get", "get pon pm counter",
+				"<counter_id> <ingress|egress>",
+				SW_API_PON_PM_COUNTER_GET, NULL},
+			{"counter", "flush", "flush pon pm counter",
+				"<counter_id> <ingress|egress|both>",
+				SW_API_PON_PM_COUNTER_FLUSH, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
 /* auto_insert_flag */
 
 /*qca808x_start*/
