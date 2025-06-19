@@ -28786,7 +28786,7 @@ cmd_data_print_servcode_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 		dprintf("bypass_bitmap_3:0x%x\n", entry->bypass_bitmap[3]);
 	}
 	dprintf("direction:%d\n", entry->direction);
-	dprintf("field_update_bitmap:0x%x  next_servicecode:%d\n",
+	dprintf("field_update_bitmap:0x%llx  next_servicecode:%d\n",
 				entry->field_update_bitmap, entry->next_service_code);
 	dprintf("hardwareservices:%d  offsetselection:%d\n",
 				entry->hw_services, entry->offset_sel);
