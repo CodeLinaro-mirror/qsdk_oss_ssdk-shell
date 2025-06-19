@@ -1403,6 +1403,16 @@ sw_error_t
 cmd_data_check_tcont_cfg(char *info, fal_queue_tcont_cfg_t *val, a_uint32_t size);
 void
 cmd_data_print_tcont_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_sampl_burst_cfg(char *cmd_str, void *val, a_uint32_t size);
+void
+cmd_data_print_sampl_burst_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_sampl_ctrl_cfg(char *cmd_str, void *val, a_uint32_t size);
+void
+cmd_data_print_sampl_ctrl_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
+void
+cmd_data_print_sampl_counter_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size);
 
 /* auto_insert_flag */
 

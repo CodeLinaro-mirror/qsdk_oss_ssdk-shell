@@ -357,6 +357,14 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"sampling_counter_mode",
+		{
+			{"eth_pkt", FAL_SAMPL_CNT_ETHERNET_PKT},
+			{"ip_pkt", FAL_SAMPL_CNT_IP_PKT},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -903,6 +911,12 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_MONITOR_CTRL, cmd_data_check_monitor_ctrl, cmd_data_print_monitor_ctrl),
 	SW_TYPE_DEF(SW_MONITOR_STATS, NULL, cmd_data_print_monitor_stats),
     SW_TYPE_DEF(SW_TCONT_CFG, cmd_data_check_tcont_cfg, cmd_data_print_tcont_cfg),
+    SW_TYPE_DEF(SW_SAMPL_BURST_CFG, cmd_data_check_sampl_burst_cfg,
+		cmd_data_print_sampl_burst_cfg),
+    SW_TYPE_DEF(SW_SAMPL_CTRL, cmd_data_check_sampl_ctrl_cfg,
+		cmd_data_print_sampl_ctrl_cfg),
+    SW_TYPE_DEF(SW_SAMPL_COUNTER, NULL, cmd_data_print_sampl_counter_entry),
+
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -24782,7 +24796,7 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
                            (a_uint32_t *) & (entry->mac_addr),
                            sizeof (fal_mac_addr_t));
 
-    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) || 
+    if ((ssdk_cfg.init_cfg.chip_type == CHIP_APPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
        		(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)) {
@@ -24798,7 +24812,7 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
 	    cmd_data_print_confirm("\n[in_mac_valid]", entry->in_mac_valid,
-			    sizeof(a_bool_t));		
+			    sizeof(a_bool_t));
     	cmd_data_print_macaddr("\n[in_mac_addr]:",
                            (a_uint32_t *) & (entry->in_mac_addr),
                            sizeof (fal_mac_addr_t));
@@ -42072,7 +42086,7 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 				"usage: flow_cookie for qos\n",
 				cmd_data_check_uint64,
 				(cmd, &cookie, sizeof(cookie)));
-		
+
 		switch (entry.type) {
 		case FAL_FLOW_QOS_TYPE_COOKIE_16B:
 			memcpy(entry.cookie_16b, &cookie, sizeof(entry.cookie_16b));
@@ -43303,8 +43317,8 @@ cmd_data_print_flow_npt66_iid_cal(a_uint8_t *param_name, a_ulong_t *buf, a_uint3
 	dprintf("\n[%s] \n", param_name);
 
 	cmd_data_print_ip6addr("sip", (a_uint32_t *) &(entry->sip), sizeof(entry->sip));
-	cmd_data_print_ip6addr("dip", (a_uint32_t *) &(entry->dip), sizeof(entry->dip));	
-	cmd_data_print_ip6addr("tip", (a_uint32_t *) &(entry->tip), sizeof(entry->tip));		
+	cmd_data_print_ip6addr("dip", (a_uint32_t *) &(entry->dip), sizeof(entry->dip));
+	cmd_data_print_ip6addr("tip", (a_uint32_t *) &(entry->tip), sizeof(entry->tip));
 	cmd_data_print_uint32("prefix_len", &entry->prefix_len, sizeof(entry->prefix_len));
 	cmd_data_print_uint32("tip_prefix_len", &entry->tip_prefix_len, sizeof(entry->tip_prefix_len));
 	cmd_data_print_enable("is_dnat", &entry->is_dnat, sizeof(entry->is_dnat));
@@ -43348,7 +43362,7 @@ cmd_data_print_flow_npt66_iid(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t 
 	dprintf("\n[%s] \n", param_name);
 
 	cmd_data_print_uint32("iid_offset", &entry->iid_offset, sizeof(entry->iid_offset));
-	cmd_data_print_uint32("iid", &entry->iid, sizeof(entry->iid));	
+	cmd_data_print_uint32("iid", &entry->iid, sizeof(entry->iid));
 	cmd_data_print_enable("is_dnat", &entry->is_dnat, sizeof(entry->is_dnat));
 
 	dprintf("\n");
@@ -43455,4 +43469,157 @@ cmd_data_print_tcont_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 	cmd_data_print_uint32("tcont_id", &entry->tcont_id, sizeof(a_uint32_t));
 	dprintf("\n");
 }
+
+sw_error_t
+cmd_data_check_sampl_burst_cfg(char *cmd_str, void *val, a_uint32_t size)
+{
+	sw_error_t rv;
+	fal_sampling_burst_cfg_t entry;
+
+	aos_mem_zero(&entry, sizeof (fal_sampling_burst_cfg_t));
+
+	rv = __cmd_data_check_complex("burst_threshold", "0",
+                        "usage: burst threshold (Bytes)\n",
+                        cmd_data_check_uint32, &(entry.burst_threshold),
+                        sizeof (a_uint32_t));
+	SW_RTN_ON_ERROR(rv);
+
+	rv = __cmd_data_check_complex("burst_short_intvl", "0",
+                        "usage: burst short interval(cycle*4)\n",
+                        cmd_data_check_uint32, &(entry.burst_short_intvl),
+                        sizeof (a_uint32_t));
+	SW_RTN_ON_ERROR(rv);
+
+ 	rv = __cmd_data_check_complex("burst_long_intvl", "0",
+                        "usage: burst long interval(cycle*4)\n",
+                        cmd_data_check_uint32, &(entry.burst_long_intvl),
+                        sizeof (a_uint32_t));
+	SW_RTN_ON_ERROR(rv);
+
+    *(fal_sampling_burst_cfg_t *)val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_sampl_burst_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_sampling_burst_cfg_t *entry;
+
+	entry = (fal_sampling_burst_cfg_t *) buf;
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_uint32("burst_threshold", (a_uint32_t *) & (entry->burst_threshold), 4);
+	cmd_data_print_uint32("burst_short_intvl", (a_uint32_t *) & (entry->burst_short_intvl), 4);
+	cmd_data_print_uint32("burst_long_intvl", (a_uint32_t *) & (entry->burst_long_intvl), 4);
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_sampl_ctrl_cfg(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	a_uint32_t tmpdata = 0;
+	sw_error_t rv;
+	fal_sampling_ctrl_t entry;
+
+	aos_mem_zero(&entry, sizeof (fal_sampling_ctrl_t));
+
+	do {
+            cmd = get_sub_cmd("counter_mode", "eth_pkt");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+               return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+               dprintf("usage: eth_pkt, ip_pkt\n");
+               rv = SW_BAD_VALUE;
+            }
+            else
+            {
+               rv = cmd_data_check_attr("sampling_counter_mode", cmd, &tmpdata, sizeof(tmpdata));
+               if (SW_OK != rv)
+                   dprintf("usage: eth_pkt, ip_pkt\n");
+               entry.counter_mode = tmpdata & 0x3;
+            }
+        } while (talk_mode && (SW_OK != rv));
+
+	rv = __cmd_data_check_complex("counter_overflow", "disable",
+			    "usage: counter overflow enable or disable\n",
+			    cmd_data_check_enable, &(entry.counter_overflow_flag),
+			    sizeof (a_bool_t));
+	SW_RTN_ON_ERROR(rv);
+
+	rv = __cmd_data_check_complex("counter_keep", "disable",
+			    "usage: counter not-read-clear enable or disable\n",
+			    cmd_data_check_enable, &(entry.counter_clear_mode),
+			    sizeof (a_bool_t));
+	SW_RTN_ON_ERROR(rv);
+
+	rv = __cmd_data_check_complex("comp_len", "0",
+			"usage: Compensate length\n",
+			cmd_data_check_uint8, &(entry.comp_len),
+			sizeof (a_uint32_t));
+	SW_RTN_ON_ERROR(rv);
+
+	rv = __cmd_data_check_complex("iat_shift_bit", "17",
+			"usage: Inter Arrival Time shift bits\n",
+			cmd_data_check_uint8, &(entry.iat_shift_bit),
+			sizeof (a_uint32_t));
+	SW_RTN_ON_ERROR(rv);
+
+    *(fal_sampling_ctrl_t *)val = entry;
+    return SW_OK;
+}
+
+void
+cmd_data_print_sampl_ctrl_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_sampling_ctrl_t *entry;
+
+	entry = (fal_sampling_ctrl_t *) buf;
+	dprintf("\n");
+
+	cmd_data_print_attr("sampling_counter_mode", "[counter_mode]:", (a_uint32_t *) & (entry->counter_mode), 4);
+	cmd_data_print_enable("counter_overflow", (a_uint32_t *) & (entry->counter_overflow_flag), 4);
+	cmd_data_print_enable("counter_keep", (a_uint32_t *) & (entry->counter_clear_mode), 4);
+	cmd_data_print_uint32("comp_len", (a_uint32_t *) & (entry->comp_len), 4);
+	cmd_data_print_uint32("iat_shift_bit", (a_uint32_t *) & (entry->iat_shift_bit), 4);
+	dprintf("\n");
+}
+
+void
+cmd_data_print_sampl_counter_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_sampling_counter_entry_t *entry;
+	entry = (fal_sampling_counter_entry_t *) buf;
+
+	dprintf("\n[matched_pkts_counter]:%ld", entry->matched_pkts);
+	dprintf("\n[matched_bytes_counter]:%lld", entry->matched_bytes);
+	dprintf("\n[min_packet_len]:%d", entry->bytes_min);
+	dprintf("\n[max_packet_len]:%d", entry->bytes_max);
+	dprintf("\n[min_iat]:%d", entry->packet_iat_min);
+	dprintf("\n[max_iat]:%d", entry->packet_iat_max);
+	dprintf("\n[sum_iat]:%d", entry->packet_iat_sum);
+	dprintf("\n[burst_oc_bytes]:%ld", entry->burst_oc_bytes);
+	dprintf("\n[burst_is_bytes]:%ld", entry->burst_is_bytes);
+	dprintf("\n[burst_bytes0]:%ld", entry->burst_bytes[0]);
+	dprintf("\n[burst_bytes1]:%ld", entry->burst_bytes[1]);
+	dprintf("\n[burst_bytes2]:%ld", entry->burst_bytes[2]);
+	dprintf("\n[burst_bytes3]:%ld", entry->burst_bytes[3]);
+	dprintf("\n[burst_bytes4]:%ld", entry->burst_bytes[4]);
+	dprintf("\n[burst_bytes5]:%ld", entry->burst_bytes[5]);
+	dprintf("\n[burst_bytes6]:%ld", entry->burst_bytes[6]);
+	dprintf("\n[burst_bytes7]:%ld", entry->burst_bytes[7]);
+	dprintf("\n[burst_bytes8]:%ld", entry->burst_bytes[8]);
+	dprintf("\n[burst_bytes9]:%ld", entry->burst_bytes[9]);
+	dprintf("\n[burst_timestamp]:0x%08x  ", entry->burst_timestamp);
+	dprintf("\n[flow_timestamp]:0x%08x  ", entry->flow_timestamp);
+	dprintf("\n[burst_flags]:0x%08x  ", entry->burst_flags);
+
+	return;
+}
+
 /* auto_insert_flag_1 */

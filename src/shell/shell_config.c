@@ -1960,6 +1960,29 @@ struct cmd_des_t gcmd_des[] =
 	},
 #endif
 
+/* sampling */
+#ifdef IN_SAMPL
+	{
+		"sampling", "config sampling",
+		{
+			{"time", "set", "Set sampling time value", "<buff_index:0|1> <time_value>", SW_API_SAMPL_TIME_SET, NULL},
+			{"time", "get", "Get sampling time value", "<buff_index:0|1>", SW_API_SAMPL_TIME_GET, NULL},
+			{"buff_status", "get", "Get sampling buffer status", "<buff_index:0|1>", SW_API_SAMPL_BUFF_STATUS_GET, NULL},
+			{"buff_status", "clear", "Clear sampling buffer status", "<buff_index:0|1>", SW_API_SAMPL_BUFF_STATUS_CLEAR, NULL},
+			{"done_miss_counter", "get", "Get miss number for sampling done bit", "", SW_API_SAMPL_DONE_MISS_CNT_GET, NULL},
+			{"done_miss_counter", "clear", "Clear miss number counter", "", SW_API_SAMPL_DONE_MISS_CNT_CLEAR, NULL},
+			{"burst_cfg", "set", "Set sampling burst configuration", "<burst_cfg>", SW_API_SAMPL_BURST_CFG_SET, NULL},
+			{"burst_cfg", "get", "Get sampling burst configuration", "<burst_cfg>", SW_API_SAMPL_BURST_CFG_GET, NULL},
+			{"ctrl", "set", "Set sampling control configuration", "<ctrl_cfg>", SW_API_SAMPL_CTRL_SET, NULL},
+			{"ctrl", "get", "Get sampling control configuration", "<ctrl_cfg>", SW_API_SAMPL_CTRL_GET, NULL},
+			{"window_en", "set", "Set sampling window enable", "<window_index:0-15> <enable>", SW_API_SAMPL_WINDOW_EN_SET, NULL},
+			{"window_en", "get", "Get sampling window enable status", "<window_index:0-15>", SW_API_SAMPL_WINDOW_EN_GET, NULL},
+			{"counter", "get", "Get sampling counter", " <counter_entry>", SW_API_SAMPL_COUNTER_GET, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
 /* auto_insert_flag */
 
 /*qca808x_start*/
