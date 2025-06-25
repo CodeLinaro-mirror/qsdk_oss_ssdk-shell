@@ -1128,7 +1128,12 @@ struct cmd_des_t gcmd_des[] =
             {"npt66_iid", "add", "add flow npt66_iid entry", "<flow_index>", SW_API_FLOW_NPT66_IID_ADD, NULL},
             {"npt66_iid", "get", "get flow npt66_iid entry", "<flow_index>", SW_API_FLOW_NPT66_IID_GET, NULL},
             {"npt66_iid", "del", "del flow npt66_iid entry", "<flow_index>", SW_API_FLOW_NPT66_IID_DEL, NULL},
-
+            {"flow_key", "get", "get flow key config", "<key_type>", SW_API_FLOW_KEY_GET, NULL},
+            {"flow_key", "set", "set flow key config", "<key_type> <key_config>", SW_API_FLOW_KEY_SET, NULL},
+            {"sampling_id", "get", "get flow sampling ID", "<flow_index>", SW_API_FLOW_SAMPLING_ID_GET, NULL},
+            {"sampling_id", "set", "set flow sampling ID", "<flow_index> <sampling_id>", SW_API_FLOW_SAMPLING_ID_SET, NULL},
+            {"gro_en", "get", "get flow GRO status", "<flow_index>", SW_API_FLOW_GRO_EN_GET, NULL},
+            {"gro_en", "set", "set flow GRO status", "<flow_index> <en>", SW_API_FLOW_GRO_EN_SET, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

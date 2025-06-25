@@ -1463,7 +1463,13 @@ extern "C" {
     SW_API_DEF(SW_API_FLOW_NPT66_IID_CAL, fal_flow_npt66_iid_cal), \
     SW_API_DEF(SW_API_FLOW_NPT66_IID_ADD, fal_flow_npt66_iid_add), \
     SW_API_DEF(SW_API_FLOW_NPT66_IID_GET, fal_flow_npt66_iid_get), \
-    SW_API_DEF(SW_API_FLOW_NPT66_IID_DEL, fal_flow_npt66_iid_del),
+    SW_API_DEF(SW_API_FLOW_NPT66_IID_DEL, fal_flow_npt66_iid_del), \
+    SW_API_DEF(SW_API_FLOW_KEY_GET, fal_flow_key_get), \
+    SW_API_DEF(SW_API_FLOW_KEY_SET, fal_flow_key_set), \
+    SW_API_DEF(SW_API_FLOW_SAMPLING_ID_GET, fal_flow_sampling_id_get), \
+    SW_API_DEF(SW_API_FLOW_SAMPLING_ID_SET, fal_flow_sampling_id_set), \
+    SW_API_DEF(SW_API_FLOW_GRO_EN_GET, fal_flow_gro_en_get), \
+    SW_API_DEF(SW_API_FLOW_GRO_EN_SET, fal_flow_gro_en_set),
 
 #define FLOW_API_PARAM \
     SW_API_DESC(SW_API_FLOW_STATUS_SET) \
@@ -1493,7 +1499,13 @@ extern "C" {
     SW_API_DESC(SW_API_FLOW_NPT66_IID_CAL) \
     SW_API_DESC(SW_API_FLOW_NPT66_IID_ADD) \
     SW_API_DESC(SW_API_FLOW_NPT66_IID_GET) \
-    SW_API_DESC(SW_API_FLOW_NPT66_IID_DEL)
+    SW_API_DESC(SW_API_FLOW_NPT66_IID_DEL) \
+    SW_API_DESC(SW_API_FLOW_KEY_GET) \
+    SW_API_DESC(SW_API_FLOW_KEY_SET) \
+    SW_API_DESC(SW_API_FLOW_SAMPLING_ID_GET) \
+    SW_API_DESC(SW_API_FLOW_SAMPLING_ID_SET) \
+    SW_API_DESC(SW_API_FLOW_GRO_EN_GET) \
+    SW_API_DESC(SW_API_FLOW_GRO_EN_SET)
 
 #else
 #define FLOW_API

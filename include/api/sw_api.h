@@ -321,6 +321,7 @@ typedef enum
 	SW_SAMPL_COUNTER,
 	SW_TCONT_CFG,
 	SW_PT_VLAN_TRANS_ADV_RULE_WITH_PORT,
+	SW_FLOW_KEY,
 /* auto_insert_flag */
 } sw_data_type_e;
 
