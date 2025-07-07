@@ -362,6 +362,7 @@ struct attr_des_t g_attr_des[] =
 		{
 			{"eth_pkt", FAL_SAMPL_CNT_ETHERNET_PKT},
 			{"ip_pkt", FAL_SAMPL_CNT_IP_PKT},
+			{"tunnel_ip_pkt", FAL_SAMPL_CNT_TUNNEL_IP_PKT},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 
