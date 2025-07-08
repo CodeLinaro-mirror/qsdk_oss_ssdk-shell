@@ -1062,7 +1062,7 @@ cmd_data_check_uint8(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
 }
 
 void
-cmd_data_print_uint8(a_char_t *param_name, a_uint32_t *buf, a_uint32_t size)
+cmd_data_print_uint8(a_char_t *param_name, a_uint8_t *buf, a_uint32_t size)
 {
     dprintf("[%s]:0x%x", param_name, *(a_uint8_t *) buf);
 
@@ -1134,7 +1134,7 @@ cmd_data_check_uint16(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
 }
 
 void
-cmd_data_print_uint16(a_char_t * param_name, a_uint32_t * buf, a_uint32_t size)
+cmd_data_print_uint16(a_char_t * param_name, a_uint16_t * buf, a_uint32_t size)
 {
     dprintf("[%s]:0x%04x", param_name, *(a_uint16_t *) buf);
 
@@ -4845,7 +4845,7 @@ cmd_data_check_ip6addr(char *cmdstr, void * val, a_uint32_t size)
     }
     else
     {
-        if (8 <= i)
+        if (8 <= i || i == 0)
         {
             return SW_BAD_VALUE;
         }
@@ -26967,19 +26967,19 @@ cmd_data_print_port_vlan_tag(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     entry = (fal_port_vlan_tag_t *) buf;
     dprintf("\n");
 
-    cmd_data_print_uint32("mask", (a_uint32_t *) & (entry->mask), 4);
+    cmd_data_print_uint32("mask", &(entry->mask), sizeof(entry->mask));
     dprintf("\n");
-    cmd_data_print_uint16("default_ctag_vid", (a_uint32_t *) & (entry->cvid), 4);
+    cmd_data_print_uint16("default_ctag_vid", &(entry->cvid), sizeof(entry->cvid));
     dprintf("\n");
-    cmd_data_print_uint16("default_stag_vid", (a_uint32_t *) & (entry->svid), 4);
+    cmd_data_print_uint16("default_stag_vid", &(entry->svid), sizeof(entry->svid));
     dprintf("\n");
-    cmd_data_print_uint16("default_ctag_pri", (a_uint32_t *) & (entry->cpri), 4);
+    cmd_data_print_uint16("default_ctag_pri", &(entry->cpri), sizeof(entry->cpri));
     dprintf("\n");
-    cmd_data_print_uint16("default_stag_pri", (a_uint32_t *) & (entry->spri), 4);
+    cmd_data_print_uint16("default_stag_pri", &(entry->spri), sizeof(entry->spri));
     dprintf("\n");
-    cmd_data_print_uint16("default_ctag_dei", (a_uint32_t *) & (entry->cdei), 4);
+    cmd_data_print_uint16("default_ctag_dei", &(entry->cdei), sizeof(entry->cdei));
     dprintf("\n");
-    cmd_data_print_uint16("default_stag_dei", (a_uint32_t *) & (entry->sdei), 4);
+    cmd_data_print_uint16("default_stag_dei", &(entry->sdei), sizeof(entry->sdei));
     dprintf("\n");
 
 }
@@ -42887,7 +42887,7 @@ cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)) {
-		cmd_data_print_uint8("type", (a_uint32_t *)&entry->type, sizeof(a_uint32_t));
+		cmd_data_print_uint8("type", (a_uint8_t *)&entry->type, sizeof(a_uint32_t));
 
 		switch (entry->type) {
 		case FAL_FLOW_QOS_TYPE_TREE_ID:
@@ -43139,13 +43139,14 @@ cmd_data_print_tunnel_key(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size
 
 	dprintf("\n[%s] \n", param_name);
 
-	cmd_data_print_decap_key("[key_include]", &entry->key_bmp, sizeof(a_uint32_t));
+	cmd_data_print_decap_key("[key_include]", &entry->key_bmp, sizeof(entry->key_bmp));
 
-	cmd_data_print_uint32("tunnel_info_mask", &entry->tunnel_info_mask, sizeof(a_uint32_t));
-	cmd_data_print_uint8("udf0_idx", (a_uint32_t *)&entry->udf0_idx, sizeof(a_uint32_t));
-	cmd_data_print_uint16("udf0_mask", (a_uint32_t *)&entry->udf0_mask, sizeof(a_uint32_t));
-	cmd_data_print_uint8("udf1_idx", (a_uint32_t *)&entry->udf1_idx, sizeof(a_uint32_t));
-	cmd_data_print_uint16("udf1_mask", (a_uint32_t *)&entry->udf1_mask, sizeof(a_uint32_t));
+	cmd_data_print_uint32("tunnel_info_mask", &entry->tunnel_info_mask,
+			      sizeof(entry->tunnel_info_mask));
+	cmd_data_print_uint8("udf0_idx", &entry->udf0_idx, sizeof(entry->udf0_idx));
+	cmd_data_print_uint16("udf0_mask", &entry->udf0_mask, sizeof(entry->udf0_mask));
+	cmd_data_print_uint8("udf1_idx", &entry->udf1_idx, sizeof(entry->udf1_idx));
+	cmd_data_print_uint16("udf1_mask", &entry->udf1_mask, sizeof(entry->udf1_mask));
 
 	dprintf("\n");
 }
@@ -44581,13 +44582,13 @@ cmd_data_print_flow_key_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 
 	cmd_data_print_flow_key("[key_include]", &entry->key_bmp, sizeof(a_uint32_t));
 
-	cmd_data_print_uint16("l3_type", (a_uint32_t *)&entry->l3_type, sizeof(a_uint32_t));
-	cmd_data_print_uint16("l4_type", (a_uint32_t *)&entry->l4_type, sizeof(a_uint32_t));
-	cmd_data_print_uint16("app_type", (a_uint32_t *)&entry->app_type, sizeof(a_uint32_t));
-	cmd_data_print_uint8("udf0_idx", (a_uint32_t *)&entry->udf0_idx, sizeof(a_uint32_t));
-	cmd_data_print_uint16("udf0_mask", (a_uint32_t *)&entry->udf0_mask, sizeof(a_uint32_t));
-	cmd_data_print_uint8("udf1_idx", (a_uint32_t *)&entry->udf1_idx, sizeof(a_uint32_t));
-	cmd_data_print_uint16("udf1_mask", (a_uint32_t *)&entry->udf1_mask, sizeof(a_uint32_t));
+	cmd_data_print_uint16("l3_type", &entry->l3_type, sizeof(entry->l3_type));
+	cmd_data_print_uint16("l4_type", &entry->l4_type, sizeof(entry->l4_type));
+	cmd_data_print_uint16("app_type", &entry->app_type, sizeof(entry->app_type));
+	cmd_data_print_uint8("udf0_idx", &entry->udf0_idx, sizeof(entry->udf0_idx));
+	cmd_data_print_uint16("udf0_mask", &entry->udf0_mask, sizeof(entry->udf0_mask));
+	cmd_data_print_uint8("udf1_idx", &entry->udf1_idx, sizeof(entry->udf1_idx));
+	cmd_data_print_uint16("udf1_mask", &entry->udf1_mask, sizeof(entry->udf1_mask));
 
 	dprintf("\n");
 }
