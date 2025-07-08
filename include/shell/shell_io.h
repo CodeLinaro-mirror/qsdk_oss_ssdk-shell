@@ -84,9 +84,9 @@ void cmd_data_print_uint64(a_char_t * param_name, a_uint64_t * buf,
                            a_uint32_t size);
 void cmd_data_print_uint32(a_char_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
-void cmd_data_print_uint16(a_char_t * param_name, a_uint32_t * buf,
+void cmd_data_print_uint16(a_char_t * param_name, a_uint16_t * buf,
                            a_uint32_t size);
-void cmd_data_print_uint8(a_char_t * param_name, a_uint32_t * buf,
+void cmd_data_print_uint8(a_char_t * param_name, a_uint8_t * buf,
                            a_uint32_t size);
 void cmd_data_print_enable(a_char_t * param_name, a_uint32_t * buf,
                            a_uint32_t size);
