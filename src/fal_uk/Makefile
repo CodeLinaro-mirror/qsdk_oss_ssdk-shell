@@ -174,6 +174,10 @@ ifeq (TRUE, $(IN_PON))
   SRC_LIST += fal_pon.c
 endif
 
+ifeq (TRUE, $(IN_PON_PM))
+  SRC_LIST += fal_pon_pm.c
+endif
+
 #auto_insert_flag
 
 include $(PRJ_PATH)/make/components.mk
