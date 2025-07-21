@@ -534,3 +534,12 @@ fal_qm_cpucode_enqueue_set(a_uint32_t dev_id, a_uint32_t cpu_code, a_bool_t enab
     rv = sw_uk_exec(SW_API_QM_CPUCODE_ENQUEUE_SET, dev_id, cpu_code, enable);
     return rv;
 }
+
+sw_error_t fal_qm_tcont_stat_get(a_uint32_t dev_id, a_uint32_t tcont_id,
+				 fal_queue_tcont_stat_t *stat)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_TCONT_STAT_GET, dev_id, tcont_id, stat);
+    return rv;
+}

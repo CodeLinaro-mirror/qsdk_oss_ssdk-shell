@@ -967,7 +967,7 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_SAMPL_COUNTER, NULL, cmd_data_print_sampl_counter_entry),
     SW_TYPE_DEF(SW_FLOW_KEY, cmd_data_check_flow_key_cfg, cmd_data_print_flow_key_cfg),
     SW_TYPE_DEF(SW_VLAN_KEY, cmd_data_check_vlan_key_cfg, cmd_data_print_vlan_key_cfg),
-    SW_TYPE_DEF(SW_EIP_LOOKUP_MODE, cmd_data_check_eip_lookup_mode_cfg, NULL),
+    SW_TYPE_DEF(SW_EIP_LOOKUP_MODE, cmd_data_check_eip_lookup_mode_cfg, cmd_data_print_eip_lookup_mode_cfg),
     SW_TYPE_DEF(SW_GEMPORT_GLB_CFG, cmd_data_check_gemport_global_cfg, cmd_data_print_gemport_global_cfg),
     SW_TYPE_DEF(SW_GEMPORT_GEN_DFT, cmd_data_check_gemport_gen_default, cmd_data_print_gemport_gen_default),
 	SW_TYPE_DEF(SW_GEMPORT_GEN, cmd_data_check_gemport_gen_entry, cmd_data_print_gemport_gen_entry),
@@ -981,6 +981,7 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_tunnel_tuple_entry),
 	SW_TYPE_DEF(SW_TUNNEL_DECAP_MISS_ACTION, cmd_data_check_tunnel_decap_miss_action,
 		    cmd_data_print_tunnel_decap_miss_action),
+	SW_TYPE_DEF(SW_TCONT_STAT, NULL, cmd_data_print_tcont_stat),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -44957,8 +44958,15 @@ cmd_data_print_vlan_key_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 sw_error_t
 cmd_data_check_eip_lookup_mode_cfg(char *cmd_str, fal_flow_eip_lookup_mode_t *arg_val, a_uint32_t size)
 {
-    return cmd_data_check_attr("eip_lookup_mode", cmd_str,
-                    arg_val, sizeof(*arg_val));
+	return cmd_data_check_attr("eip_lookup_mode", cmd_str,
+			arg_val, sizeof(*arg_val));
+}
+
+void
+cmd_data_print_eip_lookup_mode_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	return cmd_data_print_attr("[eip_lookup_mode]: ",
+			(char *)param_name, (a_uint32_t *)buf, sizeof(a_uint32_t));
 }
 
 sw_error_t
@@ -45916,5 +45924,18 @@ cmd_data_print_tunnel_decap_miss_action(a_uint8_t * param_name, a_uint32_t * buf
 	cmd_data_print_confirm("\n[service_code_en]", miss_action->service_code_en,
 			sizeof(miss_action->service_code_en));
 	dprintf(" [service_code]:%d ", miss_action->service_code);
+}
+
+void
+cmd_data_print_tcont_stat(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_queue_tcont_stat_t *entry;
+
+	entry = (fal_queue_tcont_stat_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+	cmd_data_print_uint32("credit", &entry->credit, sizeof(entry->credit));
+	cmd_data_print_uint64("bytes", &entry->bytes, sizeof(entry->bytes));
+	dprintf("\n");
 }
 /* auto_insert_flag_1 */
