@@ -291,7 +291,6 @@ struct attr_des_t g_attr_des[] =
 			{"tuple_tunnel_28", FAL_TUNNEL_TYPE_TUPLE_TUNNEL28},
 			{"tuple_tunnel_29", FAL_TUNNEL_TYPE_TUPLE_TUNNEL29},
 			{"tuple_tunnel_30", FAL_TUNNEL_TYPE_TUPLE_TUNNEL30},
-			{"tuple_tunnel_31", FAL_TUNNEL_TYPE_TUPLE_TUNNEL31},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -37758,6 +37757,21 @@ cmd_data_check_tunnel_decap_rule_entry(char *cmd_str,
 					" program5"
 					" geneve_ipv4"
 					" geneve_ipv6"
+					" program6"
+					" program7"
+					" program8"
+					" program9"
+					" program10"
+					" program11"
+					" program12"
+					" program13"
+					" program14"
+					" program15"
+					" tuple_tunnel_26"
+					" tuple_tunnel_27"
+					" tuple_tunnel_28"
+					" tuple_tunnel_29"
+					" tuple_tunnel_30"
 					"\n");
 			rv = SW_BAD_VALUE;
 		}
@@ -37781,6 +37795,21 @@ cmd_data_check_tunnel_decap_rule_entry(char *cmd_str,
 						" program5"
 						" geneve_ipv4"
 						" geneve_ipv6"
+						" program6"
+						" program7"
+						" program8"
+						" program9"
+						" program10"
+						" program11"
+						" program12"
+						" program13"
+						" program14"
+						" program15"
+						" tuple_tunnel_26"
+						" tuple_tunnel_27"
+						" tuple_tunnel_28"
+						" tuple_tunnel_29"
+						" tuple_tunnel_30"
 						"\n");
 			}
 		}
@@ -45687,22 +45716,21 @@ cmd_data_check_tunnel_tuple_entry(char *cmd_str, void *val, a_uint32_t size)
 						" program5"
 						" geneve_ipv4"
 						" geneve_ipv6"
-						" program6",
-						" program7",
-						" program8",
-						" program9",
-						" program10",
-						" program11",
-						" program12",
-						" program13",
-						" program14",
-						" program15",
-						" tuple_tunnel_26",
-						" tuple_tunnel_27",
-						" tuple_tunnel_28",
-						" tuple_tunnel_29",
-						" tuple_tunnel_30",
-						" tuple_tunnel_31"
+						" program6"
+						" program7"
+						" program8"
+						" program9"
+						" program10"
+						" program11"
+						" program12"
+						" program13"
+						" program14"
+						" program15"
+						" tuple_tunnel_26"
+						" tuple_tunnel_27"
+						" tuple_tunnel_28"
+						" tuple_tunnel_29"
+						" tuple_tunnel_30"
 						"\n");
 				rv = SW_BAD_VALUE;
 			}
@@ -45728,22 +45756,21 @@ cmd_data_check_tunnel_tuple_entry(char *cmd_str, void *val, a_uint32_t size)
 						" program5"
 						" geneve_ipv4"
 						" geneve_ipv6"
-						" program6",
-						" program7",
-						" program8",
-						" program9",
-						" program10",
-						" program11",
-						" program12",
-						" program13",
-						" program14",
-						" program15",
-						" tuple_tunnel_26",
-						" tuple_tunnel_27",
-						" tuple_tunnel_28",
-						" tuple_tunnel_29",
-						" tuple_tunnel_30",
-						" tuple_tunnel_31"
+						" program6"
+						" program7"
+						" program8"
+						" program9"
+						" program10"
+						" program11"
+						" program12"
+						" program13"
+						" program14"
+						" program15"
+						" tuple_tunnel_26"
+						" tuple_tunnel_27"
+						" tuple_tunnel_28"
+						" tuple_tunnel_29"
+						" tuple_tunnel_30"
 						"\n");
 				}
 			}
@@ -45797,11 +45824,11 @@ cmd_data_print_tunnel_tuple_entry(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 
 	if (tuple_entry->key_bmp & BIT(FAL_TUNNEL_KEY_DIP_EN)) {
 		if(tuple_entry->ip_ver == 0) {
-			cmd_data_print_ip4addr("[dipv4_addr]:",
+			cmd_data_print_ip4addr(" [dipv4_addr]:",
 					(a_uint32_t *) &(tuple_entry->dip.ip4_addr),
 					sizeof(fal_ip4_addr_t));
 		} else {
-			cmd_data_print_ip6addr("[dipv6_addr]:",
+			cmd_data_print_ip6addr(" [dipv6_addr]:",
 					(a_uint32_t *) &(tuple_entry->dip.ip6_addr),
 					sizeof(fal_ip6_addr_t));
 		}
