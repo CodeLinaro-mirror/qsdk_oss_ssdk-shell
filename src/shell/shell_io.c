@@ -41920,6 +41920,14 @@ cmd_data_check_enqueue_cfg(char *cmd_str, fal_enqueue_cfg_t *arg_val, a_uint32_t
 				}
 			} while(talk_mode && (SW_OK != rv));
 
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+				cmd_data_check_element("servcode_queue_sel", "no",
+						"usage: <yes/no/y/n>\n",
+						cmd_data_check_confirm, (cmd, A_FALSE,
+						&entry.index_entry.enqueue_servcode.queue_select_en,
+						sizeof(a_bool_t)));
+			}
 			break;
 		default:
 			break;
@@ -41959,6 +41967,13 @@ cmd_data_print_enqueue_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t siz
 					entry->index_entry.enqueue_servcode.service_code);
 			dprintf(" [enqueue_servcode_phyport]:%d",
 					entry->index_entry.enqueue_servcode.phy_port);
+
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+				cmd_data_print_enable("servcode_queue_sel",
+						&entry->index_entry.enqueue_servcode.queue_select_en,
+						sizeof(a_bool_t));
+			}
 			break;
 		default:
 			dprintf("unknow enqueue type:%d", entry->rule_entry.enqueue_type);
