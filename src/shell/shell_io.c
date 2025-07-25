@@ -414,6 +414,22 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"vlan_mode",
+		{
+			{"vid_match", FAL_VLAN_MATCH_VID},
+			{"vsi_match", FAL_VLAN_MATCH_VSI},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"pcp_mode",
+		{
+			{"pcp_dei_match", FAL_PCP_MATCH_PCP_DEI},
+			{"int_pri_match", FAL_PCP_MATCH_INT_PRI},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -45185,16 +45201,24 @@ cmd_data_check_gemport_global_cfg(char *cmd_str, void *val, a_uint32_t size)
 
 	memset(&entry, 0, sizeof (fal_gemport_global_cfg_t));
 
-	cmd_data_check_element("gen_rule_miss_action", "forward",
-			"usage: <forward/drop/cpycpu/rdtcpu>\n", cmd_data_check_maccmd,
+	cmd_data_check_element("gen_rule_miss_action", "rdtcpu",
+			"usage: <drop/cpycpu/rdtcpu>\n", cmd_data_check_maccmd,
 			(cmd, &entry.gen_miss_cmd, sizeof(fal_fwd_cmd_t)));
 
-	cmd_data_check_element("vlan mode", "0", "usage: <0/1>\n",
+	cmd_data_check_element("gen_rule_miss_pon_port", "6",
+			"usage: port_id, <0-255>\n",
 			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
-	entry.vlan_mode = tmp;
+	entry.gen_miss_pon_port = tmp;
 
-	cmd_data_check_element("pcp mode", "0", "usage: <0/1>\n",
-			cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	cmd_data_check_element("vlan_mode", "vid_match",
+					"usage:vid_match/vsi_match.\n",
+					cmd_data_check_attr, ("vlan_mode", cmd,
+					&(tmp), sizeof(a_uint8_t)));
+	entry.vlan_mode = tmp;
+	cmd_data_check_element("pcp_mode", "pcp_dei_match",
+					"usage:pcp_dei_match/int_pri_match.\n",
+					cmd_data_check_attr, ("pcp_mode", cmd,
+					&(tmp), sizeof(a_uint8_t)));
 	entry.pcp_mode = tmp;
 
 	*(fal_gemport_global_cfg_t *)val = entry;
@@ -45210,8 +45234,13 @@ cmd_data_print_gemport_global_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 	dprintf("\n[%s] \n", param_name);
 
 	cmd_data_print_maccmd("gen_rule_miss_action", &entry->gen_miss_cmd, sizeof(fal_fwd_cmd_t));
-	dprintf("\n[vlan_mode]:%u", entry->vlan_mode);
-	dprintf("\n[pcp_mode]:%u\n", entry->pcp_mode);
+	dprintf("\n[gen_rule_miss_pon_port]:%u\n", entry->gen_miss_pon_port);
+	cmd_data_print_attr("vlan_mode", "[vlan_mode]:",
+		&(entry->vlan_mode), sizeof(entry->vlan_mode));
+	dprintf("\n");
+	cmd_data_print_attr("pcp_mode", "[pcp_mode]:",
+		&(entry->pcp_mode), sizeof(entry->pcp_mode));
+	dprintf("\n");
 }
 
 sw_error_t
