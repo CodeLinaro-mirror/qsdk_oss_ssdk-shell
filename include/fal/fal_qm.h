@@ -123,6 +123,11 @@ typedef struct {
 	a_uint32_t tcont_id;
 } fal_queue_tcont_cfg_t;
 
+typedef struct {
+	a_uint64_t bytes;
+	a_uint32_t credit;
+} fal_queue_tcont_stat_t;
+
 enum {
 	FUNC_UCAST_HASH_MAP_SET = 0,
 	FUNC_AC_DYNAMIC_THRESHOLD_GET,
@@ -192,6 +197,11 @@ sw_error_t
 fal_qm_tcont_get(a_uint32_t dev_id,
 		 a_uint32_t queue_id,
 		 fal_queue_tcont_cfg_t *cfg);
+
+sw_error_t
+fal_qm_tcont_stat_get(a_uint32_t dev_id,
+		      a_uint32_t tcont_id,
+		      fal_queue_tcont_stat_t *stat);
 
 sw_error_t
 fal_ac_ctrl_set(

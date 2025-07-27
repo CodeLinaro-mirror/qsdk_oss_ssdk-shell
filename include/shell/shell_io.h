@@ -1423,6 +1423,8 @@ void
 cmd_data_print_vlan_key_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 sw_error_t
 cmd_data_check_eip_lookup_mode_cfg(char *info, fal_flow_eip_lookup_mode_t *val, a_uint32_t size);
+void
+cmd_data_print_eip_lookup_mode_cfg(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 
 sw_error_t
 cmd_data_check_gemport_global_cfg(char *cmd_str, void *val, a_uint32_t size);
@@ -1462,6 +1464,8 @@ sw_error_t
 cmd_data_check_tunnel_decap_miss_action(char *cmd_str, void *val, a_uint32_t size);
 void
 cmd_data_print_tunnel_decap_miss_action(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
+void
+cmd_data_print_tcont_stat(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/
