@@ -1325,3 +1325,155 @@ cmd_show_intf_mac_entry(a_ulong_t *arg_val)
 
 	return SW_OK;
 }
+
+sw_error_t cmd_show_ipmc_entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt = 0;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_ipmc_entry_t *ipmc_entry = (fal_ipmc_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(ipmc_entry, sizeof(fal_ipmc_entry_t));
+	ipmc_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+	arg_val[0] = SW_API_IPMC_ENTRY_GETNEXT;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = FAL_IPMC_NEXT_MODE_ALL;
+		arg_val[4] = (a_ulong_t)ipmc_entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+
+		cnt++;
+	}
+	dprintf("\nipmc total %d entries\n", cnt);
+
+	return SW_OK;
+}
+
+sw_error_t cmd_show_ipmc_gipv4entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt = 0;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_ipmc_entry_t *ipmc_entry = (fal_ipmc_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(ipmc_entry, sizeof(fal_ipmc_entry_t));
+	ipmc_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+	arg_val[0] = SW_API_IPMC_ENTRY_GETNEXT;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = FAL_IPMC_NEXT_MODE_GIP;
+		arg_val[4] = (a_ulong_t)ipmc_entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		cnt++;
+	}
+	dprintf("\nipmc gipv4 only total %d entries\n", cnt);
+
+	return SW_OK;
+}
+
+sw_error_t cmd_show_ipmc_sgipv4entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt = 0;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_ipmc_entry_t *ipmc_entry = (fal_ipmc_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(ipmc_entry, sizeof(fal_ipmc_entry_t));
+	ipmc_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+	arg_val[0] = SW_API_IPMC_ENTRY_GETNEXT;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = FAL_IPMC_NEXT_MODE_SIP_GIP;
+		arg_val[4] = (a_ulong_t)ipmc_entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		cnt++;
+	}
+	dprintf("\nipmc sgipv4 total %d entries\n", cnt);
+
+	return SW_OK;
+}
+
+sw_error_t cmd_show_ipmc_gipv6entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt = 0;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_ipmc_entry_t *ipmc_entry = (fal_ipmc_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(ipmc_entry, sizeof(fal_ipmc_entry_t));
+	ipmc_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+	arg_val[0] = SW_API_IPMC_ENTRY_GETNEXT;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = FAL_IPMC_NEXT_MODE_GIPV6;
+		arg_val[4] = (a_ulong_t)ipmc_entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		cnt++;
+	}
+	dprintf("\nipmc gipv6 only total %d entries\n", cnt);
+
+	return SW_OK;
+}
+
+sw_error_t cmd_show_ipmc_sgipv6entry(a_ulong_t *arg_val)
+{
+	sw_error_t rtn;
+	a_uint32_t cnt = 0;
+	a_uint32_t p_size = sizeof(a_ulong_t);
+
+	fal_ipmc_entry_t *ipmc_entry = (fal_ipmc_entry_t *)(ioctl_buf +
+			(sizeof(sw_error_t) + p_size - 1) / p_size);
+
+	aos_mem_zero(ipmc_entry, sizeof(fal_ipmc_entry_t));
+	ipmc_entry->entry_id = FAL_NEXT_ENTRY_FIRST_ID;
+	arg_val[0] = SW_API_IPMC_ENTRY_GETNEXT;
+
+	while (1) {
+		arg_val[1] = (a_ulong_t)ioctl_buf;
+		arg_val[2] = get_devid();
+		arg_val[3] = FAL_IPMC_NEXT_MODE_SIPV6_GIPV6;
+		arg_val[4] = (a_ulong_t)ipmc_entry;
+
+		rtn = cmd_exec_api(arg_val);
+		if ((SW_OK != rtn)  || (SW_OK != (sw_error_t)(*ioctl_buf))) {
+			break;
+		}
+		cnt++;
+	}
+	dprintf("\nipmc sgipv6 total %d entries\n", cnt);
+
+	return SW_OK;
+}
+

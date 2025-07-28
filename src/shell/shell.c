@@ -352,7 +352,12 @@ cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
 				    api_id == SW_CMD_MAPT_ENTRY_SHOW ||
 				    api_id == SW_CMD_PUBADDR_SHOW ||
 				    api_id == SW_CMD_TOEPLITZ_HASH_CONFIG_SHOW ||
-				    api_id == SW_CMD_TUNNEL_TUPLE_ENTRY_SHOW)) ||
+				    api_id == SW_CMD_TUNNEL_TUPLE_ENTRY_SHOW ||
+				    api_id == SW_CMD_IPMC_ENTRY_SHOW ||
+				    api_id == SW_CMD_IPMC_GIPV4_ENTRY_SHOW ||
+				    api_id == SW_CMD_IPMC_SGIPV4_ENTRY_SHOW ||
+				    api_id == SW_CMD_IPMC_GIPV6_ENTRY_SHOW ||
+				    api_id == SW_CMD_IPMC_SGIPV6_ENTRY_SHOW)) ||
 				    ( arg_index == 1 && (api_id == SW_CMD_SET_DEVID ||
 						api_id == SW_CMD_VXLAN_ENTRY_SHOW ||
 						api_id == SW_CMD_TUNNEL_PROGRAM_ENTRY_SHOW ||

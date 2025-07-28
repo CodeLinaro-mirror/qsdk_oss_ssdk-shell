@@ -52,6 +52,11 @@ extern "C" {
     sw_error_t cmd_show_vsi(a_ulong_t *arg_val);
     sw_error_t cmd_show_tunnel_tuple_entry(a_ulong_t *arg_val);
     sw_error_t cmd_show_intf_mac_entry(a_ulong_t *arg_val);
+    sw_error_t cmd_show_ipmc_entry(a_ulong_t *arg_val);
+    sw_error_t cmd_show_ipmc_gipv4entry(a_ulong_t *arg_val);
+    sw_error_t cmd_show_ipmc_sgipv4entry(a_ulong_t *arg_val);
+    sw_error_t cmd_show_ipmc_gipv6entry(a_ulong_t *arg_val);
+    sw_error_t cmd_show_ipmc_sgipv6entry(a_ulong_t *arg_val);
 /*qca808x_start*/
 #ifdef __cplusplus
 }

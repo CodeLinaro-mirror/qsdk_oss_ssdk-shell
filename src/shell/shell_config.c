@@ -2084,6 +2084,47 @@ struct cmd_des_t gcmd_des[] =
 	},
 #endif
 
+/* IPMC */
+#ifdef IN_IPMC
+	{
+		"ipmc", "config ipmc",
+		{
+			{"status", "set", "set ipmc status",
+				"<status>", SW_API_IPMC_STATUS_SET, NULL},
+			{"status", "get", "get ipmc status",
+				"", SW_API_IPMC_STATUS_GET, NULL},
+			{"global_cfg", "set", "set global_cfg of ipmc",
+				"<global_cfg>", SW_API_IPMC_GLOBAL_CFG_SET, NULL},
+			{"global_cfg", "get", "get global_cfg of ipmc",
+				"", SW_API_IPMC_GLOBAL_CFG_GET, NULL},
+			{"entry", "add", "add ipmc entry",
+				"<mode> <entry>", SW_API_IPMC_ENTRY_ADD, NULL},
+			{"entry", "del", "delete ipmc entry",
+				"<mode> <entry>", SW_API_IPMC_ENTRY_DEL, NULL},
+			{"entry", "get", "get the ipmc entry",
+				"<mode> <entry>", SW_API_IPMC_ENTRY_GET, NULL},
+			{"entry", "getnext", "get the next ipmc entry",
+				"<mode> <entry>", SW_API_IPMC_ENTRY_GETNEXT, NULL},
+			{"entry", "flush", "flush ipmc entries", "",
+				SW_API_IPMC_ENTRY_FLUSH, NULL},
+			{"entry", "show", "show ipmc entries", "",
+				SW_CMD_IPMC_ENTRY_SHOW, cmd_show_ipmc_entry},
+			{"gipv4entry", "show", "show gipv4 ipmc entries", "",
+				SW_CMD_IPMC_GIPV4_ENTRY_SHOW, cmd_show_ipmc_gipv4entry},
+			{"sgipv4entry", "show", "show sgipv4 ipmc entries", "",
+				SW_CMD_IPMC_SGIPV4_ENTRY_SHOW, cmd_show_ipmc_sgipv4entry},
+			{"gipv6entry", "show", "show gipv6 ipmc entries", "",
+				SW_CMD_IPMC_GIPV6_ENTRY_SHOW, cmd_show_ipmc_gipv6entry},
+			{"sgipv6entry", "show", "show sgipv6 ipmc entries", "",
+				SW_CMD_IPMC_SGIPV6_ENTRY_SHOW, cmd_show_ipmc_sgipv6entry},
+			{"ucast_fwd", "set", "set unicast forward of ipmc",
+				"<ucast_fwd>", SW_API_IPMC_UCAST_FWD_SET, NULL},
+			{"ucast_fwd", "get", "get unicast forward of ipmc",
+				"", SW_API_IPMC_UCAST_FWD_GET, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
 /* auto_insert_flag */
 
 /*qca808x_start*/

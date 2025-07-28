@@ -1468,6 +1468,18 @@ void
 cmd_data_print_tcont_stat(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 sw_error_t
 cmd_data_check_tcont_stat(char *info, fal_queue_tcont_stat_t *val, a_uint32_t size);
+sw_error_t
+cmd_data_check_ipmc_global_cfg(char *cmd_str, void *val, a_uint32_t size);
+void
+cmd_data_print_ipmc_global_cfg(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_ipmc_entry(char *cmd_str, void *val, a_uint32_t size);
+void
+cmd_data_print_ipmc_entry(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_ipmc_ucast_fwd(char *cmd_str, void *val, a_uint32_t size);
+void
+cmd_data_print_ipmc_ucast_fwd(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/

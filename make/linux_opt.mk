@@ -189,6 +189,10 @@ endif
 ifeq (TRUE, $(IN_PON_PM))
   MODULE_CFLAG += -DIN_PON_PM
 endif
+
+ifeq (TRUE, $(IN_IPMC))
+  MODULE_CFLAG += -DIN_IPMC
+endif
 #auto_insert_flag
 
 #ifdef UK_NL_PROT
