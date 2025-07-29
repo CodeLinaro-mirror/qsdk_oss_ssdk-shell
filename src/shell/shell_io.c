@@ -26396,16 +26396,16 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			dprintf("usage: <bit 0 for ctpid and bit 1 for stpid bit 2 for "
-					"tunnel ctpid, bit 3 for tunnel stpid >\n");
+			dprintf("usage: <bit 0:ctpid, 1:stpid, 2:extra ctpid, 3:extra stpid, 4:tunnel ctpid"
+						", 5:tunnel stpid, 6:extra tunnel ctpid, 7:extra tunnel stpid>\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
 		{
 			rv = cmd_data_check_uint32(cmd, &(pEntry->mask), sizeof(a_uint32_t));
 			if (SW_OK != rv)
-				dprintf("usage: <bit 0 for ctpid and bit 1 for stpid bit 2 for "
-						"tunnel ctpid, bit 3 for tunnel stpid >\n");
+				dprintf("usage: <bit 0:ctpid, 1:stpid, 2:extra ctpid, 3:extra stpid, 4:tunnel ctpid"
+						", 5:tunnel stpid, 6:extra tunnel ctpid, 7:extra tunnel stpid>\n");
 		}
 	} while (talk_mode && (SW_OK != rv));
 
@@ -26511,6 +26511,209 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
 				pEntry->tunnel_stpid = (a_uint16_t)tmp;
 			}
 		} while (talk_mode && (SW_OK != rv));
+
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+			/* get extra ctpid */
+			do
+			{
+				cmd = get_sub_cmd("extra_ctagtpid", "0x8100");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: <0x8100>\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: <0x8100>\n");
+
+					pEntry->ext_ctpid = (a_uint16_t)tmp;
+				}
+			} while (talk_mode && (SW_OK != rv));
+
+			/* get extra stpid */
+			do
+			{
+				cmd = get_sub_cmd("extra_stagtpid", "0x88a8");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: <0x88a8>\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: <0x88a8>\n");
+
+					pEntry->ext_stpid = (a_uint16_t)tmp;
+				}
+			} while (talk_mode && (SW_OK != rv));
+
+			/* get extra ctpid */
+			do
+			{
+				cmd = get_sub_cmd("extra_tunnel_stagtpid", "0x8100");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: <0x8100>\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: <0x8100>\n");
+
+					pEntry->ext_tunnel_ctpid = (a_uint16_t)tmp;
+				}
+			} while (talk_mode && (SW_OK != rv));
+
+			/* get tunnel extra stpid */
+			do
+			{
+				cmd = get_sub_cmd("extra_tunnel_stagtpid", "0x88a8");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: <0x88a8>\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: <0x88a8>\n");
+
+					pEntry->ext_tunnel_stpid = (a_uint16_t)tmp;
+				}
+			} while (talk_mode && (SW_OK != rv));
+
+			/* get ctag enbale bitmap */
+			do
+			{
+				cmd = get_sub_cmd("ctagtpid_map", "0x5");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: ctag enbale bitmap, <0x5>.\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: ctag enbale bitmap, <0x5>.\n");
+
+					pEntry->ctpid_map = (a_uint8_t)tmp;
+				}
+			} while (talk_mode && (SW_OK != rv));
+
+			/* get stag enbale bitmap */
+			do
+			{
+				cmd = get_sub_cmd("stagtpid_map", "0xa");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: stag enbale bitmap, <0xa>.\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: stag enbale bitmap, <0xa>.\n");
+
+					pEntry->stpid_map = (a_uint8_t)tmp;
+				}
+			} while (talk_mode && (SW_OK != rv));
+
+			/* get tunnel ctag enbale bitmap */
+			do
+			{
+				cmd = get_sub_cmd("tunnel_ctagtpid_map", "0x5");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: tunnel ctag enbale bitmap, <0x5>.\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: tunnel ctag enbale bitmap, <0x5>.\n");
+
+					pEntry->tunnel_ctpid_map = (a_uint8_t)tmp;
+				}
+			} while (talk_mode && (SW_OK != rv));
+
+			/* get tunnel stag enbale bitmap */
+			do
+			{
+				cmd = get_sub_cmd("tunnel_stagtpid_map", "0xa");
+				SW_RTN_ON_NULL_PARAM(cmd);
+
+				if (!strncasecmp(cmd, "quit", 4))
+				{
+					return SW_BAD_VALUE;
+				}
+				else if (!strncasecmp(cmd, "help", 4))
+				{
+					dprintf("usage: tunnel stag enbale bitmap, <0xa>.\n");
+					rv = SW_BAD_VALUE;
+				}
+				else
+				{
+					rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+					if (SW_OK != rv)
+						dprintf("usage: tunnel stag enbale bitmap, <0xa>.\n");
+
+					pEntry->tunnel_stpid_map = (a_uint8_t)tmp;
+				}
+			} while (talk_mode && (SW_OK != rv));
+		}
 	}
 
 	return SW_OK;
@@ -26532,6 +26735,18 @@ cmd_data_print_tpid(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
 		dprintf("[tunnel_ctagtpid]:0x%x\n", entry->tunnel_ctpid);
 		dprintf("[tunnel_stagtpid]:0x%x\n", entry->tunnel_stpid);
+
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+			dprintf("[extra_ctagtpid]:0x%x\n", entry->ext_ctpid);
+			dprintf("[extra_stagtpid]:0x%x\n", entry->ext_stpid);
+			dprintf("[extra_tunnel_ctpid]:0x%x\n", entry->ext_tunnel_ctpid);
+			dprintf("[extra_tunnel_stpid]:0x%x\n", entry->ext_tunnel_stpid);
+			dprintf("[ctagtpid_map]:0x%x\n", entry->ctpid_map);
+			dprintf("[stagtpid_map]:0x%x\n", entry->stpid_map);
+			dprintf("[tunnel_ctagtpid_map]:0x%x\n", entry->tunnel_ctpid_map);
+			dprintf("[tunnel_stagtpid_map]:0x%x\n", entry->tunnel_stpid_map);
+		}
 	}
 }
 
