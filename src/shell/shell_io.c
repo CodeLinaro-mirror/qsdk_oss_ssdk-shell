@@ -429,6 +429,15 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"fc_stat",
+		{
+			{"normal", 0},
+			{"flow control", 1},
+			{"drop", 2},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -22665,6 +22674,14 @@ cmd_data_print_bm_port_counter(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 			entry->drop_byte_counter, entry->drop_packet_counter, entry->fc_drop_byte_counter, entry->fc_drop_packet_counter);
     dprintf("\n[used_counter]:0x%x [react_counter]:0x%x ",
 			entry->used_counter, entry->react_counter);
+
+    cmd_data_print_attr("fc_stat", "[fc_stat]: ",
+		        (a_uint32_t *)&(entry->fc_status),
+			sizeof(entry->fc_status));
+
+    dprintf(" [xon_threshold]: %d", entry->on_thresh);
+
+    dprintf("\n");
 }
 
 sw_error_t
