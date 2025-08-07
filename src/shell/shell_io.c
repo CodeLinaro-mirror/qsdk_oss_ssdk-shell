@@ -26413,7 +26413,8 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
 		else if (!strncasecmp(cmd, "help", 4))
 		{
 			dprintf("usage: <bit 0:ctpid, 1:stpid, 2:extra ctpid, 3:extra stpid, 4:tunnel ctpid"
-						", 5:tunnel stpid, 6:extra tunnel ctpid, 7:extra tunnel stpid>\n");
+						", 5:tunnel stpid, 6:extra tunnel ctpid, 7:extra tunnel stpid, 8:ctpid bitmap"
+						", 9:stpid bitmap, 10:tunnel ctpid bitmap, 11:tunnel stpid bitmap>\n");
 			rv = SW_BAD_VALUE;
 		}
 		else
@@ -26421,7 +26422,8 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
 			rv = cmd_data_check_uint32(cmd, &(pEntry->mask), sizeof(a_uint32_t));
 			if (SW_OK != rv)
 				dprintf("usage: <bit 0:ctpid, 1:stpid, 2:extra ctpid, 3:extra stpid, 4:tunnel ctpid"
-						", 5:tunnel stpid, 6:extra tunnel ctpid, 7:extra tunnel stpid>\n");
+						", 5:tunnel stpid, 6:extra tunnel ctpid, 7:extra tunnel stpid, 8:ctpid bitmap"
+						", 9:stpid bitmap, 10:tunnel ctpid bitmap, 11:tunnel stpid bitmap>\n");
 		}
 	} while (talk_mode && (SW_OK != rv));
 
