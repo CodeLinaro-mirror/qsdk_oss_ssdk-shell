@@ -17861,6 +17861,32 @@ cmd_data_check_u_qmap(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        do
+        {
+            cmd = get_sub_cmd("sram_queue_type", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: 0 esram queue, 1 isram queue\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                rv = cmd_data_check_uint32(cmd, &(entry.sram_queue_type), sizeof (a_uint32_t));
+                if (SW_OK != rv)
+                    dprintf("usage: 0 esram queue, 1 isram queue\n");
+            }
+        }
+        while (talk_mode && (SW_OK != rv));
+    }
+
     *(fal_ucast_queue_dest_t *)val = entry;
     return SW_OK;
 }
