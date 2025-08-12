@@ -19183,6 +19183,7 @@ cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
 	    } while (talk_mode && (SW_OK != rv));
 
 	    cmd_data_check_ip_mcmode(cmd_str, &(entry.mc_mode_cfg), sizeof(entry.mc_mode_cfg));
+	    dprintf("\n");
     }
 
     *(fal_intf_entry_t *)val = entry;
@@ -24198,6 +24199,12 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 			    "usage: STC counter ID\n",
 			    cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
 	    entry.sampling_id = tmp;
+
+	    cmd_data_check_element("gro_en", "no",
+			    "usage: <yes/no/y/n>\n",
+			    cmd_data_check_confirm, (cmd, A_FALSE, &enable,
+				    sizeof(a_bool_t)));
+	    entry.gro_en = enable;
     }
 
 
@@ -24271,6 +24278,8 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 			    entry->udf1_en, sizeof(a_bool_t));
 	    dprintf(" [match_more]:0x%x", entry->match_more);
 	    dprintf(" [sampling_id]:0x%x", entry->sampling_id);
+	    cmd_data_print_confirm(" [gro_en]:",
+			    entry->gro_en, sizeof(a_bool_t));
     }
 
     if ((entry->entry_type & FAL_FLOW_IP4_5TUPLE_ADDR) ||
@@ -45199,7 +45208,7 @@ cmd_data_check_vlan_key_cfg(char *info, fal_ip_vlan_as_flow_key_t *arg_val, a_ui
 
 	aos_mem_zero(&entry, sizeof(fal_ip_vlan_as_flow_key_t));
 
-        cmd_data_check_element("enable", "no",
+        cmd_data_check_element("vlan_as_flow_key_en", "no",
                         "usage: <yes/no/y/n>\n",
                         cmd_data_check_confirm, (cmd, A_FALSE, &enable,
 			sizeof(a_bool_t)));
@@ -45225,7 +45234,7 @@ cmd_data_print_vlan_key_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 
 	dprintf("\n[%s] \n", param_name);
 
-	cmd_data_print_enable("enable", &entry->valid, sizeof(a_bool_t));
+	cmd_data_print_enable("vlan_as_flow_key_en", &entry->valid, sizeof(a_bool_t));
 	cmd_data_print_vlan_key_mode("vlan_mode", entry->mode, sizeof(entry->mode));
 
 	dprintf("\n");
