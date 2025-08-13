@@ -57,7 +57,8 @@ cmd_show_fdb(a_ulong_t *arg_val)
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_HPPE) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
-		    (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)) {
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
 		sw_error_t rtn;
 		a_uint32_t cnt = 0, type = 0;
 		a_uint16_t rtn_size = sizeof(sw_error_t);
