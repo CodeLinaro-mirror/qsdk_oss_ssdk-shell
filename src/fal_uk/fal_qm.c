@@ -543,3 +543,21 @@ sw_error_t fal_qm_tcont_stat_get(a_uint32_t dev_id, a_uint32_t tcont_id,
     rv = sw_uk_exec(SW_API_QM_TCONT_STAT_GET, dev_id, tcont_id, stat);
     return rv;
 }
+
+sw_error_t
+fal_ucast_queue_ddrq_en_set(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_UCAST_QUEUE_DDRQ_EN_SET, dev_id, queue_id, enable);
+    return rv;
+}
+
+sw_error_t
+fal_ucast_queue_ddrq_en_get(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t *enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_UCAST_QUEUE_DDRQ_EN_GET, dev_id, queue_id, enable);
+    return rv;
+}

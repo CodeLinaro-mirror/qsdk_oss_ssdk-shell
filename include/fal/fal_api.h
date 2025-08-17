@@ -1758,8 +1758,9 @@ extern "C" {
     SW_API_DEF(SW_API_QM_TCONT_SET, fal_qm_tcont_set), \
     SW_API_DEF(SW_API_QM_CPUCODE_ENQUEUE_GET, fal_qm_cpucode_enqueue_get), \
     SW_API_DEF(SW_API_QM_CPUCODE_ENQUEUE_SET, fal_qm_cpucode_enqueue_set), \
-    SW_API_DEF(SW_API_QM_TCONT_STAT_GET, fal_qm_tcont_stat_get),
-
+    SW_API_DEF(SW_API_QM_TCONT_STAT_GET, fal_qm_tcont_stat_get), \
+    SW_API_DEF(SW_API_UCAST_QUEUE_DDRQ_EN_SET, fal_ucast_queue_ddrq_en_set), \
+    SW_API_DEF(SW_API_UCAST_QUEUE_DDRQ_EN_GET, fal_ucast_queue_ddrq_en_get),
 #define QM_API_PARAM \
     SW_API_DESC(SW_API_UCAST_QUEUE_BASE_PROFILE_SET) \
     SW_API_DESC(SW_API_UCAST_QUEUE_BASE_PROFILE_GET) \
@@ -1809,8 +1810,9 @@ extern "C" {
     SW_API_DESC(SW_API_QM_TCONT_SET) \
     SW_API_DESC(SW_API_QM_CPUCODE_ENQUEUE_GET) \
     SW_API_DESC(SW_API_QM_CPUCODE_ENQUEUE_SET) \
-    SW_API_DESC(SW_API_QM_TCONT_STAT_GET)
-
+    SW_API_DESC(SW_API_QM_TCONT_STAT_GET) \
+    SW_API_DESC(SW_API_UCAST_QUEUE_DDRQ_EN_SET) \
+    SW_API_DESC(SW_API_UCAST_QUEUE_DDRQ_EN_GET)
 #else
 #define QM_API
 #define QM_API_PARAM

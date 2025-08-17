@@ -1327,6 +1327,8 @@ struct cmd_des_t gcmd_des[] =
 		    SW_API_QM_CPUCODE_ENQUEUE_SET, NULL},
 	    {"tcont_stat", "get", "get tcont stat", "<tcont_id>",
 		    SW_API_QM_TCONT_STAT_GET, NULL},
+	    {"ucastq_ddrq_en", "set", "set ddrq enable", "<queue_id> <enable>", SW_API_UCAST_QUEUE_DDRQ_EN_SET, NULL},
+	    {"ucastq_ddrq_en", "get", "get ddrq enable", "<queue_id>", SW_API_UCAST_QUEUE_DDRQ_EN_GET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
