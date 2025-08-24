@@ -1076,6 +1076,8 @@ struct cmd_des_t gcmd_des[] =
 		    SW_API_IP_INTF_MACADDR_GET_FIRST, NULL},
             {"intf_mac", "get_next", "get the next intf mac entry", "<intf> <mac_entry>",
 		    SW_API_IP_INTF_MACADDR_GET_NEXT, NULL},
+	    {"intf_mac", "show", "show all L3 interface MAC entry", "<intf>",
+		    SW_CMD_INTF_MAC_ENTRY_SHOW, cmd_show_intf_mac_entry},
             {"intf_dmac_check", "set", "set intf dmac check", "<intf> <enable>",
 		    SW_API_IP_INTF_DMAC_CHECK_SET, NULL},
             {"intf_dmac_check", "get", "get intf dmac check", "<intf>",

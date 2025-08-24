@@ -48,9 +48,10 @@ extern "C" {
     sw_error_t cmd_show_tunnel_udf_profile_entry(a_ulong_t *arg_val);
     sw_error_t cmd_show_acl_udf_profile_entry(a_ulong_t *arg_val);
     sw_error_t cmd_show_ptp_timestamp(a_ulong_t *arg_val);
-	sw_error_t cmd_show_toeplitz_hash_config(a_ulong_t *arg_val);
-	sw_error_t cmd_show_vsi(a_ulong_t *arg_val);
-	sw_error_t cmd_show_tunnel_tuple_entry(a_ulong_t *arg_val);
+    sw_error_t cmd_show_toeplitz_hash_config(a_ulong_t *arg_val);
+    sw_error_t cmd_show_vsi(a_ulong_t *arg_val);
+    sw_error_t cmd_show_tunnel_tuple_entry(a_ulong_t *arg_val);
+    sw_error_t cmd_show_intf_mac_entry(a_ulong_t *arg_val);
 /*qca808x_start*/
 #ifdef __cplusplus
 }

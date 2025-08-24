@@ -438,6 +438,15 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"intf_mac_type",
+		{
+			{"local", FAL_IP_INTF_MAC_TYPE_LOCAL},
+			{"my_mac", FAL_IP_INTF_MAC_TYPE_MY_MAC},
+			{"vsi_mac", FAL_IP_INTF_MAC_TYPE_VSI_MAC},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -43426,10 +43435,16 @@ cmd_data_print_ip_intf_mac_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32
 	cmd_data_print_macaddr(" [mac_addr]: ",
 			(a_uint32_t *)&(entry->mac_addr), sizeof(fal_mac_addr_t));
 
+	cmd_data_print_attr("intf_mac_type", " [type]: ",
+			(a_uint32_t *)&(entry->type),
+			sizeof(entry->type));
+	dprintf("\n");
+
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
 		cmd_data_print_enable("vsi_valid", &entry->vsi_valid, sizeof(a_bool_t));
+		dprintf(" ");
 		cmd_data_print_uint32("vsi", (a_uint32_t *)&entry->vsi, sizeof(entry->vsi));
 	}
 

@@ -359,6 +359,7 @@ cmd_parse_sw(char **cmd_str, a_ulong_t * arg_val)
 						api_id == SW_CMD_TUNNEL_PROGRAM_UDF_SHOW ||
 						api_id == SW_CMD_TUNNEL_UDF_PROFILE_ENTRY_SHOW ||
 						api_id == SW_CMD_ACL_UDF_PROFILE_ENTRY_SHOW ||
+						api_id == SW_CMD_INTF_MAC_ENTRY_SHOW ||
 						api_id == SW_CMD_FDB_SHOW)) ||
 				    (arg_index == 2 && (api_id == SW_CMD_PT_VLAN_TRANS_ADV_SHOW ||
 						api_id == SW_CMD_PTP_TIMESTAMP_SHOW))) {
