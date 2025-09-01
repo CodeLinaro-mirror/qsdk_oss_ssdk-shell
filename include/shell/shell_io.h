@@ -1480,6 +1480,10 @@ sw_error_t
 cmd_data_check_ipmc_ucast_fwd(char *cmd_str, void *val, a_uint32_t size);
 void
 cmd_data_print_ipmc_ucast_fwd(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_passthrough_src_profile(char *cmd_str, void *val, a_uint32_t size);
+void
+cmd_data_print_passthrough_src_profile(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/

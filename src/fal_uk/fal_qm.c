@@ -568,5 +568,46 @@ sw_error_t fal_qm_tcont_stat_set(a_uint32_t dev_id, a_uint32_t tcont_id,
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_QM_TCONT_STAT_SET, dev_id, tcont_id, stat);
+
+    return rv;
+}
+
+sw_error_t
+fal_qm_passthrough_source_profile_set(a_uint32_t dev_id, fal_passthrough_mode_t mode,
+		fal_passthrough_src_profile_t *profile)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_SOURCE_PROFILE_SET, dev_id, mode, profile);
+    return rv;
+}
+
+sw_error_t
+fal_qm_passthrough_source_profile_get(a_uint32_t dev_id, fal_passthrough_mode_t mode,
+		fal_passthrough_src_profile_t *profile)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_SOURCE_PROFILE_GET, dev_id, mode, profile);
+    return rv;
+}
+
+sw_error_t
+fal_qm_passthrough_direct_enqueue_set(a_uint32_t dev_id, fal_passthrough_mode_t mode,
+		a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_DIRECT_ENQUEUE_SET, dev_id, mode, enable);
+    return rv;
+}
+
+sw_error_t
+fal_qm_passthrough_direct_enqueue_get(a_uint32_t dev_id, fal_passthrough_mode_t mode,
+		a_bool_t *enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_DIRECT_ENQUEUE_GET, dev_id, mode, enable);
     return rv;
 }

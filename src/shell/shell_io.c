@@ -1051,6 +1051,8 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_IPMC_GLOBAL_CFG, cmd_data_check_ipmc_global_cfg, cmd_data_print_ipmc_global_cfg),
 	SW_TYPE_DEF(SW_IPMC_ENTRY, cmd_data_check_ipmc_entry, cmd_data_print_ipmc_entry),
 	SW_TYPE_DEF(SW_IPMC_UCAST_FWD, cmd_data_check_ipmc_ucast_fwd, cmd_data_print_ipmc_ucast_fwd),
+	SW_TYPE_DEF(SW_PASSTHROUGH_SRC_PROFILE, cmd_data_check_passthrough_src_profile,
+			cmd_data_print_passthrough_src_profile),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -47031,6 +47033,94 @@ cmd_data_print_ipmc_ucast_fwd(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t
 	dprintf(" [dest_vp]:0x%x", entry->dest_vp);
 	dprintf(" [service_code]:%d ", entry->service_code);
 	dprintf(" [bypass_bitmap]:0x%x", entry->bypass_bitmap);
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_passthrough_src_profile(char *cmd_str, void *val, a_uint32_t size)
+{
+	fal_passthrough_src_profile_t profile;
+	sw_error_t rv;
+	char *cmd;
+
+	aos_mem_zero(&profile, sizeof(fal_passthrough_src_profile_t));
+
+	do {
+		cmd = get_sub_cmd("esramq_src_profile_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(profile.esramq_src_profile_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("isramq_src_profile_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(profile.isramq_src_profile_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	}while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("src_profile", "0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: src profile value\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &(profile.src_profile), sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: src profile value\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_passthrough_src_profile_t *)val = profile;
+	return SW_OK;
+}
+
+void
+cmd_data_print_passthrough_src_profile(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+	fal_passthrough_src_profile_t *profile;
+
+	dprintf("\n[%s] \n", param_name);
+
+	profile = (fal_passthrough_src_profile_t *)buf;
+
+	cmd_data_print_confirm("\n[esramq_src_profile_en]", profile->esramq_src_profile_en,
+			sizeof(profile->esramq_src_profile_en));
+
+	cmd_data_print_confirm("  [isramq_src_profile_en]", profile->isramq_src_profile_en,
+			sizeof(profile->isramq_src_profile_en));
+
+	dprintf("\n[src_profile]:%d ", profile->src_profile);
+
 	dprintf("\n");
 }
 /* auto_insert_flag_1 */
