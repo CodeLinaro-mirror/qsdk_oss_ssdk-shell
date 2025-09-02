@@ -26477,6 +26477,20 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
 							cmd_data_check_attr, ("port_select", cmd,
 							&(pEntry->ingress_port_sel), sizeof(pEntry->ingress_port_sel)));
 	    }
+
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			cmd_data_check_element("in_port_ponmode_en", "disable",
+						"usage: usage: enable/disable\n",
+						cmd_data_check_enable, (cmd,
+						&(pEntry->in_port_ponmode_en), sizeof(pEntry->in_port_ponmode_en)));
+
+			cmd_data_check_element("tl_port_ponmode_en", "disable",
+						"usage: usage: enable/disable\n",
+						cmd_data_check_enable, (cmd,
+						&(pEntry->tl_port_ponmode_en), sizeof(pEntry->tl_port_ponmode_en)));
+		}
 	}
 
     return SW_OK;
@@ -26515,6 +26529,15 @@ cmd_data_print_port_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 				&(entry->ingress_port_sel), sizeof(entry->ingress_port_sel));
 			dprintf("\n");
 	    }
+
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			cmd_data_print_enable("in_port_ponmode_en", &entry->in_port_ponmode_en, sizeof(entry->in_port_ponmode_en));
+
+			cmd_data_print_enable("tl_port_ponmode_en", &entry->tl_port_ponmode_en, sizeof(entry->tl_port_ponmode_en));
+			dprintf("\n");
+		}
 	}
 }
 
