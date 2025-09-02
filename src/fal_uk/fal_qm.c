@@ -445,7 +445,7 @@ fal_qm_counter_monitor_status_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_STATUS_GET, type, cnt_id, status);
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_STATUS_GET, dev_id, type, cnt_id, status);
     return rv;
 }
 
@@ -455,7 +455,7 @@ fal_qm_counter_monitor_map_set(a_uint32_t dev_id, fal_qm_queue_type_t type,
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_MAP_SET, type, map_id, monitor_map);
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_MAP_SET, dev_id, type, map_id, monitor_map);
     return rv;
 }
 
@@ -465,7 +465,7 @@ fal_qm_counter_monitor_map_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_MAP_GET, type, map_id, monitor_map);
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_MAP_GET, dev_id, type, map_id, monitor_map);
     return rv;
 }
 
@@ -475,7 +475,7 @@ fal_qm_counter_monitor_ctrl_set(a_uint32_t dev_id, fal_qm_queue_type_t type,
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_CTRL_SET, type, cnt_id, monitor_ctrl);
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_CTRL_SET, dev_id, type, cnt_id, monitor_ctrl);
     return rv;
 }
 
@@ -485,7 +485,7 @@ fal_qm_counter_monitor_ctrl_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_CTRL_GET, type, cnt_id, monitor_ctrl);
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_CTRL_GET, dev_id, type, cnt_id, monitor_ctrl);
     return rv;
 }
 
@@ -495,7 +495,7 @@ fal_qm_counter_monitor_stats_get(a_uint32_t dev_id, fal_qm_queue_type_t type,
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_STATS_GET, type, cnt_id, monitor_stats);
+    rv = sw_uk_exec(SW_API_QM_COUNTER_MONITOR_STATS_GET, dev_id, type, cnt_id, monitor_stats);
     return rv;
 }
 

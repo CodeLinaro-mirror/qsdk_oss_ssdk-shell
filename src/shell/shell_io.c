@@ -44156,7 +44156,7 @@ cmd_data_print_monitor_map(a_uint8_t *param_name, a_uint32_t * buf, a_uint32_t s
     {
         dprintf("\n[cnt_enable]:no");
     }
-	cmd_data_print_uint32("\n[cnt_id]:", &entry->cnt_id, sizeof(a_uint32_t));
+	dprintf("\n[cnt_id]:0x%x", entry->cnt_id);
 
 	return;
 }
@@ -44170,13 +44170,13 @@ cmd_data_print_monitor_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t
 
     if (A_TRUE == entry->cnt_threshold_mode)
     {
-        dprintf("\n[byte_mode]:yes");
+        dprintf("\n[packet_mode]:yes");
     }
     else
     {
-        dprintf("\n[packet_mode]:yes");
+        dprintf("\n[byte_mode]:yes");
     }
-	cmd_data_print_uint32("\n[cnt_threshold]:", &entry->cnt_threshold, sizeof(a_uint32_t));
+	dprintf("\n[cnt_threshold]:0x%x", entry->cnt_threshold);
 
 	return;
 }
@@ -44188,10 +44188,10 @@ cmd_data_print_monitor_stats(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
 	entry = (fal_qm_monitor_stats_t *)buf;
 
-	cmd_data_print_uint32("\n[packets]:", &entry->packets, sizeof(a_uint32_t));
-	cmd_data_print_uint32("\n[bytes]:", &entry->bytes, sizeof(a_uint32_t));
-	cmd_data_print_uint32("\n[peak_packets]:", &entry->peak_packets, sizeof(a_uint32_t));
-	cmd_data_print_uint32("\n[peak_bytes]:", &entry->peak_bytes, sizeof(a_uint32_t));
+	dprintf("\n[packets]:0x%x", entry->packets);
+	dprintf("\n[bytes]:0x%x", entry->bytes);
+	dprintf("\n[peak_packets]:0x%x", entry->peak_packets);
+	dprintf("\n[peak_bytes]:0x%x", entry->peak_bytes);
 
 	return;
 }
