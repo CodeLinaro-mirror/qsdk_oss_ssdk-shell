@@ -1014,7 +1014,7 @@ static sw_data_type_t sw_data_type[] =
 		    cmd_data_print_tunnel_tuple_entry),
 	SW_TYPE_DEF(SW_TUNNEL_DECAP_MISS_ACTION, cmd_data_check_tunnel_decap_miss_action,
 		    cmd_data_print_tunnel_decap_miss_action),
-	SW_TYPE_DEF(SW_TCONT_STAT, NULL, cmd_data_print_tcont_stat),
+	SW_TYPE_DEF(SW_TCONT_STAT, cmd_data_check_tcont_stat, cmd_data_print_tcont_stat),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -46430,5 +46430,28 @@ cmd_data_print_tcont_stat(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size
 	cmd_data_print_uint32("credit", &entry->credit, sizeof(entry->credit));
 	cmd_data_print_uint64("bytes", &entry->bytes, sizeof(entry->bytes));
 	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_tcont_stat(char *info, fal_queue_tcont_stat_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	fal_queue_tcont_stat_t entry;
+
+	aos_mem_zero(&entry, sizeof(entry));
+
+	cmd_data_check_element("credit", "0",
+			"usage: credit value\n",
+			cmd_data_check_uint32,
+			(cmd, &entry.credit, sizeof(a_uint32_t)));
+
+	cmd_data_check_element("bytes", "0",
+			"usage: packet bytes\n",
+			cmd_data_check_uint64,
+			(cmd, &(entry.bytes), sizeof(a_uint64_t)));
+
+	*arg_val = entry;
+
+	return SW_OK;
 }
 /* auto_insert_flag_1 */

@@ -1466,6 +1466,8 @@ void
 cmd_data_print_tunnel_decap_miss_action(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
 void
 cmd_data_print_tcont_stat(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_tcont_stat(char *info, fal_queue_tcont_stat_t *val, a_uint32_t size);
 /* auto_insert_flag */
 
 /*qca808x_start*/
