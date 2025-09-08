@@ -3986,33 +3986,29 @@ cmd_data_check_fdbentry(char *info, void *val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (A_TRUE == entry.load_balance_en)
+    do
     {
-        do
+        cmd = get_sub_cmd("age_value", "2");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
         {
-            cmd = get_sub_cmd("load_balance", NULL);
-            SW_RTN_ON_NULL_PARAM(cmd);
-
-            if (!strncasecmp(cmd, "quit", 4))
-            {
-                return SW_BAD_VALUE;
-            }
-            else if (!strncasecmp(cmd, "help", 4))
-            {
-                dprintf("usage: input number such as <0/1/2/3>\n");
-                rv = SW_BAD_VALUE;
-            }
-            else
-            {
-                rv = cmd_data_check_uint32(cmd, &tmp, sizeof (a_uint32_t));
-                if (SW_OK != rv)
-                    dprintf("usage: input number such as <0/1/2/3>\n");
-            }
-
+            return SW_BAD_VALUE;
         }
-        while (talk_mode && (SW_OK != rv));
-        entry.load_balance = tmp;
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: input number such as <0/1/2/3>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_uint8(cmd, &tmp, sizeof (a_uint8_t));
+            if (SW_OK != rv)
+                dprintf("usage: input number such as <0/1/2/3>\n");
+        }
     }
+    while (talk_mode && (SW_OK != rv));
+    entry.age_value = tmp;
 
     do
     {
@@ -4099,12 +4095,7 @@ cmd_data_print_fdbentry(a_uint8_t * param_name, a_uint32_t * buf,
     cmd_data_print_confirm("[white_list_en]:", entry->white_list_en, sizeof (a_bool_t));
     dprintf(" ");
     cmd_data_print_confirm("[load_balance_en]:", entry->load_balance_en, sizeof (a_bool_t));
-    if (A_TRUE == entry->load_balance_en)
-    {
-        tmp = entry->load_balance;
-	dprintf(" ");
-        dprintf("[load_balance]:%d", tmp);
-    }
+    cmd_data_print_uint8("[age_value]", (a_uint8_t *) & (entry->age_value), sizeof (a_uint8_t));
     dprintf("\n");
 
     return;
