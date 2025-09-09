@@ -83,7 +83,7 @@ extern "C" {
         a_uint8_t da_queue; /* da queue value */
         a_bool_t white_list_en; /* enable white list or not */
         a_bool_t load_balance_en; /* enable load balance value or not */
-        a_uint8_t load_balance; /* load balance value */
+        a_uint8_t age_value; /* age value, can be 0/1/2/3 */
         a_bool_t entry_valid; /* check if entry is value */
         a_bool_t lookup_valid; /* check if entry is lookup */
         fal_fdb_entry_type_t type;/*software entry or hardware entry*/
