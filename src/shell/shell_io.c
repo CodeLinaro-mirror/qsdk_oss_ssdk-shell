@@ -637,6 +637,38 @@ is_dec(char c)
     return A_FALSE;
 }
 
+static sw_error_t
+cmd_data_check_fdb_age_ctrl(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+    if (cmd_str == NULL)
+        return SW_BAD_PARAM;
+
+    if (!strncasecmp(cmd_str, "disable", 10))
+        *arg_val = FAL_FDB_AGE_DISABLE;
+    else if (!strncasecmp(cmd_str, "enable", 10))
+        *arg_val = FAL_FDB_AGE_ENABLE;
+    else if (!strncasecmp(cmd_str, "enable_timer_only", 20))
+        *arg_val = FAL_FDB_AGE_ENABLE_TIMER_ONLY;
+    else
+        return SW_BAD_VALUE;
+
+    return SW_OK;
+}
+
+static void
+cmd_data_print_fdb_age_ctrl(a_char_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    dprintf("[%s]:", param_name);
+    if (*(a_uint32_t *) buf == FAL_FDB_AGE_DISABLE)
+        dprintf("DISABLE");
+    else if (*(a_uint32_t *) buf == FAL_FDB_AGE_ENABLE)
+        dprintf("ENABLE");
+    else if (*(a_uint32_t *) buf == FAL_FDB_AGE_ENABLE_TIMER_ONLY)
+        dprintf("ENABLE_TIMER_ONLY");
+    else
+        dprintf("UNKNOWN VALUE");
+}
+
 static sw_data_type_t sw_data_type[] =
 {
     SW_TYPE_DEF(SW_UINT8, cmd_data_check_uint8, cmd_data_print_uint8),
@@ -661,6 +693,7 @@ static sw_data_type_t sw_data_type[] =
 /*qca808x_start*/
     SW_TYPE_DEF(SW_PBMP, cmd_data_check_pbmp, cmd_data_print_pbmp),
     SW_TYPE_DEF(SW_ENABLE, cmd_data_check_enable, cmd_data_print_enable),
+    SW_TYPE_DEF(SW_FDB_AGE_CTRL, cmd_data_check_fdb_age_ctrl, cmd_data_print_fdb_age_ctrl),
     SW_TYPE_DEF(SW_MACADDR, cmd_data_check_macaddr, cmd_data_print_macaddr),
 /*qca808x_end*/
     SW_TYPE_DEF(SW_FDBENTRY, cmd_data_check_fdbentry, cmd_data_print_fdbentry),
