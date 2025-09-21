@@ -23239,7 +23239,10 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
 	    do {
 		    cmd = get_sub_cmd("ptmu_fail_action", "forward");
 		    SW_RTN_ON_NULL_PARAM(cmd);
@@ -23370,6 +23373,13 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
 	    }
     }
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+	    cmd_data_check_element("flow_key_bitmap", "0", "routing and ipsec_ah, esp, natt\n",
+			    cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
+	    entry.flow_key_en_bitmap = tmp;
+    }
+
     *(fal_flow_global_cfg_t *)val = entry;
     return SW_OK;
 
@@ -23394,7 +23404,10 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 		    entry->flow_deacclr_action, entry->sync_mismatch_action,
 		    entry->sync_mismatch_deacclr_en, entry->hash_mode_0,
 		    entry->hash_mode_1, entry->flow_mismatch_copy_escape_en);
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
 	    dprintf("\n");
 	    cmd_data_print_maccmd("ptmu_fail_action", (a_uint32_t *)&(entry->ptmu_fail_action),
 			    sizeof(fal_fwd_cmd_t));
@@ -23402,6 +23415,8 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 			    sizeof(a_bool_t));
 	    cmd_data_print_maccmd("ptmu_fail_df_action",
 			    (a_uint32_t *)&(entry->ptmu_fail_df_action), sizeof(fal_fwd_cmd_t));
+	    cmd_data_print_confirm(" [ptmu_fail_df_deacclr_en]", entry->ptmu_fail_df_deacclr_en,
+			    sizeof(a_bool_t));
 	    cmd_data_print_confirm(" [l2_vpn_en]", entry->l2_vpn_en,
 			    sizeof(a_bool_t));
 	    cmd_data_print_confirm(" [l3_vpn_en]", entry->l3_vpn_en,
@@ -23409,6 +23424,11 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
 		    dprintf(" [flow_cookie_pri]:0x%x", entry->flow_cookie_pri);
 	    }
+    }
+
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+	    dprintf(" [flow_key_bitmap]:0x%x", entry->flow_key_en_bitmap);
     }
 }
 
@@ -45477,8 +45497,6 @@ cmd_data_print_vlan_key_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 	fal_ip_vlan_as_flow_key_t *entry;
 
 	entry = (fal_ip_vlan_as_flow_key_t *)buf;
-
-	dprintf("\n[%s] \n", param_name);
 
 	cmd_data_print_enable("vlan_as_flow_key_en", &entry->valid, sizeof(a_bool_t));
 	cmd_data_print_vlan_key_mode("vlan_mode", entry->mode, sizeof(entry->mode));
