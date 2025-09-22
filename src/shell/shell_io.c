@@ -29351,16 +29351,18 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 			}
 			while (talk_mode && (SW_OK != rv));
 
-			cmd_data_check_element("dest_info_type", "port_id",
-								"usage:dest_info_type:port_bitmap/port_id, etc\n",
-								cmd_data_check_attr, ("dest_info_type", cmd,
-								&(entry.dst_port.dest_info_type),
-								sizeof(entry.dst_port.dest_info_type)));
+			if (entry.dst_valid) {
+				cmd_data_check_element("dest_info_type", "port_id",
+									"usage:dest_info_type:port_bitmap/port_id, etc\n",
+									cmd_data_check_attr, ("dest_info_type", cmd,
+									&(entry.dst_port.dest_info_type),
+									sizeof(entry.dst_port.dest_info_type)));
 
-			cmd_data_check_element("dest_info_value", "0",
-								"usage:dest_info_value, port_id/port_bmp, etc\n",
-								cmd_data_check_uint32, (cmd, &(entry.dst_port.dest_info_value),
-								sizeof (entry.dst_port.dest_info_value)));
+				cmd_data_check_element("dest_info_value", "0",
+									"usage:dest_info_value, port_id/port_bmp, etc\n",
+									cmd_data_check_uint32, (cmd, &(entry.dst_port.dest_info_value),
+									sizeof (entry.dst_port.dest_info_value)));
+			}
 		}
 	}
 
@@ -29427,14 +29429,16 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 					entry->svc_code_en?"ENABLE":"DISABLE", entry->svc_code);
 
 			dprintf("\n[dst_valid]:%s\n", entry->dst_valid?"Yes":"No");
-		    cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
-		        &(entry->dst_port.dest_info_type),
-		        sizeof(entry->dst_port.dest_info_type));
-		    dprintf("\n");
-		    cmd_data_print_uint32("dest_info_value",
-		        &(entry->dst_port.dest_info_value),
-		        sizeof(entry->dst_port.dest_info_value));
-		    dprintf("\n");
+			if (entry->dst_valid) {
+			    cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
+			        &(entry->dst_port.dest_info_type),
+			        sizeof(entry->dst_port.dest_info_type));
+			    dprintf("\n");
+			    cmd_data_print_uint32("dest_info_value",
+			        &(entry->dst_port.dest_info_value),
+			        sizeof(entry->dst_port.dest_info_value));
+			    dprintf("\n");
+			}
 
    			cmd_data_print_maccmd("fwd_action", (a_uint32_t *) & (entry->fwd_cmd), 4);
 		    dprintf("\n\n");
@@ -45649,14 +45653,16 @@ cmd_data_print_gemport_gen_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uin
 	dprintf("\n[src_info_valid]:%s\t[src_info]:%#x", entry->src_info_valid?"YES":"NO", entry->src_info);
 
 	dprintf("\n[dest_info_valid]:%s\t", entry->dest_info_valid?"YES":"NO");
-	cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
-		&(entry->dest_info.dest_info_type),
-		sizeof(entry->dest_info.dest_info_type));
-	dprintf("\t");
-	cmd_data_print_uint32("dest_info_value",
-		&(entry->dest_info.dest_info_value),
-		sizeof(entry->dest_info.dest_info_value));
-	dprintf("\n");
+	if (entry->dest_info_valid) {
+		cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
+			&(entry->dest_info.dest_info_type),
+			sizeof(entry->dest_info.dest_info_type));
+		dprintf("\t");
+		cmd_data_print_uint32("dest_info_value",
+			&(entry->dest_info.dest_info_value),
+			sizeof(entry->dest_info.dest_info_value));
+		dprintf("\n");
+	}
 
 	dprintf("\n[vlan_id_valid]:%s\t[vlan_id]:%d", entry->vlan_id_valid?"YES":"NO", entry->vlan_id);
 
@@ -45732,14 +45738,16 @@ cmd_data_print_gemport_map(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
 		entry->int_pri, entry->int_dp);
 
 	dprintf("\n[dest_en]:%s\t", entry->dest_en?"YES":"NO");
-	cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
-		&(entry->dest_info.dest_info_type),
-		sizeof(entry->dest_info.dest_info_type));
-	dprintf("\t");
-	cmd_data_print_uint32("dest_info_value",
-		&(entry->dest_info.dest_info_value),
-		sizeof(entry->dest_info.dest_info_value));
-	dprintf("\n");
+	if (entry->dest_en) {
+		cmd_data_print_attr("dest_info_type", "[dest_info_type]:",
+			&(entry->dest_info.dest_info_type),
+			sizeof(entry->dest_info.dest_info_type));
+		dprintf("\t");
+		cmd_data_print_uint32("dest_info_value",
+			&(entry->dest_info.dest_info_value),
+			sizeof(entry->dest_info.dest_info_value));
+		dprintf("\n");
+	}
 
 	dprintf("\n[service_code]:%d\n", entry->service_code);
 }
