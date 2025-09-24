@@ -146,20 +146,20 @@ fal_fdb_port_stamove_ctrl_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *e
 }
 
 sw_error_t
-fal_fdb_aging_ctrl_set(a_uint32_t dev_id, a_bool_t enable)
+fal_fdb_aging_ctrl_set(a_uint32_t dev_id, fal_fdb_age_ctrl_t ctrl)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_FDB_AGE_CTRL_SET, dev_id, (a_uint32_t) enable);
+    rv = sw_uk_exec(SW_API_FDB_AGE_CTRL_SET, dev_id, (a_uint32_t) ctrl);
     return rv;
 }
 
 sw_error_t
-fal_fdb_aging_ctrl_get(a_uint32_t dev_id, a_bool_t * enable)
+fal_fdb_aging_ctrl_get(a_uint32_t dev_id, fal_fdb_age_ctrl_t * ctrl)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_FDB_AGE_CTRL_GET, dev_id, enable);
+    rv = sw_uk_exec(SW_API_FDB_AGE_CTRL_GET, dev_id, ctrl);
     return rv;
 }
 

@@ -498,7 +498,7 @@ struct cmd_des_t gcmd_des[] =
             {"ptLearnCtrl", "get", "get new address learning and forward", "<port_id>", SW_API_FDB_PT_NEWADDR_LEARN_GET, NULL},
             {"ptStationMove", "set", "set station move learning and forward", "<port_id> <enable|disable> <forward|drop|cpycpu|rdtcpu>", SW_API_FDB_PT_STAMOVE_SET, NULL},
             {"ptStationMove", "get", "get station move learning and forward", "<port_id>", SW_API_FDB_PT_STAMOVE_GET, NULL},
-            {"ageCtrl", "set", "set FDB entry aging status", "<enable|disable>", SW_API_FDB_AGE_CTRL_SET, NULL},
+            {"ageCtrl", "set", "set FDB entry aging status", "<disable|enable|enable_timer_only>", SW_API_FDB_AGE_CTRL_SET, NULL},
             {"ageCtrl", "get", "get FDB entry aging status", "", SW_API_FDB_AGE_CTRL_GET, NULL},
             {"learnCtrl", "set", "set FDB entry learn control mode", "<disable|hw_ctrl|sw_ctrl>", SW_API_FDB_LEARN_CTRL_SET, NULL},
             {"learnCtrl", "get", "get FDB entry learn control mode", "", SW_API_FDB_LEARN_CTRL_GET, NULL},
