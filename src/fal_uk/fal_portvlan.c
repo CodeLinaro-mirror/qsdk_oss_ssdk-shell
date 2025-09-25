@@ -757,42 +757,42 @@ fal_port_vlan_vpgroup_get(a_uint32_t dev_id, a_uint32_t vport,
 }
 
 sw_error_t
-fal_portvlan_isol_set(a_uint32_t dev_id,
-		fal_port_t port_id, fal_portvlan_isol_ctrl_t *isol_ctrl)
+fal_port_isol_ctrl_set(a_uint32_t dev_id,
+		fal_port_t port_id, fal_port_isol_ctrl_t *isol_ctrl)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_SET, dev_id, port_id, isol_ctrl);
+    rv = sw_uk_exec(SW_API_PT_ISOL_CTRL_SET, dev_id, port_id, isol_ctrl);
     return rv;
 }
 
 sw_error_t
-fal_portvlan_isol_get(a_uint32_t dev_id,
-		fal_port_t port_id, fal_portvlan_isol_ctrl_t *isol_ctrl)
+fal_port_isol_ctrl_get(a_uint32_t dev_id,
+		fal_port_t port_id, fal_port_isol_ctrl_t *isol_ctrl)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_GET, dev_id, port_id, isol_ctrl);
+    rv = sw_uk_exec(SW_API_PT_ISOL_CTRL_GET, dev_id, port_id, isol_ctrl);
     return rv;
 }
 
 sw_error_t
-fal_portvlan_isol_group_set(a_uint32_t dev_id,
+fal_port_isol_group_set(a_uint32_t dev_id,
 		a_uint8_t isol_group_id, a_uint64_t *isol_group_bmp)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_GROUP_SET, dev_id, isol_group_id, isol_group_bmp);
+    rv = sw_uk_exec(SW_API_PT_ISOL_GROUP_SET, dev_id, isol_group_id, isol_group_bmp);
     return rv;
 }
 
 sw_error_t
-fal_portvlan_isol_group_get(a_uint32_t dev_id,
+fal_port_isol_group_get(a_uint32_t dev_id,
 		a_uint8_t isol_group_id, a_uint64_t *isol_group_bmp)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_VLAN_ISOL_GROUP_GET, dev_id, isol_group_id, isol_group_bmp);
+    rv = sw_uk_exec(SW_API_PT_ISOL_GROUP_GET, dev_id, isol_group_id, isol_group_bmp);
     return rv;
 }
 
@@ -833,5 +833,65 @@ fal_vlan_trans_dscp_pcp_mapping_get(a_uint32_t dev_id, fal_port_vlan_direction_t
     sw_error_t rv;
 
     rv = sw_uk_exec(SW_API_VLAN_TRANS_DSCP_PCP_MAPPING_GET, dev_id, direction, group_id, dscp, pcp);
+    return rv;
+}
+
+sw_error_t
+fal_port_isol_action_ctrl_set(a_uint32_t dev_id, fal_port_isol_act_ctrl_t *act_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_ISOL_ACT_CTRL_SET, dev_id, act_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_port_isol_action_ctrl_get(a_uint32_t dev_id, fal_port_isol_act_ctrl_t *act_ctrl)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_ISOL_ACT_CTRL_GET, dev_id, act_ctrl);
+    return rv;
+}
+
+sw_error_t
+fal_port_isol_action_set(a_uint32_t dev_id,
+		fal_port_isol_act_idx_t *isol_id, fal_port_isol_act_t *isol_act)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_ISOL_ACT_SET, dev_id, isol_id, isol_act);
+    return rv;
+}
+
+sw_error_t
+fal_port_isol_action_get(a_uint32_t dev_id,
+		fal_port_isol_act_idx_t *isol_id, fal_port_isol_act_t *isol_act)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_ISOL_ACT_GET, dev_id, isol_id, isol_act);
+    return rv;
+}
+
+sw_error_t
+fal_port_isol_member_set(a_uint32_t dev_id, fal_port_t port_id,
+                           fal_pbmp_t mem_port_map)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_ISOL_MEM_SET, dev_id, port_id,
+                    (a_uint32_t) mem_port_map);
+    return rv;
+}
+
+sw_error_t
+fal_port_isol_member_get(a_uint32_t dev_id, fal_port_t port_id,
+                        fal_pbmp_t *mem_port_map)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PT_ISOL_MEM_GET, dev_id, port_id,
+                    mem_port_map);
     return rv;
 }

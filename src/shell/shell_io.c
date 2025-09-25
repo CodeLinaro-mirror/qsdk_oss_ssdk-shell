@@ -447,6 +447,14 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"isol_id_type",
+		{
+			{"phy_port", FAL_ISOL_ACT_PPORT},
+			{"isol_group", FAL_ISOL_ACT_GROUP},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -977,6 +985,9 @@ static sw_data_type_t sw_data_type[] =
             cmd_data_print_tunnel_flags_parser),
     SW_TYPE_DEF(SW_ISOL_CTRL, cmd_data_check_isol_ctrl,
 		    cmd_data_print_isol_ctrl),
+    SW_TYPE_DEF(SW_ISOL_ACT_CTRL, cmd_data_check_isol_act_ctrl, cmd_data_print_isol_act_ctrl),
+    SW_TYPE_DEF(SW_ISOL_ID, cmd_data_check_isol_id, cmd_data_print_isol_id),
+    SW_TYPE_DEF(SW_ISOL_ACT, cmd_data_check_isol_act, cmd_data_print_isol_act),
     SW_TYPE_DEF(SW_EGRESS_FILTER, cmd_data_check_egress_filter,
 		    cmd_data_print_egress_filter),
     SW_TYPE_DEF(SW_VPORT_TYPE, cmd_data_check_vport_type, NULL),
@@ -43257,14 +43268,23 @@ cmd_data_print_tunnel_flags_parser(a_uint8_t * param_name, a_uint32_t * buf, a_u
 }
 
 sw_error_t
-cmd_data_check_isol_ctrl(char *cmd_str, fal_portvlan_isol_ctrl_t *arg_val, a_uint32_t size)
+cmd_data_check_isol_ctrl(char *cmd_str, void *arg_val, a_uint32_t size)
 {
 	char *cmd;
 	sw_error_t rv;
-	fal_portvlan_isol_ctrl_t entry;
+	fal_port_isol_ctrl_t entry;
 	a_uint32_t tmp = 0;
 
-	aos_mem_zero(&entry, sizeof(fal_portvlan_isol_ctrl_t));
+	aos_mem_zero(&entry, sizeof(fal_port_isol_ctrl_t));
+
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+        cmd_data_check_element("direction", "ingress",
+                        "usage: direction is both, ingress or egress\n",
+                        cmd_data_check_attr, ("direction", cmd,
+                        &(entry.dir), sizeof(entry.dir)));
+	}
 
 	do {
 		cmd = get_sub_cmd("isol_en", "n");
@@ -43300,11 +43320,11 @@ cmd_data_check_isol_ctrl(char *cmd_str, fal_portvlan_isol_ctrl_t *arg_val, a_uin
 			if (SW_OK != rv)
 				dprintf("usage: isolation group id\n");
 			else
-				entry.group_id = tmp;
+				entry.isol_group_id = tmp;
 		}
 	} while(talk_mode && (SW_OK != rv));
 
-	*(fal_portvlan_isol_ctrl_t *)arg_val = entry;
+	*(fal_port_isol_ctrl_t *)arg_val = entry;
 
 	return SW_OK;
 }
@@ -43312,15 +43332,22 @@ cmd_data_check_isol_ctrl(char *cmd_str, fal_portvlan_isol_ctrl_t *arg_val, a_uin
 void
 cmd_data_print_isol_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 {
-	fal_portvlan_isol_ctrl_t *entry;
+	fal_port_isol_ctrl_t *entry;
 
-	entry = (fal_portvlan_isol_ctrl_t *)buf;
+	entry = (fal_port_isol_ctrl_t *)buf;
 
 	dprintf("\n[%s] \n", param_name);
 
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		cmd_data_print_attr("direction", "[direction]: ",
+				&(entry->dir), sizeof(entry->dir));
+	}
+
 	cmd_data_print_confirm("[isol_en]:", entry->enable, sizeof(a_bool_t));
 
-	dprintf(" [group_id]:%d\n", entry->group_id);
+	dprintf(" [group_id]:%d\n", entry->isol_group_id);
 
 	dprintf("\n");
 }
@@ -46641,6 +46668,7 @@ cmd_data_check_ipmc_global_cfg(char *cmd_str, void *val, a_uint32_t size)
 	} while(talk_mode && (SW_OK != rv));
 
 	*(fal_ipmc_global_cfg_t *)val = entry;
+
 	return SW_OK;
 }
 
@@ -46879,6 +46907,7 @@ cmd_data_check_ipmc_entry(char *cmd_str, void *val, a_uint32_t size)
 				&entry.ucast_fwd_en, sizeof(a_bool_t)));
 
 	*(fal_ipmc_entry_t *)val = entry;
+
 	return SW_OK;
 }
 
@@ -47059,6 +47088,7 @@ cmd_data_print_ipmc_ucast_fwd(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t
 	dprintf(" [dest_vp]:0x%x", entry->dest_vp);
 	dprintf(" [service_code]:%d ", entry->service_code);
 	dprintf(" [bypass_bitmap]:0x%x", entry->bypass_bitmap);
+
 	dprintf("\n");
 }
 
@@ -47127,6 +47157,7 @@ cmd_data_check_passthrough_src_profile(char *cmd_str, void *val, a_uint32_t size
 	} while(talk_mode && (SW_OK != rv));
 
 	*(fal_passthrough_src_profile_t *)val = profile;
+
 	return SW_OK;
 }
 
@@ -47149,4 +47180,188 @@ cmd_data_print_passthrough_src_profile(a_uint8_t *param_name, a_uint32_t *buf, a
 
 	dprintf("\n");
 }
+
+sw_error_t
+cmd_data_check_isol_act_ctrl(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_port_isol_act_ctrl_t entry;
+
+	memset(&entry, 0, sizeof (fal_port_isol_act_ctrl_t));
+
+	cmd_data_check_element("bc_isol_en", "disable",
+			"usage: <yes/no>\n", cmd_data_check_enable,
+			(cmd, &entry.bc_isol_en, sizeof(entry.bc_isol_en)));
+
+	cmd_data_check_element("mc_isol_en", "disable",
+			"usage: <yes/no>\n", cmd_data_check_enable,
+			(cmd, &entry.mc_isol_en, sizeof(entry.mc_isol_en)));
+
+	*(fal_port_isol_act_ctrl_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_isol_act_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_port_isol_act_ctrl_t *entry = (fal_port_isol_act_ctrl_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_enable("bc_isol_en", &entry->bc_isol_en, sizeof(entry->bc_isol_en));
+	cmd_data_print_enable("mc_isol_en", &entry->mc_isol_en, sizeof(entry->mc_isol_en));
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_isol_id(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_port_isol_act_idx_t entry;
+
+	memset(&entry, 0, sizeof (fal_port_isol_act_idx_t));
+
+	cmd_data_check_element("isol_id_type", "phy_port",
+			"usage: <phy_port/isol_group>\n", cmd_data_check_attr,
+			("isol_id_type", cmd, &entry.isol_type, sizeof(entry.isol_type)));
+
+	if (entry.isol_type == FAL_ISOL_ACT_PPORT) {
+		cmd_data_check_element("phy_port_id", "0",
+				"usage: physical port id.\n", cmd_data_check_uint32,
+				(cmd, &entry.pport_id, sizeof(entry.pport_id)));
+	}
+
+	if (entry.isol_type == FAL_ISOL_ACT_GROUP) {
+		cmd_data_check_element("isol_group_id", "0",
+				"usage: isol group id.\n", cmd_data_check_uint32,
+				(cmd, &entry.isol_group_id, sizeof(entry.isol_group_id)));
+	}
+
+	*(fal_port_isol_act_idx_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_isol_id(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_port_isol_act_idx_t *entry = (fal_port_isol_act_idx_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+	cmd_data_print_attr("isol_id_type", "\n[isol_id_type]:",
+				&entry->isol_type, sizeof(a_uint32_t));
+
+	if (entry->isol_type == FAL_ISOL_ACT_PPORT) {
+		dprintf("\n[phy_port_id]: %d", entry->pport_id);
+	}
+
+	if (entry->isol_type == FAL_ISOL_ACT_GROUP) {
+		dprintf("\n[isol_group_id]: %d", entry->isol_group_id);
+	}
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_isol_act(char *cmd_str, a_uint32_t *arg_val, a_uint32_t size)
+{
+	char *cmd;
+	sw_error_t rv;
+	fal_port_isol_act_t entry;
+
+	aos_mem_zero(&entry, sizeof(fal_port_isol_act_t));
+
+	do {
+		cmd = get_sub_cmd("isol_act_map", "0x0:0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("input the map for isol idx and action eg: idx0:act0,idx1:act1...\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			char *token, *sub_token;
+			char *str_saveptr1, *str_saveptr2;
+			a_uint32_t idx_val, act_val;
+			char tmp_str[1024] = {0};
+			int i;
+			rv = SW_OK;
+
+			/* Initialize act_bitmap to all zeros */
+			aos_mem_zero(entry.act_bitmap, sizeof(entry.act_bitmap));
+			strlcpy(tmp_str, cmd, sizeof(tmp_str));
+
+			/* Parse the input string: "0x0:0x2,0x3:0x1,0x5:0x2..." */
+			for (token = strtok_r(tmp_str, ",", &str_saveptr1);
+				token != NULL;
+				token = strtok_r(NULL, ",", &str_saveptr1)) {
+
+				/* Parse each "idx:act" pair */
+				sub_token = strtok_r(token, ":", &str_saveptr2);
+
+				if (sub_token == NULL || str_saveptr2 == NULL) {
+					rv = SW_BAD_VALUE;
+					break;
+				}
+				if (cmd_sscanf(sub_token, NULL, &idx_val) != SW_OK ||
+					cmd_sscanf(str_saveptr2, NULL, &act_val) != SW_OK) {
+					rv = SW_BAD_VALUE;
+					break;
+				}
+
+				/* Validate idx and act ranges */
+				if (idx_val > 63 || act_val > 3) {
+					rv = SW_BAD_VALUE;
+					break;
+				}
+
+				/* Store act_val into act_bitmap */
+				i = idx_val / 16; /* Each uint32 holds 16 idx:act pairs */
+				int bit_offset = (idx_val % 16) * 2; /* Each pair takes 2 bits */
+
+				/* Clear existing bits for this idx and then set new act_val */
+				entry.act_bitmap[i] &= ~((0x3) << bit_offset);
+				entry.act_bitmap[i] |= (act_val & 0x3) << bit_offset;
+			}
+
+			if (SW_OK != rv)
+				dprintf("idx0:act0,idx1:act1..., idx[0-63], act[0-2].\n");
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	*(fal_port_isol_act_t* )arg_val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_isol_act(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+	fal_port_isol_act_t *entry;
+	int i, bit_idx, value, global_idx;
+
+	dprintf("\n%s [idx:map] (skip map=0<forward action> output):\n", param_name);
+
+	entry = (fal_port_isol_act_t *)buf;
+
+	for (i = 0; i < FAL_ISOL_ACT_ARR_SIZE; i++) {
+		if (entry->act_bitmap[i] == 0)
+			continue;
+
+		for (bit_idx = 0; bit_idx < 16; bit_idx++) {
+			global_idx = i * 16 + bit_idx;
+			value = (entry->act_bitmap[i] >> (bit_idx * 2)) & 0x3;
+
+			if (value != 0) {
+				dprintf("%d:%d\n", global_idx, value);
+			}
+		}
+	}
+	dprintf("\n");
+}
+
 /* auto_insert_flag_1 */
