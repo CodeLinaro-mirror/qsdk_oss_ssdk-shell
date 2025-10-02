@@ -1751,6 +1751,10 @@ cmd_data_print_speed(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     {
         dprintf("10000(Mbps)");
     }
+    else if (*(a_uint32_t *) buf == FAL_SPEED_25000)
+    {
+	    dprintf("25000(Mbps)");
+    }
     else
     {
         dprintf("UNKNOWN VALUE");
@@ -2012,6 +2016,10 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
 	  *arg_val = PORT_SGMII_FIBER;
     else if (!strncasecmp(cmd_str, "uqxgmii", 20))
 	  *arg_val = PORT_UQXGMII;
+    else if (!strncasecmp(cmd_str, "25gbase_r", 13))
+	  *arg_val = PORT_25GBASE_R;
+    else if (!strncasecmp(cmd_str, "pon_serdes", 13))
+	  *arg_val = PORT_PON_SERDES;
     else if (!strncasecmp(cmd_str, "auto", 5))
 	  *arg_val = PORT_INTERFACE_MODE_AUTO;
     else if (!strncasecmp(cmd_str, "interfacemode_max", 20))
@@ -2064,6 +2072,14 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     else if(*(a_uint32_t *) buf == PORT_UQXGMII)
     {
 	    dprintf("uqxgmii");
+    }
+    else if(*(a_uint32_t *) buf == PORT_25GBASE_R)
+    {
+	    dprintf("25gbase_r");
+    }
+    else if(*(a_uint32_t *) buf == PORT_PON_SERDES)
+    {
+	    dprintf("pon_serdes");
     }
     else if(*(a_uint32_t *) buf == PORT_INTERFACE_MODE_AUTO)
     {
