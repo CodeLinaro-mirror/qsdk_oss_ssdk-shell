@@ -1360,6 +1360,8 @@ struct cmd_des_t gcmd_des[] =
 		    "<passthrough_mode> <enable>", SW_API_QM_PASSTHROUGH_CPUCODE_EN_SET, NULL},
 	    {"passthrough_cpucode_en", "get", "get passthrough cpucode enable",
 		    "<passthrough_mode>", SW_API_QM_PASSTHROUGH_CPUCODE_EN_GET, NULL},
+	    {"dequeue_drop", "set", "set dequeue drop", "<queue_id> <enable>", SW_API_QM_DEQUEUE_DROP_SET, NULL},
+	    {"dequeue_drop", "get", "get dequeue drop", "<queue_id>", SW_API_QM_DEQUEUE_DROP_GET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
