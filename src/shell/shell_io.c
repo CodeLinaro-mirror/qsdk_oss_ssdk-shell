@@ -28199,7 +28199,9 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 		}
 		while (talk_mode && (SW_OK != rv));
 
-		if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
 			do
 			{
 				cmd = get_sub_cmd("stpid_idx_en", "yes");
@@ -28400,7 +28402,9 @@ cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name,
 				entry->vni_resv_enable?"ENABLE":"DISABLE",
 				entry->vni_resv_type?"VNI_RESV":"VNI_ONLY", entry->vni_resv);
 
-		if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
 			dprintf("\n[stpid_idx_en]:%s  [stpid_idx]:0x%x  [ctpid_idx_en]:%s  [ctpid_idx]:0x%x",
 					entry->stpid_idx_en?"ENABLE":"DISABLE",
 					entry->stpid_idx,
@@ -28477,7 +28481,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 				dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
 					"3 for copy from original svid, 4 for copy from original cvid. \n");
 			else
@@ -28488,7 +28494,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			rv = cmd_data_check_uint32(cmd, &entry.svid_xlt_cmd, sizeof (a_uint32_t));
 			if (SW_OK != rv) {
-				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 					dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
 						"3 for copy from original svid, 4 for copy from original cvid. \n");
 				else
@@ -28538,7 +28546,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 				dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
 					"3 for copy from original svid, 4 for copy from original cvid. \n");
 			else
@@ -28549,7 +28559,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			rv = cmd_data_check_uint32(cmd, &entry.cvid_xlt_cmd, sizeof (a_uint32_t));
 			if (SW_OK != rv) {
-				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 					dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
 						"3 for copy from original svid, 4 for copy from original cvid. \n");
 				else
@@ -28624,7 +28636,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 				dprintf("usage: 0 for unchanged, 1 for replace spcp, \n"
 					"2 for copy from original spcp, 3 for copy from original cpcp, \n"
 					"4 for map from dhcp, \n"
@@ -28640,7 +28654,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			rv = cmd_data_check_uint32(cmd, &entry.spcp_xlt_cmd, sizeof (a_uint32_t));
 			if (SW_OK != rv) {
-				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 					dprintf("usage: 0 for unchanged, 1 for replace spcp, \n"
 						"2 for copy from original spcp, 3 for copy from original cpcp, \n"
 						"4 for map from dhcp, \n"
@@ -28695,7 +28711,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 				dprintf("usage: 0 for unchanged, 1 for replace cpcp, \n"
 					"2 for copy from original spcp, 3 for copy from original cpcp, \n"
 					"4 for map from dhcp, \n"
@@ -28710,7 +28728,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			rv = cmd_data_check_uint32(cmd, &entry.cpcp_xlt_cmd, sizeof (a_uint32_t));
 			if (SW_OK != rv) {
-				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 					dprintf("usage: 0 for unchanged, 1 for replace cpcp, \n"
 						"2 for copy from original spcp, 3 for copy from original cpcp, \n"
 						"4 for map from dhcp, \n"
@@ -28791,7 +28811,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 				dprintf("usage: 0 for unchanged, 1 for replace sdei, \n"
 					"2 for copy from original sdei, 3 for copy from original cdei. \n");
 			else
@@ -28802,7 +28824,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			rv = cmd_data_check_uint32(cmd, &entry.sdei_xlt_cmd, sizeof (a_uint32_t));
 			if (SW_OK != rv)  {
-				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 					dprintf("usage: 0 for unchanged, 1 for replace sdei, \n"
 						"2 for copy from original sdei, 3 for copy from original cdei. \n");
 				else
@@ -28854,7 +28878,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		else if (!strncasecmp(cmd, "help", 4))
 		{
-			if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 				dprintf("usage: 0 for unchanged, 1 for replace cdei, \n"
 					"2 for copy from original sdei, 3 for copy from original cdei. \n");
 			else
@@ -28865,7 +28891,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			rv = cmd_data_check_uint32(cmd, &entry.cdei_xlt_cmd, sizeof (a_uint32_t));
 			if (SW_OK != rv) {
-				if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
 					dprintf("usage: 0 for unchanged, 1 for replace cdei, \n"
 						"2 for copy from original sdei, 3 for copy from original cdei. \n");
 				else
@@ -28930,7 +28958,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 	}
 	while (talk_mode && (SW_OK != rv));
 
-	if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
 		do
 		{
 			cmd = get_sub_cmd("pm_counter_mode", "No");
@@ -29173,7 +29203,9 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		}
 		while (talk_mode && (SW_OK != rv));
 
-		if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
 			do
 			{
 				cmd = get_sub_cmd("tags_to_rm", "0");
@@ -29502,7 +29534,9 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 		dprintf("\n[vni_resv_enable]:%s  [vni_resv]:0x%x\n\n",
 				entry->vni_resv_enable?"ENABLE":"DISABLE", entry->vni_resv);
 
-		if (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
 			dprintf("\n[stpid_idx_xlt_cmd]:0x%x  [stpid_idx_xlt]:0x%x  [ctpid_idx_xlt_cmd]:0x%x  [ctpid_idx_xlt]:0x%x",
 					entry->stpid_idx_xlt_cmd, entry->stpid_idx_xlt, entry->ctpid_idx_xlt_cmd, entry->ctpid_idx_xlt);
 			dprintf("\n[tags_to_rm]:0x%x  [dscp_map_idx]:0x%x  [counter_mode]:0x%x",
