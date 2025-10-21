@@ -1064,6 +1064,8 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_IPMC_UCAST_FWD, cmd_data_check_ipmc_ucast_fwd, cmd_data_print_ipmc_ucast_fwd),
 	SW_TYPE_DEF(SW_PASSTHROUGH_SRC_PROFILE, cmd_data_check_passthrough_src_profile,
 			cmd_data_print_passthrough_src_profile),
+	SW_TYPE_DEF(SW_PASSTHROUGH_CPUCODE, cmd_data_check_passthrough_cpucode,
+			cmd_data_print_passthrough_cpucode),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -47440,4 +47442,102 @@ cmd_data_print_isol_act(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 	dprintf("\n");
 }
 
+sw_error_t
+cmd_data_check_passthrough_cpucode(char *cmd_str, void *val, a_uint32_t size)
+{
+	fal_passthrough_cpucode_t cpucode;
+	sw_error_t rv;
+	char *cmd;
+
+	aos_mem_zero(&cpucode, sizeof(fal_passthrough_cpucode_t));
+
+	do {
+		cmd = get_sub_cmd("qid_mismatch_cpucode", "251");
+		SW_RTN_ON_NULL_PARAM(cmd);
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: cpu code value\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &(cpucode.qid_mismatch_cpucode),
+					sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: cpu code value\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("drop_cpucode", "252");
+		SW_RTN_ON_NULL_PARAM(cmd);
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: cpu code value\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &(cpucode.drop_cpucode),
+					sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: cpu code value\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("cpucode_0", "250");
+		SW_RTN_ON_NULL_PARAM(cmd);
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: cpu code value\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &(cpucode.cpucode[0]), sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: cpu code value\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("cpucode_1", "249");
+		SW_RTN_ON_NULL_PARAM(cmd);
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			printf("usage: cpu code value\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_uint32(cmd, &(cpucode.cpucode[1]), sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: cpu code value\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	*(fal_passthrough_cpucode_t *)val = cpucode;
+	return SW_OK;
+}
+
+void
+cmd_data_print_passthrough_cpucode(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+	fal_passthrough_cpucode_t *cpucode;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cpucode = (fal_passthrough_cpucode_t *)buf;
+
+	dprintf("\n[qid_mismatch_cpucode]:%d ", cpucode->qid_mismatch_cpucode);
+	dprintf("\n[drop_cpucode]:%d ", cpucode->drop_cpucode);
+	dprintf("\n[cpucode_0]:%d ", cpucode->cpucode[0]);
+	dprintf("\n[cpucode_1]:%d ", cpucode->cpucode[1]);
+	dprintf("\n");
+}
 /* auto_insert_flag_1 */

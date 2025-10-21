@@ -611,3 +611,39 @@ fal_qm_passthrough_direct_enqueue_get(a_uint32_t dev_id, fal_passthrough_mode_t 
     rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_DIRECT_ENQUEUE_GET, dev_id, mode, enable);
     return rv;
 }
+
+sw_error_t
+fal_qm_passthrough_cpucode_set(a_uint32_t dev_id, fal_passthrough_cpucode_t *cpucode)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_CPUCODE_SET, dev_id, cpucode);
+    return rv;
+}
+
+sw_error_t
+fal_qm_passthrough_cpucode_get(a_uint32_t dev_id, fal_passthrough_cpucode_t *cpucode)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_CPUCODE_GET, dev_id, cpucode);
+    return rv;
+}
+
+sw_error_t
+fal_qm_passthrough_cpucode_en_set(a_uint32_t dev_id, fal_passthrough_mode_t mode, a_bool_t enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_CPUCODE_EN_SET, dev_id, mode, enable);
+    return rv;
+}
+
+sw_error_t
+fal_qm_passthrough_cpucode_en_get(a_uint32_t dev_id, fal_passthrough_mode_t mode, a_bool_t *enable)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_PASSTHROUGH_CPUCODE_EN_GET, dev_id, mode, enable);
+    return rv;
+}
