@@ -30366,7 +30366,7 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	do
 	{
-		cmd = get_sub_cmd("destport_en", "yes");
+		cmd = get_sub_cmd("destport_en", "no");
 		SW_RTN_ON_NULL_PARAM(cmd);
 
 		if (!strncasecmp(cmd, "quit", 4))
