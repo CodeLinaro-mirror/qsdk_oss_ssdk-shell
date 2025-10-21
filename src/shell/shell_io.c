@@ -1066,6 +1066,7 @@ static sw_data_type_t sw_data_type[] =
 			cmd_data_print_passthrough_src_profile),
 	SW_TYPE_DEF(SW_PASSTHROUGH_CPUCODE, cmd_data_check_passthrough_cpucode,
 			cmd_data_print_passthrough_cpucode),
+	SW_TYPE_DEF(SW_DDRQ_EN, cmd_data_check_ddrq_en, cmd_data_print_ddrq_en),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -47538,6 +47539,70 @@ cmd_data_print_passthrough_cpucode(a_uint8_t *param_name, a_uint32_t *buf, a_uin
 	dprintf("\n[drop_cpucode]:%d ", cpucode->drop_cpucode);
 	dprintf("\n[cpucode_0]:%d ", cpucode->cpucode[0]);
 	dprintf("\n[cpucode_1]:%d ", cpucode->cpucode[1]);
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_ddrq_en(char *cmd_str, void *val, a_uint32_t size)
+{
+	fal_ucast_queue_ddrq_en_t ddrqen;
+	sw_error_t rv;
+	char *cmd;
+
+	aos_mem_zero(&ddrqen, sizeof(fal_ucast_queue_ddrq_en_t));
+
+	do {
+		cmd = get_sub_cmd("ddrq_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(ddrqen.ddrq_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	}while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("qid_mismatch_check_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(ddrqen.qid_mismatch_check_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	}while(talk_mode && (SW_OK != rv));
+
+	*(fal_ucast_queue_ddrq_en_t *)val = ddrqen;
+	return SW_OK;
+}
+
+void
+cmd_data_print_ddrq_en(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+	fal_ucast_queue_ddrq_en_t *ddrqen = (fal_ucast_queue_ddrq_en_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_enable("ddrq_en", &ddrqen->ddrq_en, sizeof(ddrqen->ddrq_en));
+	cmd_data_print_enable("qid_mismatch_check_en",
+			&ddrqen->qid_mismatch_check_en, sizeof(ddrqen->qid_mismatch_check_en));
 	dprintf("\n");
 }
 /* auto_insert_flag_1 */
