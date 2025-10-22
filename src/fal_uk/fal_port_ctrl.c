@@ -449,23 +449,23 @@ fal_port_congestion_drop_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
-fal_ring_flow_ctrl_thres_set(a_uint32_t dev_id, a_uint32_t ring_id,
+fal_vch_bp_thres_set(a_uint32_t dev_id, a_uint32_t vch_id,
 			a_uint16_t on_thres, a_uint16_t off_thres)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_THRES_SET, dev_id, ring_id, on_thres, off_thres);
+    rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_THRES_SET, dev_id, vch_id, on_thres, off_thres);
     return rv;
 }
 
 
 sw_error_t
-fal_ring_flow_ctrl_thres_get(a_uint32_t dev_id, a_uint32_t ring_id,
+fal_vch_bp_thres_get(a_uint32_t dev_id, a_uint32_t vch_id,
 			a_uint16_t *on_thres, a_uint16_t *off_thres)
 {
     sw_error_t rv;
 
-    rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_THRES_GET, dev_id, ring_id, on_thres, off_thres);
+    rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_THRES_GET, dev_id, vch_id, on_thres, off_thres);
     return rv;
 }
 /*qca808x_start*/
@@ -1023,11 +1023,11 @@ fal_port_8023ah_get(a_uint32_t dev_id, fal_port_t port_id,
 }
 
 sw_error_t
-fal_ring_flow_ctrl_status_get(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t *status)
+fal_vch_bp_status_get(a_uint32_t dev_id, a_uint32_t vch_id, a_bool_t *status)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_STATUS_GET, dev_id, ring_id, status);
+	rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_STATUS_GET, dev_id, vch_id, status);
 
 	return rv;
 }
@@ -1083,11 +1083,11 @@ fal_port_cnt_get(a_uint32_t dev_id, fal_port_t port_id, fal_port_cnt_t *port_cnt
 }
 
 sw_error_t
-fal_ring_flow_ctrl_config_set(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t status)
+fal_vch_bp_config_set(a_uint32_t dev_id, a_uint32_t vch_id, a_bool_t status)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_SET, dev_id, ring_id, status);
+	rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_SET, dev_id, vch_id, status);
 
 	return rv;
 }
@@ -1103,13 +1103,24 @@ fal_port_cnt_flush(a_uint32_t dev_id, fal_port_t port_id)
 }
 
 sw_error_t
-fal_ring_flow_ctrl_config_get(a_uint32_t dev_id, a_uint32_t ring_id, a_bool_t *status)
+fal_vch_bp_config_get(a_uint32_t dev_id, a_uint32_t vch_id, a_bool_t *status)
 {
 	sw_error_t rv;
 
-	rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_GET, dev_id, ring_id, status);
+	rv = sw_uk_exec(SW_API_PT_RING_FLOW_CTRL_GET, dev_id, vch_id, status);
 
 	return rv;
+}
+
+sw_error_t
+fal_vch_bp_stats_get(a_uint32_t dev_id, a_uint32_t vch_id, a_uint32_t *stats)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_VCH_BP_STATS_GET, dev_id, vch_id, stats);
+
+	return rv;
+
 }
 
 sw_error_t
