@@ -1362,6 +1362,9 @@ struct cmd_des_t gcmd_des[] =
 		    "<passthrough_mode>", SW_API_QM_PASSTHROUGH_CPUCODE_EN_GET, NULL},
 	    {"dequeue_drop", "set", "set dequeue drop", "<queue_id> <enable>", SW_API_QM_DEQUEUE_DROP_SET, NULL},
 	    {"dequeue_drop", "get", "get dequeue drop", "<queue_id>", SW_API_QM_DEQUEUE_DROP_GET, NULL},
+	    {"bp_qmap", "set", "set queue bitmap of backpressure", "<lp_qid> <queue_bitmap>", SW_API_QM_CROSSCHIP_BP_QMAP_SET, NULL},
+	    {"bp_qmap", "get", "get queue bitmap of backpressure", "<lp_qid>", SW_API_QM_CROSSCHIP_BP_QMAP_GET, NULL},
+	    {"bp_status", "get", "get queue bitmap of backpressure status", "", SW_API_QM_CROSSCHIP_BP_STATUS_GET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

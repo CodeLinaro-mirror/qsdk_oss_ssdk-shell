@@ -667,3 +667,33 @@ fal_qm_dequeue_drop_get(a_uint32_t dev_id, a_uint32_t queue_id, a_bool_t *enable
     rv = sw_uk_exec(SW_API_QM_DEQUEUE_DROP_GET, dev_id, queue_id, enable);
     return rv;
 }
+
+sw_error_t
+fal_qm_crosschip_bp_qmap_set(a_uint32_t dev_id, a_uint32_t lp_qid,
+			     fal_bp_queue_bmp_t *queue_bmp)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_CROSSCHIP_BP_QMAP_SET, dev_id, lp_qid, queue_bmp);
+    return rv;
+}
+
+sw_error_t
+fal_qm_crosschip_bp_qmap_get(a_uint32_t dev_id, a_uint32_t lp_qid,
+			     fal_bp_queue_bmp_t *queue_bmp)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_CROSSCHIP_BP_QMAP_GET, dev_id, lp_qid, queue_bmp);
+    return rv;
+}
+
+sw_error_t
+fal_qm_crosschip_bp_status_get(a_uint32_t dev_id,
+			       fal_bp_queue_bmp_t *queue_bmp)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_CROSSCHIP_BP_STATUS_GET, dev_id, queue_bmp);
+    return rv;
+}

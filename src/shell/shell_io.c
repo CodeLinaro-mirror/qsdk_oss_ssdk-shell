@@ -1067,6 +1067,7 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_PASSTHROUGH_CPUCODE, cmd_data_check_passthrough_cpucode,
 			cmd_data_print_passthrough_cpucode),
 	SW_TYPE_DEF(SW_DDRQ_EN, cmd_data_check_ddrq_en, cmd_data_print_ddrq_en),
+    SW_TYPE_DEF(SW_BP_QUEUEBMP, cmd_data_check_bp_queue, cmd_data_print_bp_queue),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -47604,5 +47605,41 @@ cmd_data_print_ddrq_en(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
 	cmd_data_print_enable("qid_mismatch_check_en",
 			&ddrqen->qid_mismatch_check_en, sizeof(ddrqen->qid_mismatch_check_en));
 	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_bp_queue(char *info, fal_bp_queue_bmp_t *val, a_uint32_t size)
+{
+    fal_bp_queue_bmp_t entry;
+    char cmd_str[64];
+    a_uint32_t i = 0;
+    char *cmd;
+
+    aos_mem_zero(&entry, sizeof(fal_bp_queue_bmp_t));
+
+    for (i = 0; i < sizeof(entry.bmp)/sizeof(entry.bmp[0]); i++) {
+	    snprintf(cmd_str, sizeof(cmd_str), "[bmp_%d]", i);
+
+	    cmd_data_check_element(cmd_str, "0",
+			    "usage: queue bitmap.\n", cmd_data_check_uint32,
+			    (cmd, &entry.bmp[i], sizeof(entry.bmp[i])));
+    }
+
+    *val = entry;
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_bp_queue(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size)
+{
+    fal_bp_queue_bmp_t *entry;
+    int i;
+
+    entry = (fal_bp_queue_bmp_t *)buf;
+
+    for (i = 0; i < sizeof(entry->bmp)/sizeof(entry->bmp[0]); i++)
+	    dprintf("[bmp_%d]:0x%x\n", i, entry->bmp[i]);
+
 }
 /* auto_insert_flag_1 */
