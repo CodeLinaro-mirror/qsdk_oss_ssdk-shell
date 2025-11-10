@@ -895,3 +895,65 @@ fal_port_isol_member_get(a_uint32_t dev_id, fal_port_t port_id,
                     mem_port_map);
     return rv;
 }
+
+sw_error_t
+fal_private_vlan_rx_cfg_set(a_uint32_t dev_id, fal_port_t port_id, fal_pvtvlan_rx_cfg_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PVLAN_RX_CFG_SET, dev_id, port_id, cfg);
+
+    return rv;
+}
+
+sw_error_t
+fal_private_vlan_rx_cfg_get(a_uint32_t dev_id, fal_port_t port_id, fal_pvtvlan_rx_cfg_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PVLAN_RX_CFG_GET, dev_id, port_id, cfg);
+
+    return rv;
+}
+
+sw_error_t
+fal_private_vlan_mapping_set(a_uint32_t dev_id,
+		fal_direction_t direction, fal_pvtvlan_map_t *port_mapping)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PVLAN_MAP_SET, dev_id, direction, port_mapping);
+
+    return rv;
+}
+
+sw_error_t
+fal_private_vlan_mapping_get(a_uint32_t dev_id,
+		fal_direction_t direction, fal_pvtvlan_map_t *port_mapping)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PVLAN_MAP_GET, dev_id, direction, port_mapping);
+
+    return rv;
+}
+
+sw_error_t
+fal_private_vlan_tx_cfg_set(a_uint32_t dev_id, fal_pvtvlan_tx_cfg_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PVLAN_TX_CFG_SET, dev_id, cfg);
+
+    return rv;
+}
+
+sw_error_t
+fal_private_vlan_tx_cfg_get(a_uint32_t dev_id, fal_pvtvlan_tx_cfg_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_PVLAN_TX_CFG_GET, dev_id, cfg);
+
+    return rv;
+}						

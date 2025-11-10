@@ -1068,6 +1068,9 @@ static sw_data_type_t sw_data_type[] =
 			cmd_data_print_passthrough_cpucode),
 	SW_TYPE_DEF(SW_DDRQ_EN, cmd_data_check_ddrq_en, cmd_data_print_ddrq_en),
     SW_TYPE_DEF(SW_BP_QUEUEBMP, cmd_data_check_bp_queue, cmd_data_print_bp_queue),
+	SW_TYPE_DEF(SW_PVLAN_RX, cmd_data_check_pvlan_rx_cfg, cmd_data_print_pvlan_rx_cfg),
+	SW_TYPE_DEF(SW_PVLAN_MAP, cmd_data_check_pvlan_map, cmd_data_print_pvlan_map),
+	SW_TYPE_DEF(SW_PVLAN_TX, cmd_data_check_pvlan_tx_cfg, cmd_data_print_pvlan_tx_cfg),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -47642,4 +47645,243 @@ cmd_data_print_bp_queue(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size)
 	    dprintf("[bmp_%d]:0x%x\n", i, entry->bmp[i]);
 
 }
+
+sw_error_t
+cmd_data_check_pvlan_rx_cfg(char *cmd_str, void *val, a_uint32_t size)
+{
+	fal_pvtvlan_rx_cfg_t rx_cfg;
+	sw_error_t rv;
+	char *cmd;
+    a_uint32_t tmp = 0;
+
+	aos_mem_zero(&rx_cfg, sizeof(fal_pvtvlan_rx_cfg_t));
+
+	do {
+		cmd = get_sub_cmd("map_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(rx_cfg.map_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("tpid", "0x8100");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <0x8100>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <0x8100>\n");
+			else
+				rx_cfg.tpid = tmp;
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	*(fal_pvtvlan_rx_cfg_t *)val = rx_cfg;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_pvlan_rx_cfg(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+	fal_pvtvlan_rx_cfg_t *rx_cfg = (fal_pvtvlan_rx_cfg_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_enable("map_en", &rx_cfg->map_en, sizeof(rx_cfg->map_en));
+	cmd_data_print_uint16("tpid", &rx_cfg->tpid, sizeof(rx_cfg->tpid));
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_pvlan_map(char *cmd_str, void *val, a_uint32_t size)
+{
+	fal_pvtvlan_map_t pvlan_map;
+	sw_error_t rv;
+	char *cmd;
+    a_uint32_t tmp = 0;
+
+	aos_mem_zero(&pvlan_map, sizeof(fal_pvtvlan_map_t));
+
+	do {
+		cmd = get_sub_cmd("ptmap_en", "n");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4)) {
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4)) {
+			dprintf("usage: <yes/no/y/n>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else {
+			rv = cmd_data_check_confirm(cmd, A_FALSE, &(pvlan_map.ptmap_en),
+					sizeof(a_bool_t));
+			if (SW_OK != rv)
+				dprintf("usage: <yes/no/y/n>\n");
+		}
+	} while(talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("vlan_tci", "0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <0x0>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <0x0>\n");
+			else
+				pvlan_map.vlan_tci = tmp;
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("vlan_tci_mask", "0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <0x0>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <0x0>\n");
+			else
+				pvlan_map.vlan_tci_mask = tmp;
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	do {
+		cmd = get_sub_cmd("int_port", "0x0");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <0x0>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint8(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <0x0>\n");
+			else
+				pvlan_map.int_port = tmp;
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	*(fal_pvtvlan_map_t *)val = pvlan_map;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_pvlan_map(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+	fal_pvtvlan_map_t *pvlan_map = (fal_pvtvlan_map_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_enable("ptmap_en", &pvlan_map->ptmap_en, sizeof(pvlan_map->ptmap_en));
+	cmd_data_print_uint16("vlan_tci", &pvlan_map->vlan_tci, sizeof(pvlan_map->vlan_tci));
+	cmd_data_print_uint16("vlan_tci_mask", &pvlan_map->vlan_tci_mask, sizeof(pvlan_map->vlan_tci_mask));
+	cmd_data_print_uint8("int_port", &pvlan_map->int_port, sizeof(pvlan_map->int_port));
+
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_pvlan_tx_cfg(char *cmd_str, void *val, a_uint32_t size)
+{
+	fal_pvtvlan_tx_cfg_t tx_cfg;
+	sw_error_t rv;
+	char *cmd;
+    a_uint32_t tmp = 0;
+
+	aos_mem_zero(&tx_cfg, sizeof(fal_pvtvlan_tx_cfg_t));
+
+	do {
+		cmd = get_sub_cmd("tpid", "0x8100");
+		SW_RTN_ON_NULL_PARAM(cmd);
+
+		if (!strncasecmp(cmd, "quit", 4))
+		{
+			return SW_BAD_VALUE;
+		}
+		else if (!strncasecmp(cmd, "help", 4))
+		{
+			dprintf("usage: <0x8100>\n");
+			rv = SW_BAD_VALUE;
+		}
+		else
+		{
+			rv = cmd_data_check_uint16(cmd, &tmp, sizeof(a_uint32_t));
+			if (SW_OK != rv)
+				dprintf("usage: <0x8100>\n");
+			else
+				tx_cfg.tpid = tmp;
+		}
+	} while (talk_mode && (SW_OK != rv));
+
+	*(fal_pvtvlan_tx_cfg_t *)val = tx_cfg;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_pvlan_tx_cfg(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+	fal_pvtvlan_tx_cfg_t *tx_cfg = (fal_pvtvlan_tx_cfg_t *)buf;
+
+	dprintf("\n[%s] \n", param_name);
+
+	cmd_data_print_uint16("tpid", &tx_cfg->tpid, sizeof(tx_cfg->tpid));
+
+	dprintf("\n");
+}
+
 /* auto_insert_flag_1 */
