@@ -30564,7 +30564,8 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 	while (talk_mode && (SW_OK != rv));
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
 		do
 		{
 			cmd = get_sub_cmd("field_update_bitmap[1]", "0");
