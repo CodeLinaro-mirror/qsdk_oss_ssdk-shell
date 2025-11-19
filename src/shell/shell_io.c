@@ -44,6 +44,7 @@ struct attr_des_t g_attr_des[] =
 		{
 			{"port_bmp", FAL_DEST_INFO_PORT_BMP},
 			{"port_id", FAL_DEST_INFO_PORT_ID},
+			{"invalid", FAL_DEST_INFO_INVALID},
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
@@ -351,6 +352,8 @@ struct attr_des_t g_attr_des[] =
 	{
 		"athtag_version",
 		{
+			{"v0", FAL_ATHTAG_VER0},
+			{"v1", FAL_ATHTAG_VER1},
 			{"v2", FAL_ATHTAG_VER2},
 			{"v3", FAL_ATHTAG_VER3},
 			{NULL, INVALID_ARRT_VALUE}
@@ -1092,6 +1095,7 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_PVLAN_MAP, cmd_data_check_pvlan_map, cmd_data_print_pvlan_map),
 	SW_TYPE_DEF(SW_PVLAN_TX, cmd_data_check_pvlan_tx_cfg, cmd_data_print_pvlan_tx_cfg),
 	SW_TYPE_DEF(SW_FWD_TYPE, cmd_data_check_fwd_type, cmd_data_print_fwd_type),
+	SW_TYPE_DEF(SW_DEST_INFO, cmd_data_check_dest_info, cmd_data_print_dest_info),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -44501,6 +44505,16 @@ cmd_data_check_athtag_rx_cfg(char * cmd_str, void * val, a_uint32_t size)
                                0x0));
     entry.athtag_type = tmpdata & 0xffff;
 
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+        cmd_data_check_element("athtag version", "v0",
+                        "usage: v0 or v1\n",
+                        cmd_data_check_attr, ("athtag_version", cmd,
+                                &tmpdata, sizeof(tmpdata)));
+        entry.version = tmpdata & 0x3;
+    }
+
     *(fal_athtag_rx_cfg_t *) val = entry;
     return SW_OK;
 }
@@ -44514,6 +44528,12 @@ cmd_data_print_athtag_rx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
     dprintf("\n[athtag_en]:%s", (entry->athtag_en) ? "YES" : "NO");
     dprintf("  [athtag_type]:0x%x\n", entry->athtag_type);
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            cmd_data_print_attr("athtag_version", "\n[athtag_version]:",
+                                &entry->version, sizeof(entry->version));
+    }
 }
 
 sw_error_t
@@ -44537,7 +44557,7 @@ cmd_data_check_athtag_tx_cfg(char * cmd_str, void * val, a_uint32_t size)
     entry.athtag_type = tmpdata & 0xffff;
 
     cmd_data_check_element("athtag version", "v3",
-                       "usage: v2 or v3\n",
+                       "usage: v1 or v2 or v3\n",
                        cmd_data_check_attr, ("athtag_version", cmd,
                                &tmpdata, sizeof(tmpdata)));
     entry.version = tmpdata & 0x3;
@@ -47919,4 +47939,49 @@ cmd_data_print_fwd_type(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size)
 			"[fwd_type]: ", (a_uint32_t *)buf, sizeof(a_uint32_t));
 }
 
+sw_error_t
+cmd_data_check_dest_info(char *cmd_str, void *val, a_uint32_t size)
+{
+	char *cmd;
+	fal_dest_info_t entry;
+
+	aos_mem_zero(&entry, sizeof(fal_dest_info_t));
+
+	cmd_data_check_element("dest_info_type", "port_id",
+		"usage:dest_info_type:port_id/port_bmp/invalid\n",
+		cmd_data_check_attr, ("dest_info_type", cmd,
+			&(entry.dest_info_type),
+			sizeof(entry.dest_info_type)));
+
+	cmd_data_check_element("dest_info_value", "0",
+		"usage:dest_info_value:port_id\n",
+		cmd_data_check_uint32, (cmd, &(entry.dest_info_value),
+			sizeof (entry.dest_info_value)));
+
+	*(fal_dest_info_t *)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_dest_info(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+	fal_dest_info_t *entry;
+
+	dprintf("\n[%s] \n", param_name);
+
+	entry = (fal_dest_info_t *)buf;
+
+	cmd_data_print_attr("dest_info_type", " [dest_info_type]:",
+		&(entry->dest_info_type),
+		sizeof(entry->dest_info_type));
+
+	dprintf("\n");
+
+	cmd_data_print_uint32("dest_info_value",
+		&(entry->dest_info_value),
+		sizeof(entry->dest_info_value));
+
+	dprintf("\n");
+}
 /* auto_insert_flag_1 */
