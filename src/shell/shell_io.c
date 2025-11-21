@@ -455,6 +455,26 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"fwd_type",
+		{
+			{"forward", FAL_FLOW_FORWARD},
+			{"snat", FAL_FLOW_SNAT},
+			{"dnat", FAL_FLOW_DNAT},
+			{"route", FAL_FLOW_ROUTE},
+			{"bridge", FAL_FLOW_BRIDGE},
+			{"drop", FAL_FLOW_DROP},
+			{"rdtcpu", FAL_FLOW_RDT_TO_CPU},
+			{"0", FAL_FLOW_FORWARD},
+			{"1", FAL_FLOW_SNAT},
+			{"2", FAL_FLOW_DNAT},
+			{"3", FAL_FLOW_ROUTE},
+			{"4", FAL_FLOW_BRIDGE},
+			{"5", FAL_FLOW_DROP},
+			{"6", FAL_FLOW_RDT_TO_CPU},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -1071,6 +1091,7 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_PVLAN_RX, cmd_data_check_pvlan_rx_cfg, cmd_data_print_pvlan_rx_cfg),
 	SW_TYPE_DEF(SW_PVLAN_MAP, cmd_data_check_pvlan_map, cmd_data_print_pvlan_map),
 	SW_TYPE_DEF(SW_PVLAN_TX, cmd_data_check_pvlan_tx_cfg, cmd_data_print_pvlan_tx_cfg),
+	SW_TYPE_DEF(SW_FWD_TYPE, cmd_data_check_fwd_type, cmd_data_print_fwd_type),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -45632,8 +45653,8 @@ cmd_data_check_eip_lookup_mode_cfg(char *cmd_str, fal_flow_eip_lookup_mode_t *ar
 void
 cmd_data_print_eip_lookup_mode_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 {
-	return cmd_data_print_attr("[eip_lookup_mode]: ",
-			(char *)param_name, (a_uint32_t *)buf, sizeof(a_uint32_t));
+	return cmd_data_print_attr("eip_lookup_mode",
+			"[mode]: ", (a_uint32_t *)buf, sizeof(a_uint32_t));
 }
 
 sw_error_t
@@ -47883,6 +47904,19 @@ cmd_data_print_pvlan_tx_cfg(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t s
 	cmd_data_print_uint16("tpid", &tx_cfg->tpid, sizeof(tx_cfg->tpid));
 
 	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_fwd_type(char *info, fal_flow_fwd_type_t *val, a_uint32_t size)
+{
+	return cmd_data_check_attr("fwd_type", info, val, sizeof(*val));
+}
+
+void
+cmd_data_print_fwd_type(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size)
+{
+	return cmd_data_print_attr("fwd_type",
+			"[fwd_type]: ", (a_uint32_t *)buf, sizeof(a_uint32_t));
 }
 
 /* auto_insert_flag_1 */

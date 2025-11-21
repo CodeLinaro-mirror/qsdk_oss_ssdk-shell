@@ -387,3 +387,23 @@ fal_flow_eip_lookup_mode_get(a_uint32_t dev_id, fal_flow_eip_lookup_mode_t *mode
 
 	return rv;
 }
+
+sw_error_t
+fal_flow_fwd_type_set(a_uint32_t dev_id, a_uint32_t flow_index, fal_flow_fwd_type_t fwd_type)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_FLOW_FWD_TYPE_SET, dev_id, flow_index, fwd_type);
+
+	return rv;
+}
+
+sw_error_t
+fal_flow_fwd_type_get(a_uint32_t dev_id, a_uint32_t flow_index, fal_flow_fwd_type_t *fwd_type)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_FLOW_FWD_TYPE_GET, dev_id, flow_index, fwd_type);
+
+	return rv;
+}
