@@ -404,7 +404,13 @@ extern "C" {
     SW_API_DEF(SW_API_PT_ISOL_ACT_SET, fal_port_isol_action_set), \
     SW_API_DEF(SW_API_PT_ISOL_ACT_GET, fal_port_isol_action_get), \
     SW_API_DEF(SW_API_PT_ISOL_MEM_SET, fal_port_isol_member_set), \
-    SW_API_DEF(SW_API_PT_ISOL_MEM_GET, fal_port_isol_member_get),
+    SW_API_DEF(SW_API_PT_ISOL_MEM_GET, fal_port_isol_member_get), \
+    SW_API_DEF(SW_API_PVLAN_RX_CFG_SET, fal_private_vlan_rx_cfg_set), \
+    SW_API_DEF(SW_API_PVLAN_RX_CFG_GET, fal_private_vlan_rx_cfg_get), \
+    SW_API_DEF(SW_API_PVLAN_MAP_SET, fal_private_vlan_mapping_set), \
+    SW_API_DEF(SW_API_PVLAN_MAP_GET, fal_private_vlan_mapping_get), \
+    SW_API_DEF(SW_API_PVLAN_TX_CFG_SET, fal_private_vlan_tx_cfg_set), \
+    SW_API_DEF(SW_API_PVLAN_TX_CFG_GET, fal_private_vlan_tx_cfg_get),
 
 #define PORTVLAN_API_PARAM \
     SW_API_DESC(SW_API_PT_ING_MODE_GET) \
@@ -494,7 +500,13 @@ extern "C" {
     SW_API_DESC(SW_API_PT_ISOL_ACT_SET) \
     SW_API_DESC(SW_API_PT_ISOL_ACT_GET) \
     SW_API_DESC(SW_API_PT_ISOL_MEM_SET) \
-    SW_API_DESC(SW_API_PT_ISOL_MEM_GET)
+    SW_API_DESC(SW_API_PT_ISOL_MEM_GET) \
+    SW_API_DESC(SW_API_PVLAN_RX_CFG_SET) \
+    SW_API_DESC(SW_API_PVLAN_RX_CFG_GET) \
+    SW_API_DESC(SW_API_PVLAN_MAP_SET) \
+    SW_API_DESC(SW_API_PVLAN_MAP_GET) \
+    SW_API_DESC(SW_API_PVLAN_TX_CFG_SET) \
+    SW_API_DESC(SW_API_PVLAN_TX_CFG_GET)
 #else
 #define PORTVLAN_API
 #define PORTVLAN_API_PARAM
