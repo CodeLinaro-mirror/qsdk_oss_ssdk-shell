@@ -7266,7 +7266,7 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                 dprintf("usage: physical port such as 1,3\n");
                 dprintf("       nexthop with highest 8bits as 0x1\n");
                 dprintf("       vp and trunk with highest 8bits as 0x2\n");
-                return SW_BAD_VALUE;
+                rv = SW_BAD_VALUE;
             }
             else
             {
@@ -44451,18 +44451,52 @@ cmd_data_print_athtag_pri_mapping(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 sw_error_t
 cmd_data_check_athtag_port_mapping(char * cmd_str, void * val, a_uint32_t size)
 {
-    char *cmd;
+    char *cmd, *cmd_find;
     fal_athtag_port_mapping_t entry;
     a_uint32_t tmpdata = 0;
+    sw_error_t rv;
 
     memset(&entry, 0, sizeof (fal_athtag_port_mapping_t));
 
     dprintf("\n");
 
-    cmd_data_check_element("ath port", "0",
-                        "usage: input port number such as 1,2\n",
-                        cmd_data_check_portmap, (cmd, &entry.ath_port,
-                        sizeof (fal_pbmp_t)));
+    do
+        {
+            cmd = get_sub_cmd("ath port", "0");
+            SW_RTN_ON_NULL_PARAM(cmd);
+
+            if (!strncasecmp(cmd, "quit", 4))
+            {
+                 return SW_BAD_VALUE;
+            }
+            else if (!strncasecmp(cmd, "help", 4))
+            {
+                dprintf("usage: physical port such as 1,2,3. for v2 and v3 atheros header\n");
+                dprintf("       vp with highest 8bits as 0x2, for v1 atheros header\n");
+                rv = SW_BAD_VALUE;
+            }
+            else
+            {
+                cmd_find = strstr(cmd, ",");
+                if (cmd_find == NULL)
+                {
+                    rv = cmd_data_check_portid(cmd, &entry.ath_port, sizeof (fal_pbmp_t));
+                    if(entry.ath_port <= SW_MAX_NR_PORT)
+                    {
+                        entry.ath_port = 1<<(entry.ath_port);
+                    }
+                }
+                else
+                {
+                    rv = cmd_data_check_portmap(cmd, &entry.ath_port, sizeof (fal_pbmp_t));
+                }
+                if(rv != SW_OK)
+                {
+                    dprintf("usage: physical port such as 1,2,3. for v2 and v3 atheros header\n");
+                    dprintf("       vp with highest 8bits as 0x2, for v1 atheros header\n");
+                }
+        }
+    }while (talk_mode && (SW_OK != rv));
 
     cmd_data_check_element("int port", "0",
                        "usage: port or vport number\n",
@@ -44482,7 +44516,10 @@ cmd_data_print_athtag_port_mapping(a_uint8_t * param_name, a_uint32_t * buf, a_u
     entry = (fal_athtag_port_mapping_t *) buf;
 
     cmd_data_print_portmap("\n[ath_port]:", entry->ath_port, sizeof (fal_pbmp_t));
-    dprintf("\n[int_port]:%d\n", entry->int_port);
+    if (FAL_PORT_ID_TYPE(entry->int_port) == FAL_PORT_TYPE_INVALID)
+        dprintf("\n[int_port]:invalid\n");
+    else
+        dprintf("\n[int_port]:%d\n", entry->int_port);
 }
 
 sw_error_t
@@ -46111,7 +46148,7 @@ cmd_data_check_pon_pm_counter_entry(char *cmd_str, void *val, a_uint32_t size)
 			dprintf("       vp with highest 8bits as 0x2\n");
 			dprintf("       vp group with highest 8bits as 0x3\n");
 			dprintf("       Gem port with highest 8bits as 0x4\n");
-			return SW_BAD_VALUE;
+			rv = SW_BAD_VALUE;
 		}
 		else
 		{
