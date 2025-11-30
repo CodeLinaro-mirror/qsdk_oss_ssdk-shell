@@ -181,6 +181,10 @@ endif
 ifeq (TRUE, $(IN_IPMC))
   SRC_LIST += fal_ipmc.c
 endif
+
+ifeq (TRUE, $(IN_CROSSCHIP))
+  SRC_LIST += fal_crosschip.c
+endif
 #auto_insert_flag
 
 include $(PRJ_PATH)/make/components.mk

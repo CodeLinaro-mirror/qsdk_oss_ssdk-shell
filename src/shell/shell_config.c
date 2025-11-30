@@ -254,6 +254,7 @@ struct cmd_des_t gcmd_des[] =
 	    {"erpstandby", "exit", "exit standby", "",
 		SW_API_PT_ERP_STANDBY_EXIT, NULL},
 		{"loopbackport", "get", "get switch loopback port", "", SW_API_PT_SWITCH_LOOPBACK_PORT_GET, NULL},
+		{"vchbpstats", "get", "get vch backpressure stats", "vch_id", SW_API_PT_VCH_BP_STATS_GET, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },
@@ -2169,6 +2170,20 @@ struct cmd_des_t gcmd_des[] =
 				"<ucast_fwd>", SW_API_IPMC_UCAST_FWD_SET, NULL},
 			{"ucast_fwd", "get", "get unicast forward of ipmc",
 				"", SW_API_IPMC_UCAST_FWD_GET, NULL},
+			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
+		},
+	},
+#endif
+
+/* CROSSCHIP */
+#ifdef IN_CROSSCHIP
+	{
+		"crosschip", "config crosschip backpressure",
+		{
+			{"bpmode", "set", "set backpressure mode", "<mode> <0-2>", SW_API_CROSSCHIP_BP_MODE_SET, NULL},
+			{"bpmode", "get", "get backpressure mode", "<mode>", SW_API_CROSSCHIP_BP_MODE_GET, NULL},
+			{"bpen", "set", "set queue backpressure enable", "<queue_id> <enable|disable>", SW_API_CROSSCHIP_BP_EN_SET, NULL},
+			{"bpen", "get", "get queue backpressure status", "<queue_id>", SW_API_CROSSCHIP_BP_EN_GET, NULL},
 			{NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
 		},
 	},

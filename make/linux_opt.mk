@@ -193,6 +193,11 @@ endif
 ifeq (TRUE, $(IN_IPMC))
   MODULE_CFLAG += -DIN_IPMC
 endif
+
+ifeq (TRUE, $(IN_CROSSCHIP))
+  MODULE_CFLAG += -DIN_CROSSCHIP
+endif
+
 #auto_insert_flag
 
 #ifdef UK_NL_PROT
