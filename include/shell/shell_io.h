@@ -1528,6 +1528,10 @@ sw_error_t
 cmd_data_check_dest_info(char *cmd_str, void *val, a_uint32_t size);
 void
 cmd_data_print_dest_info(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_drop_state(char *info, fal_ac_drop_state_t *val, a_uint32_t size);
+void
+cmd_data_print_drop_state(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 /*qca808x_start*/
 #endif

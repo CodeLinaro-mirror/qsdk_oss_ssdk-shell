@@ -1380,6 +1380,8 @@ struct cmd_des_t gcmd_des[] =
 	    {"bp_qmap", "set", "set queue bitmap of backpressure", "<lp_qid> <queue_bitmap>", SW_API_QM_CROSSCHIP_BP_QMAP_SET, NULL},
 	    {"bp_qmap", "get", "get queue bitmap of backpressure", "<lp_qid>", SW_API_QM_CROSSCHIP_BP_QMAP_GET, NULL},
 	    {"bp_status", "get", "get queue bitmap of backpressure status", "", SW_API_QM_CROSSCHIP_BP_STATUS_GET, NULL},
+	    {"ac_drop", "set", "set ac drop", "<obj> <cfg>", SW_API_AC_DROP_STATE_SET, NULL},
+	    {"ac_drop", "get", "get ac drop", "<obj>", SW_API_AC_DROP_STATE_GET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },
