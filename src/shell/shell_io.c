@@ -459,6 +459,32 @@ struct attr_des_t g_attr_des[] =
 		}
 	},
 	{
+		"flow_type",
+		{
+			{"ipv4_5tuple", FAL_FLOW_IP4_5TUPLE_ADDR},
+			{"ipv6_5tuple", FAL_FLOW_IP6_5TUPLE_ADDR},
+			{"ipv4_3tuple", FAL_FLOW_IP4_3TUPLE_ADDR},
+			{"ipv6_3tuple", FAL_FLOW_IP6_3TUPLE_ADDR},
+			{"ipv4_6tuple", FAL_FLOW_IP4_6TUPLE_ADDR},
+			{"ipv6_6tuple", FAL_FLOW_IP6_6TUPLE_ADDR},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
+		"protocol_type",
+		{
+			{"3tuple", FAL_FLOW_3TUPLE},
+			{"tcp", FAL_FLOW_TCP},
+			{"udp", FAL_FLOW_UDP},
+			{"udp_lite", FAL_FLOW_UDP_LITE},
+			{"ipsec", FAL_FLOW_IPSEC},
+			{"natt", FAL_FLOW_NATT},
+			{"gen0", FAL_FLOW_KEY_GEN0},
+			{"gen1", FAL_FLOW_KEY_GEN1 },
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
 		"fwd_type",
 		{
 			{"forward", FAL_FLOW_FORWARD},
@@ -530,7 +556,7 @@ cmd_data_print_attr(char * attr_name, char * param_name, a_uint32_t * buf, a_uin
 	}
 	if (g_attr_des[i].attr_name == NULL)
 	{
-		dprintf("unknow");
+		dprintf("unknown");
 	}
 	for (j = 0; g_attr_des[i].sub_attr_des[j].value != INVALID_ARRT_VALUE; j++)
 	{
@@ -541,7 +567,7 @@ cmd_data_print_attr(char * attr_name, char * param_name, a_uint32_t * buf, a_uin
 		}
 	}
 	/*not find*/
-	dprintf("unknow");
+	dprintf("unknown");
 }
 /*qca808x_start*/
 void append_acl_cmd(char * cmd)
@@ -4519,7 +4545,7 @@ cmd_data_print_ruletype(char * param_name, a_uint32_t * buf,
     }
     else
     {
-        dprintf("unknow");
+        dprintf("unknown");
     }
 }
 sw_error_t
@@ -4599,7 +4625,7 @@ cmd_data_print_ip_packet_type(char * param_name, a_uint16_t * buf,
     }
     else
     {
-        dprintf("unknow");
+        dprintf("unknown");
     }
 }
 
@@ -4670,7 +4696,7 @@ cmd_data_print_fieldop(char * param_name, a_uint32_t * buf,
     }
     else
     {
-        dprintf("unknow");
+        dprintf("unknown");
     }
 }
 
@@ -6670,7 +6696,7 @@ cmd_data_print_udf_type(a_char_t * param_name, a_uint32_t * buf,
     }
     else
     {
-        dprintf("unknow");
+        dprintf("unknown");
     }
 }
 
@@ -6725,7 +6751,7 @@ cmd_data_print_udf_pkt_type(a_char_t * param_name, a_uint32_t * buf,
     }
     else
     {
-        dprintf("unknow");
+        dprintf("unknown");
     }
 }
 
@@ -12549,7 +12575,7 @@ cmd_cpu_mode(hsl_init_mode mode)
             return "cpu_1_plus";
     }
 
-    return "unknow";
+    return "unknown";
 }
 
 char*
@@ -12563,7 +12589,7 @@ cmd_access_mode(hsl_access_mode mode)
             return "header";
     }
 
-    return "unknow";
+    return "unknown";
 }
 
 static void
@@ -24438,13 +24464,24 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
     entry = (fal_flow_entry_t *) buf;
     flow_qos = &(entry->flow_qos);
 
-    dprintf("\n[entry_id]:0x%x [entry_type]:0x%x [host_addr_type]:0x%x [host_addr_index]:0x%x ",
-		    entry->entry_id, entry->entry_type,
+    dprintf("\n[entry_id]:0x%x", entry->entry_id);
+
+    cmd_data_print_attr("flow_type", " [entry_type]:",
+		    (a_uint32_t *)(&entry->entry_type), sizeof(entry->entry_type));
+
+    dprintf(" [host_addr_type]:0x%x [host_addr_index]:0x%x ",
 		    entry->host_addr_type, entry->host_addr_index);
-    dprintf("\n[protocol]:0x%x [agetime]:0x%x [src_intf_valid]:0x%x \
-		    [src_intf_index]:0x%x [fwd_type]:0x%x ",
-		    entry->protocol, entry->age, entry->src_intf_valid,
-		    entry->src_intf_index, entry->fwd_type);
+
+    cmd_data_print_attr("protocol_type", " [protocol]:",
+		    (a_uint32_t *)(&entry->protocol), sizeof(entry->protocol));
+
+    dprintf("\n[agetime]:0x%x [src_intf_valid]:0x%x [src_intf_index]:0x%x",
+		    entry->age, entry->src_intf_valid,
+		    entry->src_intf_index);
+
+    cmd_data_print_attr("fwd_type", " [fwd_type]:",
+		    (a_uint32_t *)(&entry->fwd_type), sizeof(entry->fwd_type));
+
     dprintf("\n[snat_nexthop]:0x%x [snat_srcport]:0x%x [dnat_nexthop]:0x%x \
 		    [dnat_dstport]:0x%x [route_nexthop]:0x%x ",
 		    entry->snat_nexthop, entry->snat_srcport, entry->dnat_nexthop,
@@ -24473,7 +24510,7 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 			(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
-		    cmd_data_print_confirm(" [bridge_nexthop_valid]:",
+		    cmd_data_print_confirm("\n[bridge_nexthop_valid]:",
 				    entry->bridge_nexthop_valid, sizeof(a_bool_t));
 		    dprintf(" [bridge_nexthop]:0x%x", entry->bridge_nexthop);
 
@@ -24487,7 +24524,7 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
 
-	    dprintf(" [route_nat_type]:0x%x", entry->nat_action);
+	    dprintf("\n[route_nat_type]:0x%x", entry->nat_action);
 	    cmd_data_print_confirm(" [route_en]:",
 			    entry->route_en, sizeof(a_bool_t));
 	    cmd_data_print_confirm(" [udf0_en]:",
@@ -42623,7 +42660,7 @@ cmd_data_print_enqueue_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t siz
 			}
 			break;
 		default:
-			dprintf("unknow enqueue type:%d", entry->rule_entry.enqueue_type);
+			dprintf("unknown enqueue type:%d", entry->rule_entry.enqueue_type);
 			break;
 	}
 
