@@ -504,6 +504,22 @@ struct attr_des_t g_attr_des[] =
 			{NULL, INVALID_ARRT_VALUE}
 		}
 	},
+	{
+		"drop_state",
+		{
+			{"pass", 0},
+			{"1/16_drop", 1},
+			{"3/16_drop", 2},
+			{"5/16_drop", 3},
+			{"7/16_drop", 4},
+			{"9/16_drop", 5},
+			{"11/16_drop", 6},
+			{"13/16_drop", 7},
+			{"15/16_drop", 8},
+			{"drop", 9},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
 	{NULL, {{NULL, INVALID_ARRT_VALUE}}}
 };
 
@@ -1122,6 +1138,7 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_PVLAN_TX, cmd_data_check_pvlan_tx_cfg, cmd_data_print_pvlan_tx_cfg),
 	SW_TYPE_DEF(SW_FWD_TYPE, cmd_data_check_fwd_type, cmd_data_print_fwd_type),
 	SW_TYPE_DEF(SW_DEST_INFO, cmd_data_check_dest_info, cmd_data_print_dest_info),
+	SW_TYPE_DEF(SW_AC_DROP_STATE, cmd_data_check_drop_state, cmd_data_print_drop_state),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -48056,6 +48073,86 @@ cmd_data_print_dest_info(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size
 		&(entry->dest_info_value),
 		sizeof(entry->dest_info_value));
 
+	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_drop_state(char *info, fal_ac_drop_state_t *val, a_uint32_t size)
+{
+	fal_ac_drop_state_t entry;
+	a_uint32_t tmp = 0;
+	char *cmd;
+
+	aos_mem_zero(&entry, sizeof(entry));
+
+	cmd_data_check_element("green_drop", "pass", "usage: drop state\n",
+			       cmd_data_check_attr, ("drop_state", cmd,
+				       		     &tmp, sizeof(tmp)));
+	entry.green_drop = tmp;
+
+	cmd_data_check_element("yel_drop", "pass", "usage: drop state\n",
+			       cmd_data_check_attr, ("drop_state", cmd,
+				       		     &tmp, sizeof(tmp)));
+	entry.yel_drop = tmp;
+
+	cmd_data_check_element("red_drop", "pass", "usage: drop state\n",
+			       cmd_data_check_attr, ("drop_state", cmd,
+				       		     &tmp, sizeof(tmp)));
+	entry.red_drop = tmp;
+
+	cmd_data_check_element("green_resume_thrd", "0",
+			"usage: green resume threshold\n",
+			cmd_data_check_uint16, (cmd, &tmp, sizeof(tmp)));
+	entry.green_resume_thrd = tmp;
+
+	cmd_data_check_element("yel_resume_thrd", "0",
+			"usage: yellow resume threshold\n",
+			cmd_data_check_uint16, (cmd, &tmp, sizeof(tmp)));
+	entry.yel_resume_thrd = tmp;
+
+	cmd_data_check_element("red_resume_thrd", "0",
+			"usage: red resume threshold\n",
+			cmd_data_check_uint16, (cmd, &tmp, sizeof(tmp)));
+	entry.red_resume_thrd = tmp;
+
+	*(fal_ac_drop_state_t*)val = entry;
+
+	return SW_OK;
+}
+
+void
+cmd_data_print_drop_state(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size)
+{
+	fal_ac_drop_state_t *entry;
+	a_uint32_t tmp = 0;
+
+	dprintf("\n[%s] \n", info);
+
+	entry = (fal_ac_drop_state_t *)buf;
+
+	tmp = entry->green_drop;
+	cmd_data_print_attr("drop_state", "[green_drop]:", &tmp, sizeof(tmp));
+
+	tmp = entry->yel_drop;
+	cmd_data_print_attr("drop_state", " [yel_drop]:", &tmp, sizeof(tmp));
+
+	tmp = entry->red_drop;
+	cmd_data_print_attr("drop_state", " [red_drop]:", &tmp, sizeof(tmp));
+
+	dprintf(" ");
+	cmd_data_print_uint16("green_resume_thrd",
+			      &(entry->green_resume_thrd),
+			      sizeof(entry->green_resume_thrd));
+
+	dprintf(" ");
+	cmd_data_print_uint16("yel_resume_thrd",
+			      &(entry->yel_resume_thrd),
+			      sizeof(entry->yel_resume_thrd));
+
+	dprintf(" ");
+	cmd_data_print_uint16("red_resume_thrd",
+			      &(entry->red_resume_thrd),
+			      sizeof(entry->red_resume_thrd));
 	dprintf("\n");
 }
 /* auto_insert_flag_1 */

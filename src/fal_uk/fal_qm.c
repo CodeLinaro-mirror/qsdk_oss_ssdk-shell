@@ -697,3 +697,21 @@ fal_qm_crosschip_bp_status_get(a_uint32_t dev_id,
     rv = sw_uk_exec(SW_API_QM_CROSSCHIP_BP_STATUS_GET, dev_id, queue_bmp);
     return rv;
 }
+
+sw_error_t fal_qm_ac_drop_state_set(a_uint32_t dev_id, fal_ac_obj_t *obj,
+				    fal_ac_drop_state_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_AC_DROP_STATE_SET, dev_id, obj, cfg);
+    return rv;
+}
+
+sw_error_t fal_qm_ac_drop_state_get(a_uint32_t dev_id, fal_ac_obj_t *obj,
+				    fal_ac_drop_state_t *cfg)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_AC_DROP_STATE_GET, dev_id, obj, cfg);
+    return rv;
+}
