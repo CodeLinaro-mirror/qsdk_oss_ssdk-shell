@@ -1382,6 +1382,8 @@ struct cmd_des_t gcmd_des[] =
 	    {"bp_status", "get", "get queue bitmap of backpressure status", "", SW_API_QM_CROSSCHIP_BP_STATUS_GET, NULL},
 	    {"ac_drop", "set", "set ac drop", "<obj> <cfg>", SW_API_AC_DROP_STATE_SET, NULL},
 	    {"ac_drop", "get", "get ac drop", "<obj>", SW_API_AC_DROP_STATE_GET, NULL},
+	    {"mcast_enqueue_ctrl", "set", "set mcast enqueue ctrl", "<port_id> <ucast_enqueue_en>", SW_API_QM_MCAST_ENQUEUE_CTRL_SET, NULL},
+	    {"mcast_enqueue_ctrl", "get", "get mcast enqueue ctrl", "<port_id>", SW_API_QM_MCAST_ENQUEUE_CTRL_GET, NULL},
 	    {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

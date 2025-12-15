@@ -1806,7 +1806,9 @@ extern "C" {
     SW_API_DEF(SW_API_QM_CROSSCHIP_BP_QMAP_GET, fal_qm_crosschip_bp_qmap_get), \
     SW_API_DEF(SW_API_QM_CROSSCHIP_BP_STATUS_GET, fal_qm_crosschip_bp_status_get), \
     SW_API_DEF(SW_API_AC_DROP_STATE_SET, fal_qm_ac_drop_state_set), \
-    SW_API_DEF(SW_API_AC_DROP_STATE_GET, fal_qm_ac_drop_state_get),
+    SW_API_DEF(SW_API_AC_DROP_STATE_GET, fal_qm_ac_drop_state_get), \
+    SW_API_DEF(SW_API_QM_MCAST_ENQUEUE_CTRL_SET, fal_qm_mcast_enqueue_ctrl_set), \
+    SW_API_DEF(SW_API_QM_MCAST_ENQUEUE_CTRL_GET, fal_qm_mcast_enqueue_ctrl_get),
 #define QM_API_PARAM \
     SW_API_DESC(SW_API_UCAST_QUEUE_BASE_PROFILE_SET) \
     SW_API_DESC(SW_API_UCAST_QUEUE_BASE_PROFILE_GET) \
@@ -1874,7 +1876,9 @@ extern "C" {
     SW_API_DESC(SW_API_QM_CROSSCHIP_BP_QMAP_GET) \
     SW_API_DESC(SW_API_QM_CROSSCHIP_BP_STATUS_GET) \
     SW_API_DESC(SW_API_AC_DROP_STATE_SET) \
-    SW_API_DESC(SW_API_AC_DROP_STATE_GET)
+    SW_API_DESC(SW_API_AC_DROP_STATE_GET) \
+    SW_API_DESC(SW_API_QM_MCAST_ENQUEUE_CTRL_SET) \
+    SW_API_DESC(SW_API_QM_MCAST_ENQUEUE_CTRL_GET)
 #else
 #define QM_API
 #define QM_API_PARAM

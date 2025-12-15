@@ -715,3 +715,23 @@ sw_error_t fal_qm_ac_drop_state_get(a_uint32_t dev_id, fal_ac_obj_t *obj,
     rv = sw_uk_exec(SW_API_AC_DROP_STATE_GET, dev_id, obj, cfg);
     return rv;
 }
+
+sw_error_t
+fal_qm_mcast_enqueue_ctrl_set(a_uint32_t dev_id, fal_port_t port_id,
+				a_bool_t ucast_enqueue_en)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_MCAST_ENQUEUE_CTRL_SET, dev_id, port_id, ucast_enqueue_en);
+    return rv;
+}
+
+sw_error_t
+fal_qm_mcast_enqueue_ctrl_get(a_uint32_t dev_id, fal_port_t port_id,
+				a_bool_t *ucast_enqueue_en)
+{
+    sw_error_t rv;
+
+    rv = sw_uk_exec(SW_API_QM_MCAST_ENQUEUE_CTRL_GET, dev_id, port_id, ucast_enqueue_en);
+    return rv;
+}

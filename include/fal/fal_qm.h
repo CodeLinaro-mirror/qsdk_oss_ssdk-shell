@@ -554,6 +554,11 @@ sw_error_t fal_qm_ac_drop_state_set(a_uint32_t dev_id, fal_ac_obj_t *obj,
 				    fal_ac_drop_state_t *cfg);
 sw_error_t fal_qm_ac_drop_state_get(a_uint32_t dev_id, fal_ac_obj_t *obj,
 				    fal_ac_drop_state_t *cfg);
+sw_error_t
+fal_qm_mcast_enqueue_ctrl_set(a_uint32_t dev_id, fal_port_t port_id, a_bool_t ucast_enqueue_en);
+
+sw_error_t
+fal_qm_mcast_enqueue_ctrl_get(a_uint32_t dev_id, fal_port_t port_id, a_bool_t *ucast_enqueue_en);
 #ifdef __cplusplus
 }
 #endif                          /* __cplusplus */
