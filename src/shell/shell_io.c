@@ -3702,7 +3702,7 @@ cmd_data_check_portmap(char *cmdstr, fal_pbmp_t * val, a_uint32_t size)
     tmp = (void *) strtok_r(cmdstr, ",", &str_save);
     while (tmp)
     {
-        SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &port));
+        SW_RTN_ON_ERROR(cmd_sscanf(tmp, NULL, &port));
         if (SW_MAX_NR_PORT <= port) {
             return cmd_data_check_uint32(tmp_str, val, sizeof(a_uint32_t));
         }
