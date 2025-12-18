@@ -235,6 +235,15 @@ struct attr_des_t g_attr_des[] =
 		}
 	},
 	{
+		"policer_length_mode",
+		{
+			{"original_len", FAL_FRAME_LEN_ORIGINAL},
+			{"decap_len", FAL_FRAME_LEN_DECAP},
+			{"output_len", FAL_FRAME_LEN_OUTPUT},
+			{NULL, INVALID_ARRT_VALUE}
+		}
+	},
+	{
 		"shaper_meter_type",
 		{
 			{"rfc", FAL_SHAPER_METER_RFC},
@@ -32908,6 +32917,14 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
         }
         while (talk_mode && (SW_OK != rv));
     }
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+        cmd_data_check_element("length_mode", "original_len",
+                        "usage:length_mode:original_len/decap_len/output_len, etc\n",
+                        cmd_data_check_attr, ("policer_length_mode", cmd,
+                        &(entry.length_mode), sizeof(entry.length_mode)));
+    }
 
     *(fal_policer_config_t *)val = entry;
     return SW_OK;
@@ -33840,6 +33857,12 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
         {
             dprintf("\n[grp_coupling_enable]:no  ");
         }
+    }
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+        cmd_data_print_attr("policer_length_mode", "\n[length_mode]:",
+    	    &(entry->length_mode), sizeof(entry->length_mode));
     }
     return;
 }
