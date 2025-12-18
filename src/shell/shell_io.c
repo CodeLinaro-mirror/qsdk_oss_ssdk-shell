@@ -1139,6 +1139,7 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_FWD_TYPE, cmd_data_check_fwd_type, cmd_data_print_fwd_type),
 	SW_TYPE_DEF(SW_DEST_INFO, cmd_data_check_dest_info, cmd_data_print_dest_info),
 	SW_TYPE_DEF(SW_AC_DROP_STATE, cmd_data_check_drop_state, cmd_data_print_drop_state),
+	SW_TYPE_DEF(SW_PT_PPS_CTRL, cmd_data_check_pt_pps_ctrl, cmd_data_print_pt_pps_ctrl),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -48154,5 +48155,46 @@ cmd_data_print_drop_state(a_uint8_t *info, a_ulong_t *buf, a_uint32_t size)
 			      &(entry->red_resume_thrd),
 			      sizeof(entry->red_resume_thrd));
 	dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_pt_pps_ctrl(char *cmd_str, void *val, a_uint32_t size)
+{
+    fal_port_pps_ctrl_t entry;
+    a_uint32_t tmp = 0;
+    char *cmd;
+
+    aos_mem_zero(&entry, sizeof(fal_port_pps_ctrl_t));
+
+    cmd_data_check_element("pps_out_sel", "0",
+			   "usage: 0: port0... 5: port5\n",
+			   cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
+
+    entry.pps_out_sel = tmp;
+
+    cmd_data_check_element("pps_in_sel", "0",
+			   "usage: 0: external input pps 1: port output pps\n",
+			   cmd_data_check_uint32, (cmd, &tmp, sizeof(a_uint32_t)));
+
+    entry.pps_in_sel = tmp;
+
+    *(fal_port_pps_ctrl_t *)val = entry;
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_pt_pps_ctrl(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size)
+{
+    fal_port_pps_ctrl_t *entry;
+
+    dprintf("\n[%s] \n", param_name);
+
+    entry = (fal_port_pps_ctrl_t *)buf;
+
+    dprintf("[pps_out_sel]:%d", entry->pps_out_sel);
+    dprintf(" [pps_in_sel]:%d", entry->pps_in_sel);
+
+    dprintf("\n");
 }
 /* auto_insert_flag_1 */

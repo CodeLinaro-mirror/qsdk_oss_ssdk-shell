@@ -1208,3 +1208,22 @@ fal_switch_loopback_port_get(a_uint32_t dev_id, fal_port_t *port_id)
 	return rv;
 }
 
+sw_error_t
+fal_port_pps_ctrl_set(a_uint32_t dev_id, fal_port_pps_ctrl_t *pps_ctrl)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_PPS_CTRL_SET, dev_id, pps_ctrl);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_pps_ctrl_get(a_uint32_t dev_id, fal_port_pps_ctrl_t *pps_ctrl)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_PPS_CTRL_GET, dev_id, pps_ctrl);
+
+	return rv;
+}

@@ -253,8 +253,10 @@ struct cmd_des_t gcmd_des[] =
 		SW_API_PT_ERP_STANDBY_ENTER, NULL},
 	    {"erpstandby", "exit", "exit standby", "",
 		SW_API_PT_ERP_STANDBY_EXIT, NULL},
-		{"loopbackport", "get", "get switch loopback port", "", SW_API_PT_SWITCH_LOOPBACK_PORT_GET, NULL},
-		{"vchbpstats", "get", "get vch backpressure stats", "vch_id", SW_API_PT_VCH_BP_STATS_GET, NULL},
+	    {"loopbackport", "get", "get switch loopback port", "", SW_API_PT_SWITCH_LOOPBACK_PORT_GET, NULL},
+	    {"vchbpstats", "get", "get vch backpressure stats", "vch_id", SW_API_PT_VCH_BP_STATS_GET, NULL},
+	    {"ppsctrl", "set", "set port pps ctrl", "<pps_ctrl>", SW_API_PT_PPS_CTRL_SET, NULL},
+	    {"ppsctrl", "get", "get port pps ctrl", "", SW_API_PT_PPS_CTRL_GET, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },

@@ -142,7 +142,9 @@ extern "C" {
     SW_API_DEF(SW_API_PT_ERP_STANDBY_ENTER, fal_erp_standby_enter), \
     SW_API_DEF(SW_API_PT_ERP_STANDBY_EXIT, fal_erp_standby_exit), \
     SW_API_DEF(SW_API_PT_SWITCH_LOOPBACK_PORT_GET, fal_switch_loopback_port_get), \
-    SW_API_DEF(SW_API_PT_VCH_BP_STATS_GET, fal_vch_bp_stats_get),
+    SW_API_DEF(SW_API_PT_VCH_BP_STATS_GET, fal_vch_bp_stats_get), \
+    SW_API_DEF(SW_API_PT_PPS_CTRL_SET, fal_port_pps_ctrl_set), \
+    SW_API_DEF(SW_API_PT_PPS_CTRL_GET, fal_port_pps_ctrl_get),
 /*qca808x_start*/\
 /*end of PORTCONTROL_API*/
 #define PORTCONTROL_API_PARAM \
@@ -273,7 +275,9 @@ extern "C" {
     SW_API_DESC(SW_API_PT_ERP_STANDBY_ENTER) \
     SW_API_DESC(SW_API_PT_ERP_STANDBY_EXIT) \
     SW_API_DESC(SW_API_PT_SWITCH_LOOPBACK_PORT_GET) \
-    SW_API_DESC(SW_API_PT_VCH_BP_STATS_GET)
+    SW_API_DESC(SW_API_PT_VCH_BP_STATS_GET) \
+    SW_API_DESC(SW_API_PT_PPS_CTRL_SET) \
+    SW_API_DESC(SW_API_PT_PPS_CTRL_GET)
 /*qca808x_start*/\
 /*end of PORTCONTROL_API_PARAM*/
 /*qca808x_end*/
