@@ -489,6 +489,12 @@ enum
 		FAL_ERP_LOW_POWER = 1, /* erp low power mode */
 	} fal_port_erp_power_mode_t;
 
+	typedef struct {
+		a_uint32_t pps_out_sel; /* 0: port0... 5: port5 */
+		a_uint32_t pps_in_sel;  /* 0: input pps 1: output pps */
+	} fal_port_pps_ctrl_t;
+
+
 	sw_error_t
 	fal_port_max_frame_size_set(a_uint32_t dev_id, fal_port_t port_id,
 			a_uint32_t max_frame);
@@ -927,6 +933,12 @@ fal_erp_standby_exit (a_uint32_t dev_id);
 
 sw_error_t
 fal_switch_loopback_port_get(a_uint32_t dev_id, fal_port_t *port_id);
+
+sw_error_t
+fal_port_pps_ctrl_set(a_uint32_t dev_id, fal_port_pps_ctrl_t *pps_ctrl);
+
+sw_error_t
+fal_port_pps_ctrl_get(a_uint32_t dev_id, fal_port_pps_ctrl_t *pps_ctrl);
 
 /*qca808x_start*/
 #ifdef __cplusplus
