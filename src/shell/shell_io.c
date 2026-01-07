@@ -22837,7 +22837,11 @@ cmd_data_print_queue_cnt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
     dprintf("\n[yellow_force_drop_bytes]:0x%llx ", entry->drop_bytes[4]);
     dprintf("\n[red_force_drop_packets]:0x%x ", entry->drop_packets[5]);
     dprintf("\n[red_force_drop_bytes]:0x%llx ", entry->drop_bytes[5]);
-
+    if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        dprintf("\n[ddrq_packets]:0x%x ", entry->ddrq_packets);
+        dprintf("\n[ddrq_bytes]:0x%llx ", entry->ddrq_bytes);
+    }
 }
 
 void
