@@ -1149,6 +1149,7 @@ static sw_data_type_t sw_data_type[] =
 	SW_TYPE_DEF(SW_DEST_INFO, cmd_data_check_dest_info, cmd_data_print_dest_info),
 	SW_TYPE_DEF(SW_AC_DROP_STATE, cmd_data_check_drop_state, cmd_data_print_drop_state),
 	SW_TYPE_DEF(SW_PT_PPS_CTRL, cmd_data_check_pt_pps_ctrl, cmd_data_print_pt_pps_ctrl),
+	SW_TYPE_DEF(SW_FLOW_APP, cmd_data_check_flow_app, cmd_data_print_flow_app),
 /* auto_insert_flag */
 /*qca808x_start*/
 };
@@ -48219,5 +48220,70 @@ cmd_data_print_pt_pps_ctrl(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t si
     dprintf(" [pps_in_sel]:%d", entry->pps_in_sel);
 
     dprintf("\n");
+}
+
+sw_error_t
+cmd_data_check_flow_app(char * cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    fal_flow_app_entry_t entry;
+    a_uint32_t tmpdata = 0;
+
+    memset(&entry, 0, sizeof (fal_flow_app_entry_t));
+
+    dprintf("\n");
+
+    cmd_data_check_element("ip ver", "ipv4",
+                       "usage: ipv4, ipv6, ipv4_and_ipv6\n",
+                       cmd_data_check_attr, ("ip_ver", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.ip_ver= tmpdata & 0x3;
+
+    cmd_data_check_element("udp type", "udp",
+                       "usage: udp, udp-lite, udp_and_udp-lite\n",
+                       cmd_data_check_attr, ("udp_type", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.udp_type= tmpdata & 0x3;
+
+    cmd_data_check_element("l4 port type", "dst",
+                       "usage: dst, src, dst_and_src\n",
+                       cmd_data_check_attr, ("l4_port_type", cmd,
+                               &tmpdata, sizeof(tmpdata)));
+    entry.l4_port_type= tmpdata & 0x3;
+
+    cmd_data_check_element("l4 port", "0",
+                       "usage: the format is 0x0-0xffff or 0-65535\n",
+                       cmd_data_check_integer, (cmd, &tmpdata,
+                               0xffff, 0x0));
+    entry.l4_port = tmpdata & 0xffff;
+
+    *(fal_flow_app_entry_t *) val = entry;
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_flow_app(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_flow_app_entry_t *entry;
+    a_uint32_t tmpdata;
+
+    entry = (fal_flow_app_entry_t *) buf;
+
+    tmpdata = entry->ip_ver;
+    cmd_data_print_attr("ip_ver", "\n[ip_ver]:",
+                    &tmpdata, sizeof(tmpdata));
+
+    tmpdata = entry->udp_type;
+    cmd_data_print_attr("udp_type", "\n[udp_type]:",
+                    &tmpdata, sizeof(tmpdata));
+
+    tmpdata = entry->l4_port_type;
+    cmd_data_print_attr("l4_port_type", "\n[l4_port_type]:",
+                    &tmpdata, sizeof(tmpdata));
+
+    dprintf("\n[l4_port]:0x%x\n", entry->l4_port);
+
+    return;
 }
 /* auto_insert_flag_1 */
