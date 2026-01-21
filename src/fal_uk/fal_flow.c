@@ -407,3 +407,30 @@ fal_flow_fwd_type_get(a_uint32_t dev_id, a_uint32_t flow_index, fal_flow_fwd_typ
 
 	return rv;
 }
+
+sw_error_t fal_flow_app_entry_add(a_uint32_t dev_id, fal_flow_app_entry_t *entry)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_FLOW_APP_ADD, dev_id, entry);
+
+	return rv;
+}
+
+sw_error_t fal_flow_app_entry_get(a_uint32_t dev_id, fal_flow_app_entry_t *entry)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_FLOW_APP_GET, dev_id, entry);
+
+	return rv;
+}
+
+sw_error_t fal_flow_app_entry_del(a_uint32_t dev_id, fal_flow_app_entry_t *entry)
+{
+	sw_error_t rv = SW_OK;
+
+	rv = sw_uk_exec(SW_API_FLOW_APP_DEL, dev_id, entry);
+
+	return rv;
+}

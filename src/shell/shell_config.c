@@ -1175,6 +1175,9 @@ struct cmd_des_t gcmd_des[] =
             {"eip_lookup_mode", "set", "set flow EIP lookup mode", "<mode>", SW_API_FLOW_EIP_LOOKUP_MODE_SET, NULL},
             {"fwd_type", "get", "get flow forward type", "<flow_index>", SW_API_FLOW_FWD_TYPE_GET, NULL},
             {"fwd_type", "set", "set flow forward type", "<flow_index> <type>", SW_API_FLOW_FWD_TYPE_SET, NULL},
+            {"app_entry", "add", "add flow app entry", "<entry>", SW_API_FLOW_APP_ADD, NULL},
+            {"app_entry", "get", "get flow app entry", "", SW_API_FLOW_APP_GET, NULL},
+            {"app_entry", "del", "delete flow app entry", "", SW_API_FLOW_APP_DEL, NULL},
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL}/*end of desc*/
         },
     },

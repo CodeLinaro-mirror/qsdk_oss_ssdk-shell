@@ -1536,6 +1536,10 @@ sw_error_t
 cmd_data_check_pt_pps_ctrl(char *cmd_str, void *val, a_uint32_t size);
 void
 cmd_data_print_pt_pps_ctrl(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
+sw_error_t
+cmd_data_check_flow_app(char *cmd_str, void *val, a_uint32_t size);
+void
+cmd_data_print_flow_app(a_uint8_t *param_name, a_uint32_t *buf, a_uint32_t size);
 /* auto_insert_flag */
 /*qca808x_start*/
 #endif
