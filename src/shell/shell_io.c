@@ -22351,6 +22351,7 @@ cmd_data_print_port_scheduler_resource(a_uint8_t * param_name, a_uint32_t * buf,
 			entry->l0edrr_start, entry->l0edrr_num, entry->l1sp_start, entry->l1sp_num);
     dprintf("\n[l1cdrr_start]:0x%x [l1cdrr_num]:0x%x [l1edrr_start]:0x%x [l1edrr_num]:0x%x ",
 			entry->l1cdrr_start, entry->l1cdrr_num, entry->l1edrr_start, entry->l1edrr_num);
+    dprintf("\n[max_pri]:0x%x", entry->max_pri);
 }
 
 sw_error_t
