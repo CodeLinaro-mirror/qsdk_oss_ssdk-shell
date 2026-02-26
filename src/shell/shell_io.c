@@ -2110,6 +2110,8 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
 	  *arg_val = PORT_XGPON;
     else if (!strncasecmp(cmd_str, "xgspon", 13))
 	  *arg_val = PORT_XGSPON;
+    else if (!strncasecmp(cmd_str, "internal", 13))
+	  *arg_val = PORT_INTERNAL;
     else if (!strncasecmp(cmd_str, "auto", 5))
 	  *arg_val = PORT_INTERFACE_MODE_AUTO;
     else if (!strncasecmp(cmd_str, "interfacemode_max", 20))
@@ -2178,6 +2180,10 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     else if(*(a_uint32_t *) buf == PORT_XGSPON)
     {
 	    dprintf("xgspon");
+    }
+    else if(*(a_uint32_t *) buf == PORT_INTERNAL)
+    {
+	    dprintf("internal");
     }
     else if(*(a_uint32_t *) buf == PORT_INTERFACE_MODE_AUTO)
     {

@@ -268,6 +268,8 @@ typedef enum {
 				/**<PORT_UQXGMII mode*/
 		PORT_25GBASE_R = PHY_INTERFACE_MODE_25GBASER,
 				/**<PORT_25GBASE_R mode*/
+		PORT_INTERNAL = PHY_INTERFACE_MODE_INTERNAL,
+				/**<PORT_INTERNAL mode*/
 		PORT_GPON = 0xFB,
 				/**<GPON mode*/
 		PORT_XGPON,
