@@ -1,15 +1,7 @@
 /*
  * Copyright (c) 2014, 2017, The Linux Foundation. All rights reserved.
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all copies.
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
- * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
+ * SPDX-License-Identifier: ISC
  */
 
 #include <stdio.h>
@@ -389,7 +381,7 @@ search_cmd_sub(int cmd_id, int *pmatch_sub_id, char *sub_name, int is_print)
                 continue;
 
             /*partly matched */
-            if (*pmatch_sub_id == GCMD_DESC_NO_MATCH || (GCMD_SUB_NAME(cmd_id, cmd_sub_no-1) &&
+            if (*pmatch_sub_id == GCMD_DESC_NO_MATCH || (cmd_sub_no > 0 && GCMD_SUB_NAME(cmd_id, cmd_sub_no-1) &&
                     strcasecmp(GCMD_SUB_NAME(cmd_id, cmd_sub_no), GCMD_SUB_NAME(cmd_id, cmd_sub_no-1))))
             {
                 printc(is_print, "%-10s\t", GCMD_SUB_NAME(cmd_id, cmd_sub_no));
@@ -436,7 +428,7 @@ search_cmd_action(int cmd_id, int *pmatch_act_id, char *sub_name, char *action, 
         else if (!strncasecmp(action, GCMD_SUB_ACT(cmd_id, cmd_act_no), strlen(action)))
         {
             /*partly matched */
-            if (*pmatch_act_id == GCMD_DESC_NO_MATCH ||( GCMD_SUB_ACT(cmd_id, cmd_act_no-1) &&
+            if (*pmatch_act_id == GCMD_DESC_NO_MATCH ||( cmd_act_no > 0 && GCMD_SUB_ACT(cmd_id, cmd_act_no-1) &&
                     strcasecmp(GCMD_SUB_ACT(cmd_id, cmd_act_no), GCMD_SUB_ACT(cmd_id, cmd_act_no-1))))
             {
                 printc(is_print, "%-10s\t%s\n", GCMD_SUB_ACT(cmd_id, cmd_act_no), GCMD_SUB_MEMO(cmd_id, cmd_act_no));
@@ -456,11 +448,14 @@ handle_help(void)
     int pmatch_id = GCMD_DESC_NO_MATCH, pmatch_sub_id = GCMD_DESC_NO_MATCH, pmatch_act_id = GCMD_DESC_NO_MATCH;
     int cmd_nr = 0, pmatch_nr = 0, pmatch_sub_nr = 0;
     char *tmp_str[3], *cmd_strp_cp = strdup(cmd_strp), *str_save;
+    size_t cmd_strp_len;
 
     if (!cmd_strp_cp)
         return;
 
-    cmd_strp_cp[strlen(cmd_strp) - 1] = '\0';
+    cmd_strp_len = strlen(cmd_strp);
+    if (cmd_strp_len > 0)
+        cmd_strp_cp[cmd_strp_len - 1] = '\0';
 
     /* split command string into temp array */
     tmp_str[cmd_nr] = (void *) strtok_r(cmd_strp_cp, " ", &str_save);

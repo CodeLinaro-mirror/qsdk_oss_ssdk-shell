@@ -595,12 +595,31 @@ cmd_data_print_attr(char * attr_name, char * param_name, a_uint32_t * buf, a_uin
 	dprintf("unknown");
 }
 /*qca808x_start*/
-void append_acl_cmd(char * cmd)
+void append_acl_cmd(const char * cmd)
 {
-	if(500 > (g_aclcmd_len+1)) {
-		g_aclcmd_len += snprintf(g_aclcmd+g_aclcmd_len, 500-g_aclcmd_len, "%s", cmd);
-		g_aclcmd_len += snprintf(g_aclcmd+g_aclcmd_len, 500-g_aclcmd_len, "%s", " ");
-	}
+	size_t remain;
+	int n;
+	size_t max_len = sizeof(g_aclcmd);
+
+	if (!cmd)
+		return;
+
+	if (g_aclcmd_len >= max_len)
+		return;
+
+	remain = max_len - g_aclcmd_len;
+
+	if (remain <= 1)
+		return;
+
+	n = snprintf(g_aclcmd + g_aclcmd_len, remain, "%s ", cmd);
+	if (n < 0)
+		return;
+
+	if ((size_t)n >= remain)
+		g_aclcmd_len = max_len - 1;
+	else
+		g_aclcmd_len += (size_t)n;
 }
 
 int
@@ -2874,7 +2893,9 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 				if (SW_MAX_NR_PORT <= port) {
 					return SW_BAD_VALUE;
 				}
-
+				if (i >= SW_MAX_NR_PORT) {
+					return SW_BAD_VALUE;
+				}
 				entry.v_port_info[i].port_id = port;
 				entry.v_port_info[i].is_wan_port = A_FALSE;
 				entry.v_port_info[i].valid = A_TRUE;
@@ -2908,6 +2929,9 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 			while (tmp) {
 				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &vid));
 				if (0xfff <= vid) {
+					return SW_BAD_VALUE;
+				}
+				if (j >= SW_MAX_NR_PORT) {
 					return SW_BAD_VALUE;
 				}
 
@@ -2963,6 +2987,9 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 				if (SW_MAX_NR_PORT <= port) {
 					return SW_BAD_VALUE;
 				}
+				if (i >= SW_MAX_NR_PORT) {
+					return SW_BAD_VALUE;
+				}
 
 				entry.v_port_info[i].port_id = port;
 				entry.v_port_info[i].is_wan_port = A_TRUE;
@@ -2996,6 +3023,9 @@ cmd_data_check_lan_wan_cfg(char *cmdstr, void *val, a_uint32_t size)
 			while (tmp) {
 				SW_RTN_ON_ERROR(cmd_sscanf(tmp, "%d", &vid));
 				if (0xfff <= vid) {
+					return SW_BAD_VALUE;
+				}
+				if (j >= SW_MAX_NR_PORT) {
 					return SW_BAD_VALUE;
 				}
 
@@ -5005,7 +5035,7 @@ sw_error_t
 cmd_data_check_ip6addr(char *cmdstr, void * val, a_uint32_t size)
 {
     char *tmp = NULL, *str_save;
-    a_uint32_t j;
+    a_int32_t j;
     a_uint32_t i = 0, cnt = 0, rep = 0, loc = 0;
     a_uint32_t data;
     a_uint32_t addr[8];
@@ -5096,7 +5126,7 @@ cmd_data_check_ip6addr(char *cmdstr, void * val, a_uint32_t size)
             return SW_BAD_VALUE;
         }
 
-        for (j = i - 1; j >= loc; j--)
+        for (j = (a_int32_t)i - 1; j >= 0 && j >= (a_int32_t)loc; j--)
         {
             addr[8 - i + j] = addr[j];
             addr[j] = 0;
@@ -8704,7 +8734,7 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
     memset(&tmp_entry, 0, sizeof (fal_acl_rule_t));
 
     dprintf("\n");
-    g_aclcmd_len = snprintf(g_aclcmd, 500-g_aclcmd_len, "ssdk_sh acl rule add [listid] [ruleid] 1 ");
+    g_aclcmd_len = snprintf(g_aclcmd, sizeof(g_aclcmd), "ssdk_sh acl rule add [listid] [ruleid] 1 ");
 
     cmd_data_check_element("post routing enable", "no",
                            "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
