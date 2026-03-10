@@ -2104,8 +2104,14 @@ cmd_data_check_interface_mode(char *cmd_str, a_uint32_t * arg_val, a_uint32_t si
 	  *arg_val = PORT_UQXGMII;
     else if (!strncasecmp(cmd_str, "25gbase_r", 13))
 	  *arg_val = PORT_25GBASE_R;
-    else if (!strncasecmp(cmd_str, "pon_serdes", 13))
-	  *arg_val = PORT_PON_SERDES;
+    else if (!strncasecmp(cmd_str, "gpon", 13))
+	  *arg_val = PORT_GPON;
+    else if (!strncasecmp(cmd_str, "xgpon", 13))
+	  *arg_val = PORT_XGPON;
+    else if (!strncasecmp(cmd_str, "xgspon", 13))
+	  *arg_val = PORT_XGSPON;
+    else if (!strncasecmp(cmd_str, "internal", 13))
+	  *arg_val = PORT_INTERNAL;
     else if (!strncasecmp(cmd_str, "auto", 5))
 	  *arg_val = PORT_INTERFACE_MODE_AUTO;
     else if (!strncasecmp(cmd_str, "interfacemode_max", 20))
@@ -2163,9 +2169,21 @@ cmd_data_print_interface_mode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
     {
 	    dprintf("25gbase_r");
     }
-    else if(*(a_uint32_t *) buf == PORT_PON_SERDES)
+    else if(*(a_uint32_t *) buf == PORT_GPON)
     {
-	    dprintf("pon_serdes");
+	    dprintf("gpon");
+    }
+    else if(*(a_uint32_t *) buf == PORT_XGPON)
+    {
+	    dprintf("xgpon");
+    }
+    else if(*(a_uint32_t *) buf == PORT_XGSPON)
+    {
+	    dprintf("xgspon");
+    }
+    else if(*(a_uint32_t *) buf == PORT_INTERNAL)
+    {
+	    dprintf("internal");
     }
     else if(*(a_uint32_t *) buf == PORT_INTERFACE_MODE_AUTO)
     {
@@ -22351,6 +22369,7 @@ cmd_data_print_port_scheduler_resource(a_uint8_t * param_name, a_uint32_t * buf,
 			entry->l0edrr_start, entry->l0edrr_num, entry->l1sp_start, entry->l1sp_num);
     dprintf("\n[l1cdrr_start]:0x%x [l1cdrr_num]:0x%x [l1edrr_start]:0x%x [l1edrr_num]:0x%x ",
 			entry->l1cdrr_start, entry->l1cdrr_num, entry->l1edrr_start, entry->l1edrr_num);
+    dprintf("\n[max_pri]:0x%x", entry->max_pri);
 }
 
 sw_error_t
