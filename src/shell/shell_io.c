@@ -22861,8 +22861,9 @@ cmd_data_print_bm_static_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 
     entry = (fal_bm_static_cfg_t *) buf;
 
-    dprintf("\n[max_thresh]:0x%x [resume_off]:0x%x ",
-			entry->max_thresh, entry->resume_off);
+    dprintf("\n[max_thresh]:0x%x [resume_off]:0x%x [status]: %s",
+	    entry->max_thresh, entry->resume_off,
+	    entry->is_dynamic ? "disable" : "enable");
 }
 
 void
@@ -23059,8 +23060,9 @@ cmd_data_print_bm_dynamic_thresh(a_uint8_t * param_name, a_uint32_t * buf, a_uin
 
     entry = (fal_bm_dynamic_cfg_t *) buf;
 
-    dprintf("\n[weight]:0x%x [shared_ceiling]:0x%x [resume_off]:0x%x [resume_min_thresh]:0x%x ",
-			entry->weight, entry->shared_ceiling, entry->resume_off, entry->resume_min_thresh);
+    dprintf("\n[weight]:0x%x [shared_ceiling]:0x%x [resume_off]:0x%x [resume_min_thresh]:0x%x [status]: %s",
+	    entry->weight, entry->shared_ceiling, entry->resume_off, entry->resume_min_thresh,
+	    entry->is_dynamic ? "enable" : "disable");
 }
 
 sw_error_t
