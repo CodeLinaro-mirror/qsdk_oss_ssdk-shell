@@ -22739,6 +22739,7 @@ cmd_data_check_pcp_cfg(char *cmd_str, void * val, a_uint32_t size)
     char *cmd;
     sw_error_t rv;
     fal_qos_pcp_cfg_t entry;
+    a_uint32_t tmp;
 
     aos_mem_zero(&entry, sizeof (fal_qos_pcp_cfg_t));
 
@@ -22747,9 +22748,10 @@ cmd_data_check_pcp_cfg(char *cmd_str, void * val, a_uint32_t size)
         cmd = get_sub_cmd("pcp_mode", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
-        rv = cmd_data_check_uint8(cmd, (a_uint32_t *)&(entry.pcp_mode),
+        rv = cmd_data_check_uint8(cmd, &tmp,
                                    sizeof (a_uint8_t));
-
+	if (rv == SW_OK)
+		entry.pcp_mode = tmp;
     }
     while (talk_mode && (SW_OK != rv));
 
@@ -22758,9 +22760,11 @@ cmd_data_check_pcp_cfg(char *cmd_str, void * val, a_uint32_t size)
         cmd = get_sub_cmd("default_pcp_dei", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
-        rv = cmd_data_check_uint8(cmd, (a_uint32_t *)&(entry.default_pcp_dei),
+        rv = cmd_data_check_uint8(cmd, &tmp,
                                    sizeof (a_uint8_t));
 
+	if (rv == SW_OK)
+		entry.default_pcp_dei = tmp;
     }
     while (talk_mode && (SW_OK != rv));
 
