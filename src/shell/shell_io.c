@@ -20721,26 +20721,24 @@ cmd_data_check_ip_global(char *cmd_str, void * val, a_uint32_t size)
     }
     while (talk_mode && (SW_OK != rv));
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
-	    do {
-		    cmd = get_sub_cmd("route_fail_no_eth_action", "forward");
-		    SW_RTN_ON_NULL_PARAM(cmd);
+    do {
+	    cmd = get_sub_cmd("route_fail_no_eth_action", "forward");
+	    SW_RTN_ON_NULL_PARAM(cmd);
 
-		    if (!strncasecmp(cmd, "quit", 4)) {
-			    return SW_BAD_VALUE;
-		    }
-		    else if (!strncasecmp(cmd, "help", 4)) {
+	    if (!strncasecmp(cmd, "quit", 4)) {
+		    return SW_BAD_VALUE;
+	    }
+	    else if (!strncasecmp(cmd, "help", 4)) {
+		    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
+		    rv = SW_BAD_VALUE;
+	    }
+	    else {
+		    rv = cmd_data_check_maccmd(cmd, &(entry.rt_fail_no_eth_action),
+				    sizeof (fal_fwd_cmd_t));
+		    if (SW_OK != rv)
 			    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
-			    rv = SW_BAD_VALUE;
-		    }
-		    else {
-			    rv = cmd_data_check_maccmd(cmd, &(entry.rt_fail_no_eth_action),
-					    sizeof (fal_fwd_cmd_t));
-			    if (SW_OK != rv)
-				    dprintf("usage: <forward/drop/cpycpu/rdtcpu>\n");
-		    }
-	    } while (talk_mode && (SW_OK != rv));
-    }
+	    }
+    } while (talk_mode && (SW_OK != rv));
 
     *(fal_ip_global_cfg_t *)val = entry;
     return SW_OK;
@@ -20765,10 +20763,8 @@ cmd_data_print_ip_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
     dprintf("\n[hash_mode_0]:0x%x [hash_mode_1]:0x%x ",
 			entry->hash_mode_0, entry->hash_mode_1);
 
-    if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE) {
-	    cmd_data_print_maccmd("route_fail_no_eth_action",
-			    (a_uint32_t *)&(entry->rt_fail_no_eth_action), sizeof(fal_fwd_cmd_t));
-    }
+    cmd_data_print_maccmd("route_fail_no_eth_action",
+		    (a_uint32_t *)&(entry->rt_fail_no_eth_action), sizeof(fal_fwd_cmd_t));
 }
 
 sw_error_t
@@ -23539,7 +23535,8 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
 		    }
 	    } while (talk_mode && (SW_OK != rv));
 
-	    if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
+	    if (ssdk_cfg.init_cfg.chip_type != CHIP_APPE ||
+		ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) {
 		    cmd_data_check_element("flow_cookie_pri", "0",
 				    "usage: flow cookie priority\n",
 				    cmd_data_check_uint16, (cmd, &tmp, sizeof(a_uint16_t)));
@@ -48292,25 +48289,25 @@ cmd_data_check_flow_app(char * cmd_str, void * val, a_uint32_t size)
 
     dprintf("\n");
 
-    cmd_data_check_element("ip ver", "ipv4",
+    cmd_data_check_element("ip_ver", "ipv4",
                        "usage: ipv4, ipv6, ipv4_and_ipv6\n",
                        cmd_data_check_attr, ("ip_ver", cmd,
                                &tmpdata, sizeof(tmpdata)));
     entry.ip_ver= tmpdata & 0x3;
 
-    cmd_data_check_element("udp type", "udp",
+    cmd_data_check_element("udp_type", "udp",
                        "usage: udp, udp-lite, udp_and_udp-lite\n",
                        cmd_data_check_attr, ("udp_type", cmd,
                                &tmpdata, sizeof(tmpdata)));
     entry.udp_type= tmpdata & 0x3;
 
-    cmd_data_check_element("l4 port type", "dst",
+    cmd_data_check_element("l4_port_type", "dst",
                        "usage: dst, src, dst_and_src\n",
                        cmd_data_check_attr, ("l4_port_type", cmd,
                                &tmpdata, sizeof(tmpdata)));
     entry.l4_port_type= tmpdata & 0x3;
 
-    cmd_data_check_element("l4 port", "0",
+    cmd_data_check_element("l4_port", "0",
                        "usage: the format is 0x0-0xffff or 0-65535\n",
                        cmd_data_check_integer, (cmd, &tmpdata,
                                0xffff, 0x0));
