@@ -2253,7 +2253,8 @@ cmd_data_print_mtu_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 	{
 		cmd_data_print_enable("mtu_enable", &mtu_cfg->mtu_enable,
 			sizeof(mtu_cfg->mtu_enable));
@@ -2372,7 +2373,8 @@ cmd_data_check_mtu_cfg(char *cmd_str, void * val, a_uint32_t size)
         ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 
         cmd_data_check_element("mtu_enable", "enable",
                         "usage: usage: enable/disable\n",
@@ -3736,7 +3738,8 @@ cmd_data_check_portid(char *cmdstr, fal_port_t * val, a_uint32_t size)
             ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+	    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
             return SW_BAD_VALUE;
         return SW_OK;
     }
@@ -4548,7 +4551,8 @@ cmd_data_check_ruletype(char *cmd_str, fal_acl_rule_type_t * arg_val,
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
         {
             if (!strcasecmp(cmd_str, "tunnel_mac"))
             {
@@ -5762,7 +5766,8 @@ cmd_data_check_mac_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
         ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("stag tpid index field", "no", "usage: <yes/no/y/n>\n",
                                cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
                                        sizeof (a_bool_t)));
@@ -7075,7 +7080,8 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
         {
             cmd_data_check_element("udf2 operation", "mask",
                                    "usage: <mask/range/le/ge/ne> \n",
@@ -7148,7 +7154,8 @@ cmd_data_check_udf_field(fal_acl_rule_t * entry, a_bool_t is_inner)
 		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
     {
         cmd_data_check_element("udfprofile", "no",
                                "usage: <yes/no/inverse/y/n/i>\n", cmd_data_check_rule_confirm,
@@ -7542,7 +7549,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
             cmd_data_check_element("stag format", NULL,
                                    "usage: 0-delete, 1-add or replace, 2-copy from original SVID,"
                                    "3-copy from original CVID\n",
@@ -7563,7 +7571,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     {
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
             cmd_data_check_element("stag pri change cmd", NULL,
                                    "usage: 1-replace, 2-copy from original spcp,"
                                    "3-copy from original cpcp,"
@@ -7593,7 +7602,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     {
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
             cmd_data_check_element("stag dei change cmd", NULL,
                                    "usage: 1-replace, 2-copy from original sdei,"
                                    "3-copy from original cdei\n",
@@ -7620,7 +7630,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
             cmd_data_check_element("ctag format", NULL,
                                    "usage: 0-delete, 1-add or replace, 2-copy from original SVID,"
                                    "3-copy from original CVID\n",
@@ -7641,7 +7652,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     {
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
             cmd_data_check_element("ctag pri change cmd", "1",
                                    "usage: 1-replace, 2-copy from original spcp,"
                                    "3-copy from original cpcp,"
@@ -7671,7 +7683,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
     {
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
             cmd_data_check_element("ctag cfi change cmd", "1",
                                    "usage: 1-replace, 2-copy from original sdei,"
                                    "3-copy from original cdei\n",
@@ -7690,7 +7703,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
         ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("tags to remove", "0",
                                "usage: the format is 0x0-0x2 or 0-2 \n",
                                cmd_data_check_integer, (cmd, &tmpdata, 0x2, 0x0));
@@ -7817,7 +7831,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 	     ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	     ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	     ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	     ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE))
+	     ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	     ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE))
         {
             cmd_data_check_element("snapt", "no", "usage: <yes/no/y/n>\n",
                                    cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -8079,7 +8094,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
         {
             cmd_data_check_element("bypass fake mac drop", "no", "usage: <yes/no/y/n>\n",
                     cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -8101,7 +8117,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
             if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
-			    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE)
+			    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+			    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
             {
                 cmd_data_check_element("bypass flow policer", "no", "usage: <yes/no/y/n>\n",
                         cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -8114,7 +8131,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
             /* Pre ACL bypass bitmap for IPQ96xx */
             if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
                 ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-                ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+                ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+                ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
                 cmd_data_check_element("bypass ingress vlan translation", "no",
                                 "usage: <yes/no/y/n>\n",
                                 cmd_data_check_confirm, (cmd, A_FALSE, &tmpdata,
@@ -8273,7 +8291,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
         {
             /*policy id action configuration */
             cmd_data_check_element("policy id", "0",
@@ -8286,13 +8305,15 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
             {
                 /*cookie value configuration*/
                 if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
                     /*high 24bit for cookie ext, low 16bit for cookie*/
                     cmd_data_check_element("cookie value", "0",
                                "usage: the format is 0x0-0xffffffffff or 0-1099511627775\n",
@@ -8324,7 +8345,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
                 if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
                     /*wifi qos configuration*/
                     cmd_data_check_element("wifi qos enable", "no", "usage: <yes/no/y/n>\n",
                                cmd_data_check_confirm, (cmd, A_FALSE, &(entry->wifi_qos_en),
@@ -8354,7 +8376,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 	 ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	 ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	 ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	 ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE))
+	 ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	 ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE))
     {
         /* cascade data action configuration */
         cmd_data_check_element("cascade data change", "no", "usage: <yes/no/y/n>\n",
@@ -8402,7 +8425,8 @@ cmd_data_check_acl_action(fal_acl_rule_t * entry)
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
         ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         if(FAL_ACL_RULE_TUNNEL_MAC == entry->rule_type ||
             FAL_ACL_RULE_TUNNEL_IP4 == entry->rule_type ||
             FAL_ACL_RULE_TUNNEL_IP6 == entry->rule_type ||
@@ -8832,7 +8856,8 @@ cmd_data_check_aclrule(char *info, void *val, a_uint32_t size)
         ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) &&
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) &&
         (FAL_ACL_RULE_TUNNEL_MAC == entry.rule_type ||
         FAL_ACL_RULE_TUNNEL_IP4 == entry.rule_type ||
         FAL_ACL_RULE_TUNNEL_IP6 == entry.rule_type ||
@@ -8970,7 +8995,8 @@ static void cmd_data_print_acl_bypass_bitmap(a_uint32_t bitmap)
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
         {
             dprintf("\t[bypass_fake_mac_qos]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FAKE_MAC_DROP)&0x1);
             dprintf("\t[bypass_tunnel_context]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_TUNL_CONTEXT)&0x1);
@@ -8979,7 +9005,8 @@ static void cmd_data_print_acl_bypass_bitmap(a_uint32_t bitmap)
 			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
             {
                 dprintf("\t[bypass_flow_policer]:0x%x\n", (bitmap>>FAL_ACL_BYPASS_FLOW_POLICER)&0x1);
             }
@@ -9532,7 +9559,8 @@ void acl_rule_field_print(fal_acl_rule_t * rule)
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
         {
             cmd_data_print_fieldop("\n[udf2_op]:",
                                    (a_uint32_t *) & (rule->udf2_op),
@@ -9602,7 +9630,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) &&
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) &&
         (FAL_ACL_RULE_TUNNEL_MAC == rule->rule_type ||
         FAL_ACL_RULE_TUNNEL_IP4 == rule->rule_type ||
         FAL_ACL_RULE_TUNNEL_IP6 == rule->rule_type ||
@@ -9773,7 +9802,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         dprintf("\n[change_stag_pri]:yes");
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
                 dprintf("  [stag_pri_change_cmd]:%d", rule->stag_pri_change_cmd);
         }
         dprintf("  [stag_pri]:%d", rule->stag_pri);
@@ -9784,7 +9814,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         dprintf("\n[change_stag_dei]:yes");
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
                 dprintf("  [stag_dei_change_cmd]:%d", rule->stag_dei_change_cmd);
         }
         dprintf("  [stag_dei]:%d", rule->stag_dei);
@@ -9795,7 +9826,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         dprintf("\n[change_ctag_pri]:yes");
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
                 dprintf("  [ctag_pri_change_cmd]:%d", rule->ctag_pri_change_cmd);
         }
         dprintf("  [ctag_pri]:%d", rule->ctag_pri);
@@ -9806,7 +9838,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         dprintf("\n[change_ctag_cfi]:yes");
         if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
             ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+            ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+            ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
                 dprintf("  [ctag_cfi_change_cmd ]:%d", rule->ctag_cfi_change_cmd );
         }
         dprintf("  [ctag_cfi]:%d", rule->ctag_cfi);
@@ -9954,14 +9987,16 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
 			ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
         {
             dprintf("\n[policy_id]:0x%x", rule->policy_id);
             if (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+			    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
             {
                 dprintf("\n[cookie_val]:0x%llx", rule->cookie_val);
                 dprintf("\n[cookie_pri]:%d", rule->cookie_pri);
@@ -9969,7 +10004,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
                 if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
                     cmd_data_print_confirm("\n[wifi_qos_en]:", rule->wifi_qos_en, sizeof(a_bool_t));
                     dprintf(" [wifi_qos_val]:0x%x", rule->wifi_qos_val);
                 }
@@ -9991,7 +10027,8 @@ cmd_data_print_aclrule(a_char_t * param_name, a_uint32_t * buf,
         ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE))
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE))
     {
         if (FAL_ACTION_FLG_TST(rule->action_flg_ext, FAL_ACL_ACTION_CASCADE))
         {
@@ -10636,7 +10673,8 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
 		ssdk_cfg.init_cfg.chip_type != CHIP_MRPPE &&
 		ssdk_cfg.init_cfg.chip_type != CHIP_JHPPE &&
 		ssdk_cfg.init_cfg.chip_type != CHIP_HMSPPE &&
-		ssdk_cfg.init_cfg.chip_type != CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type != CHIP_HTTPPE &&
+		ssdk_cfg.init_cfg.chip_type != CHIP_BLMPPE) {
 	do
 	{
 		cmd = get_sub_cmd("ovid", "1");
@@ -10909,7 +10947,8 @@ cmd_data_check_vlan_translation(char *info, fal_vlan_trans_entry_t *val, a_uint3
 	    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	do
 	{
 		cmd = get_sub_cmd("direction", "0");
@@ -12048,7 +12087,8 @@ cmd_data_print_vlan_translation(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 	    ssdk_cfg.init_cfg.chip_type != CHIP_MRPPE &&
 	    ssdk_cfg.init_cfg.chip_type != CHIP_JHPPE &&
 	    ssdk_cfg.init_cfg.chip_type != CHIP_HMSPPE &&
-	    ssdk_cfg.init_cfg.chip_type != CHIP_HTTPPE) {
+	    ssdk_cfg.init_cfg.chip_type != CHIP_HTTPPE &&
+	    ssdk_cfg.init_cfg.chip_type != CHIP_BLMPPE) {
 	    dprintf("[Ovid]:0x%x  [Svid]:0x%x  [Cvid]:0x%x  [BiDirect]:%s  [ForwardDirect]:%s  [ReverseDirect]:%s",
 		    entry->o_vid, entry->s_vid, entry->c_vid,
 		    entry->bi_dir?"ENABLE":"DISABLE",
@@ -12067,7 +12107,8 @@ cmd_data_print_vlan_translation(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 	    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    dprintf("\n\n rule field: ");
 	    dprintf("\n[TranslateDirect]:%d", entry->trans_direction);
 	    dprintf("\n[port_bitmap]:0x%x",
@@ -13148,7 +13189,8 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
 		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
     {
         do
         {
@@ -13283,7 +13325,8 @@ cmd_data_check_pppoe(char *cmd_str, void * val, a_uint32_t size)
 		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    do
 	    {
 		    cmd = get_sub_cmd("tl_l3if_index", "0");
@@ -13359,7 +13402,8 @@ cmd_data_print_pppoe(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    dprintf("  [tl_l3if_index]:0x%x  [tl_l3if_index_valid]:%s\n",
 			    entry->tl_l3_if_index, entry->tl_l3_if_valid ? "YES":"NO");
     }
@@ -18157,7 +18201,8 @@ cmd_data_check_u_qmap(char *cmd_str, void * val, a_uint32_t size)
     while (talk_mode && (SW_OK != rv));
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
-        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("sram_queue_type", "0");
@@ -18867,7 +18912,8 @@ cmd_data_check_vsi_member(char *cmd_str, void * val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 
 	{
 		rv = __cmd_data_check_complex("vports_bitmap(port64-port95)", 0,
@@ -18932,7 +18978,8 @@ cmd_data_print_vsi_member_entry(a_uint8_t * param_name, a_uint32_t * buf, a_uint
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
     {
         for(vports_bmp_index = 0;
             vports_bmp_index < sizeof(entry->member_vports)/sizeof(a_uint32_t);
@@ -19376,7 +19423,8 @@ cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 	    do {
 		    cmd = get_sub_cmd("dmac_check_en", "no");
 		    SW_RTN_ON_NULL_PARAM(cmd);
@@ -19485,7 +19533,8 @@ cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
 		if(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			do {
 			    cmd = get_sub_cmd("in_mac_valid", "no");
 			    SW_RTN_ON_NULL_PARAM(cmd);
@@ -19515,7 +19564,8 @@ cmd_data_check_intf(char *cmd_str, void * val, a_uint32_t size)
 
     if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    a_bool_t enable = A_FALSE;
 
 	    cmd_data_check_element("vlan_key_from_port", "no",
@@ -21576,7 +21626,8 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("l2flow_type", "flow_aware");
@@ -21651,7 +21702,8 @@ cmd_data_print_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n");
         tmpdata = entry->l3flow_type;
         cmd_data_print_attr("flow_excep_type", "[l3flow_type]:", &tmpdata, sizeof(tmpdata));
@@ -22028,7 +22080,8 @@ cmd_data_check_port_pri(char *cmd_str, void * val, a_uint32_t size)
         (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 	(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 	(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-	(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+	(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 	    do {
 		    cmd = get_sub_cmd("pre_acl_outer_pri_prece", "0");
 		    SW_RTN_ON_NULL_PARAM(cmd);
@@ -22095,7 +22148,8 @@ cmd_data_print_port_pri(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 		dprintf("\n[pre_acl_outer_pri_prece]:0x%x [pre_acl_inner_pri_prece]:0x%x",
 				entry->pre_acl_outer_pri, entry->pre_acl_inner_pri);
 	}
@@ -22984,7 +23038,8 @@ cmd_data_print_queue_cnt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
     dprintf("\n[red_force_drop_packets]:0x%x ", entry->drop_packets[5]);
     dprintf("\n[red_force_drop_bytes]:0x%llx ", entry->drop_bytes[5]);
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
-        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+        ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[ddrq_packets]:0x%x ", entry->ddrq_packets);
         dprintf("\n[ddrq_bytes]:0x%llx ", entry->ddrq_bytes);
     }
@@ -23508,7 +23563,8 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    do {
 		    cmd = get_sub_cmd("ptmu_fail_action", "forward");
 		    SW_RTN_ON_NULL_PARAM(cmd);
@@ -23641,7 +23697,8 @@ cmd_data_check_flow_global(char *cmd_str, void * val, a_uint32_t size)
     }
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    cmd_data_check_element("flow_key_bitmap", "0", "routing and ipsec_ah, esp, natt\n",
 			    cmd_data_check_uint8, (cmd, &tmp, sizeof(a_uint8_t)));
 	    entry.flow_key_en_bitmap = tmp;
@@ -23674,7 +23731,8 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    dprintf("\n");
 	    cmd_data_print_maccmd("ptmu_fail_action", (a_uint32_t *)&(entry->ptmu_fail_action),
 			    sizeof(fal_fwd_cmd_t));
@@ -23694,7 +23752,8 @@ cmd_data_print_flow_global(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
     }
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    dprintf(" [flow_key_bitmap]:0x%x", entry->flow_key_en_bitmap);
     }
 }
@@ -24412,7 +24471,8 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 	    do
 	    {
 		    cmd = get_sub_cmd("pmtu_check_l3", "yes");
@@ -24558,7 +24618,8 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 	       		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 
 		    cmd_data_check_element("bridge_nexthop_valid", "no",
 				    "usage: <yes/no/y/n>\n",
@@ -24585,7 +24646,8 @@ cmd_data_check_flow(char *cmd_str, void * val, a_uint32_t size)
 
     if ((ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-		    (ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 	    a_bool_t enable = A_FALSE;
 
 	    cmd_data_check_element("route_nat_type", "0",
@@ -24678,7 +24740,8 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 	    dprintf("\n[pmtu_check_l3]:0x%x [pmtu]:0x%x [vpn_id]:0x%x",
 			    entry->pmtu_check_l3, entry->pmtu, entry->vpn_id);
 	    dprintf("\n[bridge_vlan_format_valid]:0x%x [bridge_svlan_format]:0x%x \
@@ -24689,7 +24752,8 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 		    cmd_data_print_confirm("\n[bridge_nexthop_valid]:",
 				    entry->bridge_nexthop_valid, sizeof(a_bool_t));
 		    dprintf(" [bridge_nexthop]:0x%x", entry->bridge_nexthop);
@@ -24702,7 +24766,8 @@ cmd_data_print_flow(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 
     if ((ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 		    (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-		    (ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+		    (ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 
 	    dprintf("\n[route_nat_type]:0x%x", entry->nat_action);
 	    cmd_data_print_confirm(" [route_en]:",
@@ -25456,7 +25521,8 @@ cmd_data_check_ip_sg(char *cmd_str, void * val, a_uint32_t size)
 
     if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    do
 	    {
 		    cmd = get_sub_cmd("ipv4_sg_pass_action", "forward");
@@ -25528,7 +25594,8 @@ cmd_data_print_ip_sg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 
     if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    cmd_data_print_maccmd("ipv4_sg_pass_action", (a_uint32_t *) &(entry->ipv4_sg_pass_action),
 			    sizeof (fal_fwd_cmd_t));
 	    cmd_data_print_maccmd("ipv6_sg_pass_action", (a_uint32_t *) &(entry->ipv6_sg_pass_action),
@@ -25953,7 +26020,8 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
        		(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-       		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+       		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+       		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 	    cmd_data_print_confirm("\n[dmac_check_en]", entry->dmac_check_en,
 			    sizeof(a_bool_t));
 	    dprintf(" [ipv6_mru]:0x%x [ipv6_mtu]:0x%x ", entry->ip6_mru, entry->ip6_mtu);
@@ -25965,7 +26033,8 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    cmd_data_print_confirm("\n[in_mac_valid]", entry->in_mac_valid,
 			    sizeof(a_bool_t));
     	cmd_data_print_macaddr("\n[in_mac_addr]:",
@@ -25975,7 +26044,8 @@ cmd_data_print_intf(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 
 	if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 
 		cmd_data_print_confirm("\n[vlan_key_from_port]", entry->vlan_key_from_port,
 				sizeof(a_bool_t));
@@ -26299,7 +26369,8 @@ cmd_data_check_arp_sg(char *cmd_str, void * val, a_uint32_t size)
 
     if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    do
 	    {
 		    cmd = get_sub_cmd("ipv4_arp_sg_pass_action", "forward");
@@ -26371,7 +26442,8 @@ cmd_data_print_arp_sg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 
     if(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    cmd_data_print_maccmd("ipv4_arp_sg_pass_action", (a_uint32_t *) &(entry->ipv4_arp_sg_pass_action),
 			    sizeof (fal_fwd_cmd_t));
 	    cmd_data_print_maccmd("ip_nd_sg_pass_action", (a_uint32_t *) &(entry->ip_nd_sg_pass_action),
@@ -26770,7 +26842,8 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do
 		{
 			cmd = get_sub_cmd("tunnel_qinq_role", "edge");
@@ -26805,7 +26878,8 @@ cmd_data_check_port_qinqmode(char *info, void *val, a_uint32_t size)
 
 		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			cmd_data_check_element("in_port_ponmode_en", "disable",
 						"usage: usage: enable/disable\n",
 						cmd_data_check_enable, (cmd,
@@ -26842,7 +26916,8 @@ cmd_data_print_port_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_print_qinq_role("tunnel_qinq_role",
 				(a_uint32_t *) & (entry->tunnel_port_role),
 				sizeof(a_uint32_t));
@@ -26857,7 +26932,8 @@ cmd_data_print_port_qinqmode(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 
 		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			cmd_data_print_enable("in_port_ponmode_en", &entry->in_port_ponmode_en, sizeof(entry->in_port_ponmode_en));
 
 			cmd_data_print_enable("tl_port_ponmode_en", &entry->tl_port_ponmode_en, sizeof(entry->tl_port_ponmode_en));
@@ -26957,7 +27033,8 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do
 		{
 			cmd = get_sub_cmd("tunnel_ctagtpid", "0x8100");
@@ -27009,7 +27086,8 @@ cmd_data_check_tpid(char *info, void *val, a_uint32_t size)
 
 		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			/* get extra ctpid */
 			do
 			{
@@ -27229,13 +27307,15 @@ cmd_data_print_tpid(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		dprintf("[tunnel_ctagtpid]:0x%x\n", entry->tunnel_ctpid);
 		dprintf("[tunnel_stagtpid]:0x%x\n", entry->tunnel_stpid);
 
 		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			dprintf("[extra_ctagtpid]:0x%x\n", entry->ext_ctpid);
 			dprintf("[extra_stagtpid]:0x%x\n", entry->ext_stpid);
 			dprintf("[extra_tunnel_ctpid]:0x%x\n", entry->ext_tunnel_ctpid);
@@ -27353,7 +27433,8 @@ cmd_data_check_ingress_filter(char *info, void *val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    /* get tag filter */
 	    do
 	    {
@@ -27451,7 +27532,8 @@ cmd_data_print_ingress_filter(a_uint8_t * param_name, a_uint32_t * buf, a_uint32
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	    cmd_data_print_enable("ctag_tagged_filter_en",
 			    (a_uint32_t *) & (entry->ctag_tagged_filter), sizeof(a_uint32_t));
 	    dprintf("\n");
@@ -28371,7 +28453,8 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do
 		{
 			cmd = get_sub_cmd("vni_resv_enable", "yes");
@@ -28450,7 +28533,8 @@ cmd_data_check_port_vlan_translation_adv_rule(char *info, fal_vlan_trans_adv_rul
 
 		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			do
 			{
 				cmd = get_sub_cmd("stpid_idx_en", "yes");
@@ -28646,14 +28730,16 @@ cmd_data_print_port_vlan_translation_adv_rule(a_uint8_t * param_name,
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		dprintf("\n[vni_resv_enable]:%s  [vni_resv_type]:%s  [vni_resv]:0x%x\n\n",
 				entry->vni_resv_enable?"ENABLE":"DISABLE",
 				entry->vni_resv_type?"VNI_RESV":"VNI_ONLY", entry->vni_resv);
 
 		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			dprintf("\n[stpid_idx_en]:%s  [stpid_idx]:0x%x  [ctpid_idx_en]:%s  [ctpid_idx]:0x%x",
 					entry->stpid_idx_en?"ENABLE":"DISABLE",
 					entry->stpid_idx,
@@ -28732,7 +28818,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 				dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
 					"3 for copy from original svid, 4 for copy from original cvid. \n");
 			else
@@ -28745,7 +28832,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 			if (SW_OK != rv) {
 				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 					dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
 						"3 for copy from original svid, 4 for copy from original cvid. \n");
 				else
@@ -28797,7 +28885,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 				dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
 					"3 for copy from original svid, 4 for copy from original cvid. \n");
 			else
@@ -28810,7 +28899,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 			if (SW_OK != rv) {
 				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 					dprintf("usage: 0 for unchanged, 1 for add and replace tag, 2 for delete tag, \n"
 						"3 for copy from original svid, 4 for copy from original cvid. \n");
 				else
@@ -28887,7 +28977,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 				dprintf("usage: 0 for unchanged, 1 for replace spcp, \n"
 					"2 for copy from original spcp, 3 for copy from original cpcp, \n"
 					"4 for map from dhcp, \n"
@@ -28905,7 +28996,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 			if (SW_OK != rv) {
 				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 					dprintf("usage: 0 for unchanged, 1 for replace spcp, \n"
 						"2 for copy from original spcp, 3 for copy from original cpcp, \n"
 						"4 for map from dhcp, \n"
@@ -28962,7 +29054,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 				dprintf("usage: 0 for unchanged, 1 for replace cpcp, \n"
 					"2 for copy from original spcp, 3 for copy from original cpcp, \n"
 					"4 for map from dhcp, \n"
@@ -28979,7 +29072,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 			if (SW_OK != rv) {
 				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 					dprintf("usage: 0 for unchanged, 1 for replace cpcp, \n"
 						"2 for copy from original spcp, 3 for copy from original cpcp, \n"
 						"4 for map from dhcp, \n"
@@ -29062,7 +29156,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 				dprintf("usage: 0 for unchanged, 1 for replace sdei, \n"
 					"2 for copy from original sdei, 3 for copy from original cdei. \n");
 			else
@@ -29075,7 +29170,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 			if (SW_OK != rv)  {
 				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 					dprintf("usage: 0 for unchanged, 1 for replace sdei, \n"
 						"2 for copy from original sdei, 3 for copy from original cdei. \n");
 				else
@@ -29129,7 +29225,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		{
 			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 				ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+				ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+				ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 				dprintf("usage: 0 for unchanged, 1 for replace cdei, \n"
 					"2 for copy from original sdei, 3 for copy from original cdei. \n");
 			else
@@ -29142,7 +29239,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 			if (SW_OK != rv) {
 				if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 					dprintf("usage: 0 for unchanged, 1 for replace cdei, \n"
 						"2 for copy from original sdei, 3 for copy from original cdei. \n");
 				else
@@ -29209,7 +29307,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do
 		{
 			cmd = get_sub_cmd("pm_counter_mode", "No");
@@ -29325,7 +29424,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do
 		{
 			cmd = get_sub_cmd("src_info_enable", "yes");
@@ -29454,7 +29554,8 @@ cmd_data_check_port_vlan_translation_adv_action(char *info,
 
 		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			do
 			{
 				cmd = get_sub_cmd("tags_to_rm", "0");
@@ -29773,7 +29874,8 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_print_srctype("\n[src_info_type]:", entry->src_info_type,
 				sizeof(entry->src_info_type));
 
@@ -29785,7 +29887,8 @@ cmd_data_print_port_vlan_translation_adv_action(a_uint8_t * param_name, a_uint32
 
 		if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			dprintf("\n[stpid_idx_xlt_cmd]:0x%x  [stpid_idx_xlt]:0x%x  [ctpid_idx_xlt_cmd]:0x%x  [ctpid_idx_xlt]:0x%x",
 					entry->stpid_idx_xlt_cmd, entry->stpid_idx_xlt, entry->ctpid_idx_xlt_cmd, entry->ctpid_idx_xlt);
 			dprintf("\n[tags_to_rm]:0x%x  [dscp_map_idx]:0x%x  [counter_mode]:0x%x",
@@ -30309,7 +30412,8 @@ cmd_data_check_ctrlpkt_profile(char *info, void *val, a_uint32_t size)
         ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
     {
         do
         {
@@ -30573,7 +30677,8 @@ cmd_data_print_ctrlpkt_profile(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
         ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
     {
         cmd_data_print_enable("8023ah_oam_en", (a_uint32_t *) &
             (entry->protocol_types.mgt_8023ah_oam), 4);
@@ -30733,7 +30838,8 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 	{
 		do
 		{
@@ -30810,7 +30916,8 @@ cmd_data_check_servcode_config(char *info, fal_servcode_config_t *val, a_uint32_
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do
 		{
 			cmd = get_sub_cmd("field_update_bitmap[1]", "0");
@@ -30928,7 +31035,8 @@ cmd_data_print_servcode_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)
 	{
 		dprintf("bypass_bitmap_3:0x%llx\n", entry->bypass_bitmap[3]);
 	}
@@ -31664,7 +31772,8 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("shaper_meter_type", cmd,
@@ -31771,7 +31880,8 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("cir_max", "0");
@@ -31870,7 +31980,8 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("eir_max", "0");
@@ -31921,7 +32032,8 @@ cmd_data_check_shaper_config(char *cmd_str, void * val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("next_ptr", "0");
@@ -32195,7 +32307,8 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_print_attr("shaper_meter_type", "\n[shaper_meter_type]:",
         &(entry->meter_type), sizeof(entry->meter_type));
     }
@@ -32225,7 +32338,8 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[shaper_cir_max]:0x%x", entry->cir_max);
     }
     dprintf("\n[shaper_cbs]:0x%x", entry->cbs);
@@ -32244,7 +32358,8 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[shaper_eir_max]:0x%x", entry->eir_max);
     }
     dprintf("\n[shaper_ebs]:0x%x", entry->ebs);
@@ -32253,7 +32368,8 @@ cmd_data_print_shaper_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[next_ptr]:%d", entry->next_ptr);
         if (A_TRUE == entry->grp_end)
         {
@@ -32330,7 +32446,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("policer_meter_type", cmd,
@@ -32365,7 +32482,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("vp_policer_index", (ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION)?"0-127":"0-511");
@@ -32526,7 +32644,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("cir_max", "0");
@@ -32598,7 +32717,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("eir_max", "0");
@@ -32648,7 +32768,8 @@ cmd_data_check_port_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("next_ptr", "0");
@@ -32735,7 +32856,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("meter_type", "rfc",
                         "usage:meter_type:rfc/mef10_3, etc\n",
                         cmd_data_check_attr, ("policer_meter_type", cmd,
@@ -32880,7 +33002,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("cir_max", "0");
@@ -32952,7 +33075,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("eir_max", "0");
@@ -33002,7 +33126,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("next_ptr", "0");
@@ -33073,7 +33198,8 @@ cmd_data_check_acl_policer_config(char *cmd_str, void * val, a_uint32_t size)
     }
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("length_mode", "original_len",
                         "usage:length_mode:original_len/decap_len/output_len, etc\n",
                         cmd_data_check_attr, ("policer_length_mode", cmd,
@@ -33199,7 +33325,8 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("yellow_dscp_remark", "no");
@@ -33343,7 +33470,8 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("yellow_dscp", "0-63");
@@ -33494,7 +33622,8 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("red_dscp_remark", "no");
@@ -33638,7 +33767,8 @@ cmd_data_check_policer_cmd_config(char *cmd_str, void * val, a_uint32_t size)
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         do
         {
             cmd = get_sub_cmd("red_dscp", "0-63");
@@ -33678,7 +33808,8 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_print_attr("policer_meter_type", "\n[meter_type]:",
     	    &(entry->meter_type), sizeof(entry->meter_type));
     }
@@ -33696,7 +33827,8 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[vp_policer_index]:0x%x", entry->vp_meter_index);
     }
 
@@ -33727,7 +33859,8 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[cir_max]:0x%08x  ", entry->cir_max);
     }
     dprintf("\n[eir]:0x%08x  [ebs]:0x%08x  ", entry->eir, entry->ebs);
@@ -33735,14 +33868,16 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[eir_max]:0x%08x  ", entry->eir_max);
     }
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[next_ptr]:%d", entry->next_ptr);
         if (A_TRUE == entry->grp_end)
         {
@@ -33812,7 +33947,8 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         if (A_TRUE == entry->yellow_dscp_en)
         {
             dprintf("\n[yellow_dscp_remark]:yes  ");
@@ -33839,7 +33975,8 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[yellow_dscp]:0x%x", entry->yellow_dscp);
     }
 
@@ -33892,7 +34029,8 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         if (A_TRUE == entry->red_dscp_en)
         {
             dprintf("\n[red_dscp_remark]:yes  ");
@@ -33919,7 +34057,8 @@ cmd_data_print_policer_cmd_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[red_dscp]:0x%x", entry->red_dscp);
     }
 
@@ -33937,7 +34076,8 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_print_attr("policer_meter_type", "\n[meter_type]:",
         &(entry->meter_type), sizeof(entry->meter_type));
     }
@@ -33978,7 +34118,8 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[cir_max]:0x%08x  ", entry->cir_max);
     }
     dprintf("\n[eir]:0x%08x  [ebs]:0x%08x  ", entry->eir, entry->ebs);
@@ -33986,14 +34127,16 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[eir_max]:0x%08x  ", entry->eir_max);
     }
     if (ssdk_cfg.init_cfg.chip_type == CHIP_APPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         dprintf("\n[next_ptr]:%d", entry->next_ptr);
         if (A_TRUE == entry->grp_end)
         {
@@ -34014,7 +34157,8 @@ cmd_data_print_acl_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_ui
     }
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_print_attr("policer_length_mode", "\n[length_mode]:",
     	    &(entry->length_mode), sizeof(entry->length_mode));
     }
@@ -39393,7 +39537,8 @@ cmd_data_check_tunnel_decap_action_entry(char *cmd_str,
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do {
 			cmd = get_sub_cmd("inner_type_en", "no");
 			SW_RTN_ON_NULL_PARAM(cmd);
@@ -39635,7 +39780,8 @@ cmd_data_print_tunnel_decap_action_entry(a_uint8_t *param_name, a_ulong_t *buf, 
 	dprintf(" [ecn_mode]:%d", entry_action->ecn_mode);
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_print_confirm("\n[inner_type_en]", entry_action->inner_type_en,
 			sizeof(entry_action->inner_type_en));
 		tmpdata = entry_action->inner_type;
@@ -40292,7 +40438,8 @@ cmd_data_check_tunnel_encap_entry(char *cmd_str, fal_tunnel_encap_cfg_t *arg_val
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do {
 			cmd = get_sub_cmd("mapt_udp_csm0_keep", "n");
 			SW_RTN_ON_NULL_PARAM(cmd);
@@ -40415,7 +40562,8 @@ cmd_data_print_tunnel_encap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint3
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 			cmd_data_print_confirm(" [mapt_udp_csm0_keep]", entry->mapt_udp_csm0_keep,
 			sizeof(entry->mapt_udp_csm0_keep));
 	}
@@ -41180,7 +41328,8 @@ cmd_data_check_tunnel_program_entry(char * cmd_str, void * val, a_uint32_t size)
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("protocol_pos_valid", "no",
                         "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                         (cmd, A_FALSE, &entry.protocol_pos_valid, sizeof (a_bool_t)));
@@ -41281,7 +41430,8 @@ cmd_data_check_tunnel_program_entry(char * cmd_str, void * val, a_uint32_t size)
 tuple_id_config:
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("tuple_id_valid", "no",
                         "usage: <yes/no/y/n>\n", cmd_data_check_confirm,
                         (cmd, A_FALSE, &entry.tuple_id_valid, sizeof (a_bool_t)));
@@ -41314,7 +41464,8 @@ cmd_data_print_tunnel_program_entry(a_uint8_t * param_name, a_uint32_t * buf, a_
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_print_confirm("\n[protocol_pos_valid]:",
                         entry->protocol_pos_valid, sizeof(a_uint32_t));
         if (entry->protocol_pos_valid) {
@@ -41358,7 +41509,8 @@ cmd_data_print_tunnel_program_entry(a_uint8_t * param_name, a_uint32_t * buf, a_
 tuple_id_config:
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		    ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		    ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		    ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_print_confirm("\n[tuple_id_valid]:",
                         entry->tuple_id_valid, sizeof(a_uint32_t));
         dprintf("  [tuple_id]:0x%x", entry->tuple_id);
@@ -42118,7 +42270,8 @@ cmd_data_check_mapt_decap_entry(char *cmd_str, void *arg_val, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		do {
 			cmd = get_sub_cmd("service_code_en", "n");
 			SW_RTN_ON_NULL_PARAM(cmd);
@@ -42213,7 +42366,8 @@ cmd_data_print_mapt_decap_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_print_confirm("[service_code_en]", entry->service_code_en,
 			sizeof(entry->service_code_en));
 		dprintf(" [service_code]:%d", entry->service_code);
@@ -42798,7 +42952,8 @@ cmd_data_check_enqueue_cfg(char *cmd_str, fal_enqueue_cfg_t *arg_val, a_uint32_t
 
 			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 				cmd_data_check_element("servcode_queue_sel", "no",
 						"usage: <yes/no/y/n>\n",
 						cmd_data_check_confirm, (cmd, A_FALSE,
@@ -42847,7 +43002,8 @@ cmd_data_print_enqueue_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t siz
 
 			if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 					ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+					ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+					ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 				cmd_data_print_enable("servcode_queue_sel",
 						&entry->index_entry.enqueue_servcode.queue_select_en,
 						sizeof(a_bool_t));
@@ -43619,7 +43775,8 @@ cmd_data_check_isol_ctrl(char *cmd_str, void *arg_val, a_uint32_t size)
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("direction", "ingress",
                         "usage: direction is both, ingress or egress\n",
                         cmd_data_check_attr, ("direction", cmd,
@@ -43680,7 +43837,8 @@ cmd_data_print_isol_ctrl(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_print_attr("direction", "[direction]: ",
 				&(entry->dir), sizeof(entry->dir));
 	}
@@ -43764,7 +43922,8 @@ cmd_data_check_port_cnt_cfg(char *cmd_str, fal_port_cnt_cfg_t *arg_val, a_uint32
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_check_element("tl_rx_cnt_enable", "disable",
 							"usage: usage: enable/disable\n",
 							cmd_data_check_enable, (cmd,
@@ -43808,7 +43967,8 @@ cmd_data_print_port_cnt_cfg(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t si
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_print_enable("tl_rx_cnt_enable", &entry->tl_rx_cnt_en, sizeof(entry->tl_rx_cnt_en));
 		dprintf("\n");
 
@@ -43839,7 +43999,8 @@ cmd_data_print_port_cnt(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 		ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 		ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+		ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 	dprintf("\n[rx_pkt_cnt]:%ld [rx_byte_cnt]:%lld"
 			" [rx_drop_pkt_cnt]:%ld [rx_drop_byte_cnt]:%lld\n",
 			entry->rx_pkt_cnt, entry->rx_byte_cnt,
@@ -43873,7 +44034,8 @@ cmd_data_check_ip_intf_mac_entry(char *cmd_str, fal_intf_macaddr_t *arg_val, a_u
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		a_uint32_t tmp = 0;
 
 		cmd_data_check_element("vsi_valid", "no", "usage: <yes/no/y/n>\n",
@@ -43911,7 +44073,8 @@ cmd_data_print_ip_intf_mac_entry(a_uint8_t *param_name, a_ulong_t *buf, a_uint32
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_print_enable("vsi_valid", &entry->vsi_valid, sizeof(a_bool_t));
 		dprintf(" ");
 		cmd_data_print_uint32("vsi", (a_uint32_t *)&entry->vsi, sizeof(entry->vsi));
@@ -43954,7 +44117,8 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)){
+			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)){
 		cmd_data_check_element("wifi_qos_en", "disable",
 				"usage: usage: enable/disable\n",
 				cmd_data_check_enable,
@@ -43971,7 +44135,8 @@ cmd_data_check_flow_qos(char *cmd_str, fal_flow_qos_t *arg_val, a_uint32_t size)
 			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)){
+			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)){
 		a_uint64_t cookie = 0;
 
 		cmd_data_check_element("qos_type", "0",
@@ -44030,7 +44195,8 @@ cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 			(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 			(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)){
+			(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)){
 		cmd_data_print_enable("wifi_qos_en", &entry->qos_valid, sizeof(entry->qos_valid));
 		cmd_data_print_uint32("wifi_qos", (a_uint32_t *)&entry->qos, sizeof(entry->qos));
 	};
@@ -44039,7 +44205,8 @@ cmd_data_print_flow_qos(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size)
 		(ssdk_cfg.init_cfg.chip_type == CHIP_MRPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE) ||
 		(ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE) ||
-		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE)) {
+		(ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+		ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE)) {
 		cmd_data_print_uint8("type", (a_uint8_t *)&entry->type, sizeof(a_uint32_t));
 
 		switch (entry->type) {
@@ -44279,7 +44446,8 @@ cmd_data_check_tunnel_key(char *cmd_str, fal_tunnel_decap_key_t *arg_val, a_uint
 
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_check_element("key_tlinfo_udf0_en", "no",
 				"usage: <yes/no/y/n>\n",
 				cmd_data_check_confirm, (cmd, A_FALSE, &enable,
@@ -44343,7 +44511,8 @@ cmd_data_print_tunnel_key(a_uint8_t *param_name, a_ulong_t *buf, a_uint32_t size
 	cmd_data_print_uint16("udf1_mask", &entry->udf1_mask, sizeof(entry->udf1_mask));
 	if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 			ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+			ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+			ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
 		cmd_data_print_uint8("tunnel_info_udf0_idx",
 				&entry->tunnel_info_udf0_idx, sizeof(entry->tunnel_info_udf0_idx));
 		cmd_data_print_uint8("tunnel_info_udf1_idx",
@@ -44775,7 +44944,8 @@ cmd_data_check_athtag_rx_cfg(char * cmd_str, void * val, a_uint32_t size)
 
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
 	ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+	ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+	ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
         cmd_data_check_element("athtag version", "v0",
                         "usage: v0 or v1\n",
                         cmd_data_check_attr, ("athtag_version", cmd,
@@ -44798,7 +44968,8 @@ cmd_data_print_athtag_rx_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_
     dprintf("  [athtag_type]:0x%x\n", entry->athtag_type);
     if (ssdk_cfg.init_cfg.chip_type == CHIP_JHPPE ||
         ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
-        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE) {
+        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_BLMPPE) {
             cmd_data_print_attr("athtag_version", "\n[athtag_version]:",
                                 &entry->version, sizeof(entry->version));
     }

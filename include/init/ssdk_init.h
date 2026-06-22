@@ -121,6 +121,7 @@ extern "C" {
 	    CHIP_JHPPE,
 	    CHIP_HMSPPE,
 	    CHIP_HTTPPE,
+	    CHIP_BLMPPE,
     } ssdk_chip_type;
 /*qca808x_end*/
 
