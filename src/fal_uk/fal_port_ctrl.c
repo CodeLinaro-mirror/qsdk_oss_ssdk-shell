@@ -1227,3 +1227,46 @@ fal_port_pps_ctrl_get(a_uint32_t dev_id, fal_port_pps_ctrl_t *pps_ctrl)
 
 	return rv;
 }
+
+sw_error_t
+fal_port_fastretrain_cfg_set(a_uint32_t dev_id, fal_port_t port_id,
+	fal_port_fr_cfg_t *cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_FASTRETRAIN_CFG_SET, dev_id, port_id, cfg);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_fastretrain_cfg_get(a_uint32_t dev_id, fal_port_t port_id,
+	fal_port_fr_cfg_t *cfg)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_FASTRETRAIN_CFG_GET, dev_id, port_id, cfg);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_fastretrain_status_get(a_uint32_t dev_id, fal_port_t port_id,
+	fal_port_fr_status_t *status)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_FASTRETRAIN_STATUS_GET, dev_id, port_id, status);
+
+	return rv;
+}
+
+sw_error_t
+fal_port_fastretrain_trigger(a_uint32_t dev_id, fal_port_t port_id)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_PT_FASTRETRAIN_TRIGGER, dev_id, port_id);
+
+	return rv;
+}

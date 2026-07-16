@@ -57,7 +57,7 @@ extern "C" {
 #define SW_CMD_IPMC_SGIPV6_ENTRY_SHOW	(SW_API_MAX + 40)
 #define SW_CMD_MAX			(SW_API_MAX + 41)
 
-#define MAX_SUB_CMD_DES_NUM 120
+#define MAX_SUB_CMD_DES_NUM 128
 
 #define SW_API_INVALID 0
 

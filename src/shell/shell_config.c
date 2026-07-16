@@ -257,6 +257,14 @@ struct cmd_des_t gcmd_des[] =
 	    {"vchbpstats", "get", "get vch backpressure stats", "vch_id", SW_API_PT_VCH_BP_STATS_GET, NULL},
 	    {"ppsctrl", "set", "set port pps ctrl", "<pps_ctrl>", SW_API_PT_PPS_CTRL_SET, NULL},
 	    {"ppsctrl", "get", "get port pps ctrl", "", SW_API_PT_PPS_CTRL_GET, NULL},
+	    {"frcfg", "set", "set port fast retrain cfg", "<port_id> <fr_cfg>",
+		SW_API_PT_FASTRETRAIN_CFG_SET, NULL},
+	    {"frcfg", "get", "get port fast retrain cfg", "<port_id>",
+		SW_API_PT_FASTRETRAIN_CFG_GET, NULL},
+	    {"frstatus", "get", "get port fast retrain status", "<port_id>",
+		SW_API_PT_FASTRETRAIN_STATUS_GET, NULL},
+	    {"frtrigger", "set", "trigger port fast retrain", "<port_id>",
+		SW_API_PT_FASTRETRAIN_TRIGGER, NULL},
 /*qca808x_start*/
             {NULL, NULL, NULL, NULL, SW_API_INVALID, NULL},/*end of desc*/
         },

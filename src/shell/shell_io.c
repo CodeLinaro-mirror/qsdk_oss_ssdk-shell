@@ -872,6 +872,8 @@ static sw_data_type_t sw_data_type[] =
     SW_TYPE_DEF(SW_CROSSOVER_STATUS, cmd_data_check_crossover_status, cmd_data_print_crossover_status),
 /*qca808x_end*/
     SW_TYPE_DEF(SW_PORT_EEE_CONFIG, cmd_data_check_port_eee_config, cmd_data_print_port_eee_config),
+    SW_TYPE_DEF(SW_PORT_FR_CFG, cmd_data_check_port_fr_cfg, cmd_data_print_port_fr_cfg),
+    SW_TYPE_DEF(SW_PORT_FR_STATUS, NULL, cmd_data_print_port_fr_status),
     SW_TYPE_DEF(SW_PREFER_MEDIUM, cmd_data_check_prefer_medium, cmd_data_print_prefer_medium),
     SW_TYPE_DEF(SW_FIBER_MODE, cmd_data_check_fiber_mode, cmd_data_print_fiber_mode),
     SW_TYPE_DEF(SW_SRC_FILTER_CONFIG, cmd_data_check_src_filter_config, cmd_data_print_src_filter_config),
@@ -12430,6 +12432,100 @@ cmd_data_print_port_eee_config(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     dprintf("\n[eee_status]:0x%x  ", cfg->eee_status);
     dprintf("\n[eee_lpi_wakeup_timer]:0x%x  ", cfg->lpi_wakeup_timer);
     dprintf("\n[eee_link_partner_advertisement]:0x%x  ", cfg->link_partner_advertisement);
+
+    return;
+}
+
+sw_error_t
+cmd_data_check_port_fr_cfg(char *cmd_str, void * val, a_uint32_t size)
+{
+    char *cmd;
+    sw_error_t rv;
+    fal_port_fr_cfg_t *cfg = (fal_port_fr_cfg_t *) val;
+
+    aos_mem_zero(cfg, sizeof (fal_port_fr_cfg_t));
+
+    do
+    {
+        cmd = get_sub_cmd("ieee_fr_en", "yes");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(cfg->ieee_fr_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    do
+    {
+        cmd = get_sub_cmd("cisco_fr_en", "yes");
+        SW_RTN_ON_NULL_PARAM(cmd);
+
+        if (!strncasecmp(cmd, "quit", 4))
+        {
+            return SW_BAD_VALUE;
+        }
+        else if (!strncasecmp(cmd, "help", 4))
+        {
+            dprintf("usage: <yes/no/y/n>\n");
+            rv = SW_BAD_VALUE;
+        }
+        else
+        {
+            rv = cmd_data_check_confirm(cmd, A_FALSE, &(cfg->cisco_fr_en),
+                                        sizeof (a_bool_t));
+            if (SW_OK != rv)
+                dprintf("usage: <yes/no/y/n>\n");
+        }
+    }
+    while (talk_mode && (SW_OK != rv));
+
+    return SW_OK;
+}
+
+void
+cmd_data_print_port_fr_cfg(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_port_fr_cfg_t *cfg;
+
+    cfg = (fal_port_fr_cfg_t *) buf;
+
+    dprintf("\n[ieee_fr_en]:%s  ", (A_TRUE == cfg->ieee_fr_en) ? "yes" : "no");
+    dprintf("\n[cisco_fr_en]:%s  ", (A_TRUE == cfg->cisco_fr_en) ? "yes" : "no");
+
+    return;
+}
+
+void
+cmd_data_print_port_fr_status(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t size)
+{
+    fal_port_fr_status_t *status;
+
+    status = (fal_port_fr_status_t *) buf;
+
+    dprintf("\n[ieee_enabled]:%s  ", (A_TRUE == status->ieee_enabled) ? "yes" : "no");
+    dprintf("\n[cisco_enabled]:%s  ", (A_TRUE == status->cisco_enabled) ? "yes" : "no");
+    dprintf("\n[negotiated]:0x%x", status->negotiated);
+    dprintf("\n[active]:%s  ", (A_TRUE == status->active) ? "yes" : "no");
+    dprintf("\n[success]:%s  ", (A_TRUE == status->success) ? "yes" : "no");
+    dprintf("\n[fail]:%s  ", (A_TRUE == status->fail) ? "yes" : "no");
+    dprintf("\n[rx_count]:%llu", (unsigned long long)status->rx_count);
+    dprintf("\n[tx_count]:%llu", (unsigned long long)status->tx_count);
+    dprintf("\n[rx_total]:%llu", (unsigned long long)status->rx_total);
+    dprintf("\n[tx_total]:%llu", (unsigned long long)status->tx_total);
 
     return;
 }
