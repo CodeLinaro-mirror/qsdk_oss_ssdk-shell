@@ -23043,6 +23043,8 @@ cmd_data_print_queue_cnt(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t si
         dprintf("\n[ddrq_packets]:0x%x ", entry->ddrq_packets);
         dprintf("\n[ddrq_bytes]:0x%llx ", entry->ddrq_bytes);
     }
+    dprintf("\n[rfc_block]:0x%x ", entry->rfc_block);
+    dprintf("\n[rfc_status]:0x%x ", entry->rfc_status);
 }
 
 void
