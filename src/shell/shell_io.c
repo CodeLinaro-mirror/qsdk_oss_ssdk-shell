@@ -45552,27 +45552,27 @@ cmd_data_check_pktedit_padding(char *cmd_str, void *val, a_uint32_t size)
 
 	memset(&entry, 0, sizeof (fal_pktedit_padding_t));
 
-	cmd_data_check_element("srip padding enable", "no",
+	cmd_data_check_element("strip padding enable", "no",
 			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
 			(cmd, A_FALSE, &entry.strip_padding_en, sizeof (a_bool_t)));
 
-	cmd_data_check_element("srip padding route enable", "no",
+	cmd_data_check_element("strip padding route enable", "no",
 			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
 			(cmd, A_FALSE, &entry.strip_padding_route_en, sizeof (a_bool_t)));
 
-	cmd_data_check_element("srip padding bridge enable", "no",
+	cmd_data_check_element("strip padding bridge enable", "no",
 			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
 			(cmd, A_FALSE, &entry.strip_padding_bridge_en, sizeof (a_bool_t)));
 
-	cmd_data_check_element("srip padding checksum enable", "no",
+	cmd_data_check_element("strip padding checksum enable", "no",
 			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
 			(cmd, A_FALSE, &entry.strip_padding_checksum_en, sizeof (a_bool_t)));
 
-	cmd_data_check_element("srip padding snap enable", "no",
+	cmd_data_check_element("strip padding snap enable", "no",
 			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
 			(cmd, A_FALSE, &entry.strip_padding_snap_en, sizeof (a_bool_t)));
 
-	cmd_data_check_element("srip tunnel inner padding enable", "no",
+	cmd_data_check_element("strip tunnel inner padding enable", "no",
 			"usage: <yes/no/y/n>\n", cmd_data_check_confirm,
 			(cmd, A_FALSE, &entry.strip_tunnel_inner_padding_en, sizeof (a_bool_t)));
 
