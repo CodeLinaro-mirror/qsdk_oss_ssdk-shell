@@ -21524,7 +21524,7 @@ cmd_data_check_exp_ctrl(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("l2fwd_onl_en", "0");
+        cmd = get_sub_cmd("l2fwd_only_en", "0");
         SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -21692,7 +21692,7 @@ cmd_data_print_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t siz
     entry = (fal_l3_excep_ctrl_t *) buf;
 
     dprintf("\n");
-    cmd_data_print_maccmd("except_cmd", (a_uint32_t *)&(entry->cmd), sizeof(fal_fwd_cmd_t));
+    cmd_data_print_maccmd("excep_cmd", (a_uint32_t *)&(entry->cmd), sizeof(fal_fwd_cmd_t));
 
     dprintf(" [deacclr_en]:0x%x [l3route_only_en]:0x%x [l2fwd_only_en]:0x%x ",
             entry->deacclr_en, entry->l3route_only_en, entry->l2fwd_only_en);
@@ -33840,7 +33840,7 @@ cmd_data_print_port_policer_config(a_uint8_t * param_name, a_uint32_t * buf, a_u
     }
     else
     {
-        dprintf("\n[couping_enable]:no  ");
+        dprintf("\n[coupling_enable]:no  ");
     }
 
     dprintf("\n[color_mode]:0x%x", entry->color_mode);
@@ -34356,12 +34356,18 @@ cmd_data_check_policer_ctrl(char *cmd_str, void * val, a_uint32_t size)
     char *cmd;
     sw_error_t rv;
     fal_policer_ctrl_t entry;
+    char *range;
 
     aos_mem_zero(&entry, sizeof (fal_policer_ctrl_t));
 
+    range = (ssdk_cfg.init_cfg.chip_type == CHIP_HMSPPE ||
+        ssdk_cfg.init_cfg.chip_type == CHIP_HTTPPE ||
+        ssdk_cfg.init_cfg.chip_revision == MPPE_REVISION) ?
+        "0-127" : "0-511";
+
     do
     {
-        cmd = get_sub_cmd("head", "0-511");
+        cmd = get_sub_cmd("head", range);
 		SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -34384,7 +34390,7 @@ cmd_data_check_policer_ctrl(char *cmd_str, void * val, a_uint32_t size)
 
     do
     {
-        cmd = get_sub_cmd("tail", "0-511");
+        cmd = get_sub_cmd("tail", range);
 		SW_RTN_ON_NULL_PARAM(cmd);
 
         if (!strncasecmp(cmd, "quit", 4))
@@ -43496,7 +43502,7 @@ cmd_data_print_l2_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint32_t 
     entry = (fal_l2_excep_ctrl_t *) buf;
 
     dprintf("\n");
-    cmd_data_print_maccmd("except_cmd", (a_uint32_t *)&(entry->cmd),
+    cmd_data_print_maccmd("excep_cmd", (a_uint32_t *)&(entry->cmd),
         sizeof(fal_fwd_cmd_t));
 }
 
@@ -43603,7 +43609,7 @@ cmd_data_print_tunnel_exp_ctrl(a_uint8_t * param_name, a_uint32_t * buf, a_uint3
     entry = (fal_tunnel_excep_ctrl_t *) buf;
 
     dprintf("\n");
-    cmd_data_print_maccmd("except_cmd", (a_uint32_t *)&(entry->cmd),
+    cmd_data_print_maccmd("excep_cmd", (a_uint32_t *)&(entry->cmd),
             sizeof(fal_fwd_cmd_t));
     dprintf(" [deacclr_en]:0x%x ", entry->deacclr_en);
     dprintf("\n[profile0_en]:0x%x [profile1_en]:0x%x [profile2_en]:0x%x [profile3_en]:0x%x ",
