@@ -566,3 +566,47 @@ fal_tunnel_decap_miss_action_get(a_uint32_t dev_id, fal_tunnel_type_t tunnel_typ
 
 	return rv;
 }
+
+sw_error_t
+fal_tunnel_app_type_set(a_uint32_t dev_id, fal_tunnel_type_t tunnel_type,
+		a_uint32_t app_type)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_APP_TYPE_SET, dev_id, tunnel_type, app_type);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_app_type_get(a_uint32_t dev_id, fal_tunnel_type_t tunnel_type,
+		a_uint32_t *app_type)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_APP_TYPE_GET, dev_id, tunnel_type, app_type);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_outer_lookup_set(a_uint32_t dev_id, fal_tunnel_type_t tunnel_type,
+		a_bool_t enable)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_OUTER_LOOKUP_SET, dev_id, tunnel_type, enable);
+
+	return rv;
+}
+
+sw_error_t
+fal_tunnel_outer_lookup_get(a_uint32_t dev_id, fal_tunnel_type_t tunnel_type,
+		a_bool_t *enable)
+{
+	sw_error_t rv;
+
+	rv = sw_uk_exec(SW_API_TUNNEL_OUTER_LOOKUP_GET, dev_id, tunnel_type, enable);
+
+	return rv;
+}
